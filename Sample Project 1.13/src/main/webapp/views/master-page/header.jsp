@@ -26,7 +26,7 @@ function createDiv(){
  var bodytag = document.getElementsByTagName('body')[0];
  var div = document.createElement('div');
  div.setAttribute('id','cookie-law');
- div.innerHTML = '<p>We request your permission to obtain stadistic data from your navigation in this webpage, in accordance with the Royal Decree-Law 13/2012. If you continue navigating, we consider that you accept the use of cookies.</p><p><a class="close-cookie-banner" href="javascript:void(0);" onclick="removeMe();"><span>Got it!</span></a></p><input type="button" id="hola" value="ReadMore"/><div id="readMore"><p>Hola</p></div>';    
+ div.innerHTML = '<p>We request your permission to obtain stadistic data from your navigation in this webpage, in accordance with the Royal Decree-Law 13/2012. If you continue navigating, we consider that you accept the use of cookies.</p><p><a class="close-cookie-banner" href="javascript:void(0);" onclick="removeMe();"><span>Got it!</span></a></p><input type="button" value="ReadMore" onclick="toggleMoreInfo();" /><div id="readMore"><p>Hola</p></div>';    
   
  bodytag.insertBefore(div,bodytag.firstChild); // Adds the Cookie Law Banner just after the opening <body> tag
   
@@ -66,6 +66,7 @@ function eraseCookie(name) {
 window.onload = function(){
  if(checkCookie(window.cookieName) != window.cookieValue){
      createDiv(); 
+     $("#readMore").hide();
  }
 }
 
@@ -74,12 +75,9 @@ function removeMe(){
 	element.parentNode.removeChild(element);
 }
 
-$(document).ready(function(){
-	 $("#readMore").hide()
-	    $("#hola").click(function(){
-	        $("#readMore").toggle(1000);
-	    });
-	});
+function toggleMoreInfo(){
+	$("#readMore").toggle(100);
+}
 
 </script>
 
