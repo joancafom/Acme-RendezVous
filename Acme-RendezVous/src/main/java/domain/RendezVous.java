@@ -1,11 +1,16 @@
 
 package domain;
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
@@ -101,6 +106,83 @@ public class RendezVous extends DomainEntity {
 
 	public void setIsForAdults(final boolean isForAdults) {
 		this.isForAdults = isForAdults;
+	}
+
+
+	/* Relationships */
+
+	private User						user;
+	private Collection<User>			attendants;
+	private Collection<Comment>			comments;
+	private Collection<RendezVous>		sourceRendezVouses;
+	private Collection<Announcement>	announcements;
+	private Collection<Question>		questions;
+
+
+	@NotNull
+	@Valid
+	@ManyToOne(optional = false)
+	public User getUser() {
+		return this.user;
+	}
+
+	@NotNull
+	@Valid
+	@ManyToMany(mappedBy = "attendedRendezVouses")
+	public Collection<User> getAttendants() {
+		return this.attendants;
+	}
+
+	@NotNull
+	@Valid
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "rendezVous")
+	public Collection<Comment> getComments() {
+		return this.comments;
+	}
+
+	@NotNull
+	@Valid
+	@ManyToMany
+	public Collection<RendezVous> getSourceRendezVouses() {
+		return this.sourceRendezVouses;
+	}
+
+	@NotNull
+	@Valid
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "rendezVous")
+	public Collection<Announcement> getAnnouncements() {
+		return this.announcements;
+	}
+
+	@NotNull
+	@Valid
+	@OneToMany(mappedBy = "rendezVous")
+	public Collection<Question> getQuestions() {
+		return this.questions;
+	}
+
+	public void setUser(final User user) {
+		this.user = user;
+	}
+
+	public void setAttendants(final Collection<User> attendants) {
+		this.attendants = attendants;
+	}
+
+	public void setComments(final Collection<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public void setSourceRendezVouses(final Collection<RendezVous> sourceRendezVouses) {
+		this.sourceRendezVouses = sourceRendezVouses;
+	}
+
+	public void setAnnouncements(final Collection<Announcement> announcements) {
+		this.announcements = announcements;
+	}
+
+	public void setQuestions(final Collection<Question> questions) {
+		this.questions = questions;
 	}
 
 }

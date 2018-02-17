@@ -1,9 +1,15 @@
 
 package domain;
 
+import java.util.Collection;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -22,4 +28,46 @@ public class Question extends DomainEntity {
 	public void setQuestion(final String question) {
 		this.question = question;
 	}
+
+
+	/* Relationships */
+
+	private User				user;
+	private Collection<Answer>	answers;
+	private RendezVous			rendezVous;
+
+
+	@NotNull
+	@Valid
+	@ManyToOne(optional = false)
+	public User getUser() {
+		return this.user;
+	}
+
+	@NotNull
+	@Valid
+	@OneToMany(mappedBy = "question")
+	public Collection<Answer> getAnswers() {
+		return this.answers;
+	}
+
+	@NotNull
+	@Valid
+	@ManyToOne(optional = false)
+	public RendezVous getRendezVous() {
+		return this.rendezVous;
+	}
+
+	public void setUser(final User user) {
+		this.user = user;
+	}
+
+	public void setAnswers(final Collection<Answer> answers) {
+		this.answers = answers;
+	}
+
+	public void setRendezVous(final RendezVous rendezVous) {
+		this.rendezVous = rendezVous;
+	}
+
 }
