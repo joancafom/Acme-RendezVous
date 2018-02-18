@@ -16,9 +16,867 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	">
 	
+	<bean class="java.text.SimpleDateFormat" id="dateFormat">
+		<constructor-arg value="dd/MM/yyyy HH:mm"/>
+	</bean>
+	
 	<!-- User accounts -->
 
+	<bean id="userAccount1" class="security.UserAccount">
+		<property name="username" value="administrator"/>
+		<property name="password" value="200ceb26807d6bf99fd6f4f0d1ca54d4"/>
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="ADMINISTRATOR"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="userAccount2" class="security.UserAccount">
+		<property name="username" value="user1"/>
+		<property name="password" value="24c9e15e52afc47c225b757e7bee1f9d"/>
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="USER"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="userAccount3" class="security.UserAccount">
+		<property name="username" value="user2"/>
+		<property name="password" value="7e58d63b60197ceb55a1c487989a3720"/>
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="USER"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="userAccount4" class="security.UserAccount">
+		<property name="username" value="user3"/>
+		<property name="password" value="92877af70a45fd6a2ed7fe81e1236b78"/>
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="USER"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="userAccount5" class="security.UserAccount">
+		<property name="username" value="user4"/>
+		<property name="password" value="3f02ebe3d7929b091e3d8ccfde2f3bc6"/>
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="USER"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="userAccount6" class="security.UserAccount">
+		<property name="username" value="user5"/>
+		<property name="password" value="0a791842f52a0acfbb3a783378c066b8"/>
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="USER"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="userAccount7" class="security.UserAccount">
+		<property name="username" value="user6"/>
+		<property name="password" value="affec3b64cf90492377a8114c86fc093"/>
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="USER"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
 	
 	<!-- Other domain beans come here -->	
+	
+	<!-- Administrator -->
+	
+	<bean id="administrator" class="domain.Administrator">
+		<property name="name" value="Taylor"/>
+		<property name="surnames" value="Swift Finlay"/>
+		<property name="postalAddress" value="Av. de la Independencia Nº127, Madrid, España"/>
+		<property name="phoneNumber" value="+16882334365"/>
+		<property name="email" value="taylor@gmail.com"/>
+		<property name="userAccount" ref="userAccount1"/>
+	</bean>
+	
+	<!-- Announcement -->
+	
+	<!-- <bean id="announcement1" class="domain.Announcement">
+		<property name="creationMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="18/01/2018 19:21"/>
+			</bean>
+		</property>
+		<property name="title" value="Rainy day"/>
+		<property name="description" value="It seems that it's going to rain tomorrow, but that won't stop us, right? Just bring your umbrellas, show must go on!"/>
+		<property name="rendezVous" ref="rendezVous1"/>
+		<property name="user" ref="user1"/>
+	</bean>
+	
+	<bean id="announcement2" class="domain.Announcement">
+		<property name="creationMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="15/01/2018 16:01"/>
+			</bean>
+		</property>
+		<property name="title" value="Last days"/>
+		<property name="description" value="There's only a few days left until our big party!"/>
+		<property name="rendezVous" ref="rendezVous1"/>
+		<property name="user" ref="user1"/>
+	</bean>
+	
+	<bean id="announcement3" class="domain.Announcement">
+		<property name="creationMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="19/01/2018 18:00"/>
+			</bean>
+		</property>
+		<property name="title" value="Do I need a professional camera?"/>
+		<property name="description" value="Hi! I just wanted to let you know that it doesn't matter if you own a professional camera or not. Bring whatever you can, even your mobile phones can take nice photos!"/>
+		<property name="rendezVous" ref="rendezVous2"/>
+		<property name="user" ref="user3"/>
+	</bean>
+	
+	<bean id="announcement4" class="domain.Announcement">
+		<property name="creationMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="19/02/2018 10:49"/>
+			</bean>
+		</property>
+		<property name="title" value="Adjusting the date"/>
+		<property name="description" value="Some people told me the date didn't adjust to their schedule, so I'm asking you to leave in the comments which dates are best for you so we can find the most appropiate for everyone."/>
+		<property name="rendezVous" ref="rendezVous5"/>
+		<property name="user" ref="user5"/>
+	</bean> -->
+	
+	<!-- Answer -->
+	 
+	<bean id="answer1" class="domain.Answer">
+		<property name="answer" value="Yes! I'll bring my new Canon."/>
+		<property name="user" ref="user1"/>
+		<property name="question" ref="question1"/>
+	</bean>
+	
+	<bean id="answer2" class="domain.Answer">
+		<property name="answer" value="No, I'll bring my phone."/>
+		<property name="user" ref="user5"/>
+		<property name="question" ref="question1"/>
+	</bean>
+	
+	<bean id="answer3" class="domain.Answer">
+		<property name="answer" value="Pop and Rock."/>
+		<property name="user" ref="user2"/>
+		<property name="question" ref="question2"/>
+	</bean>
+	
+	<bean id="answer4" class="domain.Answer">
+		<property name="answer" value="Pop, Indie, Soundtracks, Classical and more."/>
+		<property name="user" ref="user6"/>
+		<property name="question" ref="question2"/>
+	</bean>
+	
+	<bean id="answer5" class="domain.Answer">
+		<property name="answer" value="I work some weekends singing in a club."/>
+		<property name="user" ref="user2"/>
+		<property name="question" ref="question3"/>
+	</bean>
+	
+	<!-- <bean id="answer6" class="domain.Answer">
+		<property name="answer" value="No, I've never worked as a singer."/>
+		<property name="user" ref="user6"/>
+		<property name="question" ref="question3"/>
+	</bean> -->
+	
+	<!-- Comment -->
+	
+	<!-- <bean id="comment1" class="domain.Comment">
+		<property name="text" value="Wow, I love the idea! I'll definitely be there and hope more people will join us!"/>
+		<property name="writtenMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="14/01/2018 18:43"/>
+			</bean>
+		</property>
+		<property name="user" ref="user2"/>
+		<property name="rendezVous" ref="rendezVous1"/>
+		<property name="replies">
+			<list>
+				<ref bean="comment2"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="comment2" class="domain.Comment">
+		<property name="text" value="Thanks for the comment, Aitana! See you there. :P"/>
+		<property name="writtenMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="14/01/2018 21:04"/>
+			</bean>
+		</property>
+		<property name="picture" value="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3SjYqrYLwKTT1OCk1l5Bf6cS0O__x4rhLoIxf2Xr5dcUbQENc"/>
+		<property name="user" ref="user1"/>
+		<property name="rendezVous" ref="rendezVous1"/>
+		<property name="replies">
+			<list>
+			</list>
+		</property>
+		<property name="parentComment" ref="comment1"/>
+	</bean>
+	
+	<bean id="comment3" class="domain.Comment">
+		<property name="text" value="At last a photography activity!"/>
+		<property name="writtenMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="20/01/2018 17:54"/>
+			</bean>
+		</property>
+		<property name="user" ref="user5"/>
+		<property name="rendezVous" ref="rendezVous2"/>
+		<property name="replies">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="comment4" class="domain.Comment">
+		<property name="text" value="What kind of music can we sing in that bar?"/>
+		<property name="writtenMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="01/02/2018 17:34"/>
+			</bean>
+		</property>
+		<property name="user" ref="user2"/>
+		<property name="rendezVous" ref="rendezVous3"/>
+		<property name="replies">
+			<list>
+				<ref bean="comment5"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="comment5" class="domain.Comment">
+		<property name="text" value="There's nearly all kind of songs, but mostly: pop, rock and flamenco."/>
+		<property name="writtenMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="01/02/2018 19:18"/>
+			</bean>
+		</property>
+		<property name="user" ref="user1"/>
+		<property name="rendezVous" ref="rendezVous3"/>
+		<property name="replies">
+			<list>
+				<ref bean="comment6"/>
+			</list>
+		</property>
+		<property name="parentComment" ref="comment4"/>
+	</bean>
+	
+	<bean id="comment6" class="domain.Comment">
+		<property name="text" value="Are there Eurovision songs in that bar?"/>
+		<property name="writtenMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="02/02/2018 10:37"/>
+			</bean>
+		</property>
+		<property name="picture" value="https://www.eurovisionary.com/wp-content/uploads/2012/11/esc_generic_black.png"/>
+		<property name="user" ref="user6"/>
+		<property name="rendezVous" ref="rendezVous3"/>
+		<property name="replies">
+			<list>
+				<ref bean="comment7"/>
+				<ref bean="comment8"/>
+			</list>
+		</property>
+		<property name="parentComment" ref="comment5"/>
+	</bean>
+	
+	<bean id="comment7" class="domain.Comment">
+		<property name="text" value="I just asked the bar owner and he said yes. Join us!!!"/>
+		<property name="writtenMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="02/02/2018 17:53"/>
+			</bean>
+		</property>
+		<property name="user" ref="user1"/>
+		<property name="rendezVous" ref="rendezVous3"/>
+		<property name="replies">
+			<list>
+			</list>
+		</property>
+		<property name="parentComment" ref="comment6"/>
+	</bean>
+	
+	<bean id="comment8" class="domain.Comment">
+		<property name="text" value="I was wondering exactly the same!"/>
+		<property name="writtenMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="02/02/2018 13:26"/>
+			</bean>
+		</property>
+		<property name="user" ref="user2"/>
+		<property name="rendezVous" ref="rendezVous3"/>
+		<property name="replies">
+			<list>
+			</list>
+		</property>
+		<property name="parentComment" ref="comment6"/>
+	</bean>
+	
+	<bean id="comment9" class="domain.Comment">
+		<property name="text" value="Is there any chance that the date can be changed?"/>
+		<property name="writtenMoment">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="18/02/2018 17:27"/>
+			</bean>
+		</property>
+		<property name="user" ref="user6"/>
+		<property name="rendezVous" ref="rendezVous5"/>
+		<property name="replies">
+			<list>
+			</list>
+		</property>
+	</bean> -->
+	
+	<!-- GPS Coordinates -->
+	
+	<bean id="gpsCoordinates1" class="domain.GPSCoordinates">
+		<property name="latitude" value="37.382746"/>
+		<property name="longitude" value="-5.993408"/>
+	</bean>
+	
+	<bean id="gpsCoordinates2" class="domain.GPSCoordinates">
+		<property name="latitude" value="37.386360"/>
+		<property name="longitude" value="-6.002507"/>
+	</bean>
+	
+	<bean id="gpsCoordinates3" class="domain.GPSCoordinates">
+		<property name="latitude" value="41.389479"/>
+		<property name="longitude" value="2.196577"/>
+	</bean>
+	
+	<bean id="gpsCoordinates4" class="domain.GPSCoordinates">
+		<property name="latitude" value="39.466423"/>
+		<property name="longitude" value="-0.381110"/>
+	</bean>
+	
+	<!-- Question -->
+	
+	<bean id="question1" class="domain.Question">
+		<property name="question" value="Will you bring a professional camera?"/>
+		<property name="user" ref="user3"/>
+		<property name="answers">
+			<list>
+				<ref bean="answer1"/>
+				<ref bean="answer2"/>
+			</list>
+		</property>
+		<property name="rendezVous" ref="rendezVous2"/>
+	</bean>
+	
+	<bean id="question2" class="domain.Question">
+		<property name="question" value="What kind of music do you like?"/>
+		<property name="user" ref="user1"/>
+		<property name="answers">
+			<list>
+				<ref bean="answer3"/>
+				<ref bean="answer4"/>
+			</list>
+		</property>
+		<property name="rendezVous" ref="rendezVous3"/>
+	</bean>
+	
+	<bean id="question3" class="domain.Question">
+		<property name="question" value="Are you working in the music industry?"/>
+		<property name="user" ref="user1"/>
+		<property name="answers">
+			<list>
+				<ref bean="answer5"/>
+				<!-- <ref bean="answer6"/> -->
+			</list>
+		</property>
+		<property name="rendezVous" ref="rendezVous3"/>
+	</bean>
+	 
+	<!-- Rendez-Vous -->
+	
+	<bean id="rendezVous1" class="domain.RendezVous">
+		<property name="name" value="Night out!"/>
+		<property name="description" value="Just a typical night out to have fun and make some friends. Come and join us!"/>
+		<property name="orgDate">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="19/01/2018 22:00"/>
+			</bean>
+		</property>
+		<property name="picture" value="https://ae01.alicdn.com/kf/HTB1HlKxJFXXXXaIXVXXq6xXFXXXF/100-ml-c-ctel-Margarita-copa-de-vino-copa-de-Martini-c-ctel-copas-de-champ.jpg_640x640.jpg"/>
+		<property name="coordinates" ref="gpsCoordinates1"/>
+		<property name="isFinal" value="true"/>
+		<property name="isDeleted" value="false"/>
+		<property name="isForAdults" value="true"/>
+		<property name="user" ref="user1"></property>
+		<property name="attendants">
+			<list>
+				<ref bean="user2"/>
+				<ref bean="user3"/>
+				<ref bean="user4"/>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+				<!-- <ref bean="comment1"/>
+				<ref bean="comment2"/> -->
+			</list>
+		</property>
+		<property name="similarRendezVouses">
+			<list>
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+				<!-- <ref bean="announcement1"/>
+				<ref bean="announcement2"/> -->
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="rendezVous2" class="domain.RendezVous">
+		<property name="name" value="Photography tour"/>
+		<property name="description" value="The idea is to go on a tour throught Seville and take the best photos. I look for people who knows beautiful places in Seville and are interested on photography and want to share their knowledge."/>
+		<property name="orgDate">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="23/01/2018 18:00"/>
+			</bean>
+		</property>
+		<property name="coordinates" ref="gpsCoordinates2"/>
+		<property name="isFinal" value="true"/>
+		<property name="isDeleted" value="false"/>
+		<property name="isForAdults" value="false"/>
+		<property name="user" ref="user3"/>
+		<property name="attendants">
+			<list>
+				<ref bean="user5"/>
+				<ref bean="user1"/>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+				<!-- <ref bean="comment3"/> -->
+			</list>
+		</property>
+		<property name="similarRendezVouses">
+			<list>
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+				<!-- <ref bean="announcement3"/> -->
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+				<ref bean="question1"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="rendezVous3" class="domain.RendezVous">
+		<property name="name" value="Karaoke night"/>
+		<property name="description" value="Aimed at people who love music and having fun. Don't worry if you don't have a perfect voice, we won't judge anyone."/>
+		<property name="orgDate">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="03/02/2018 22:20"/>
+			</bean>
+		</property>
+		<property name="picture" value="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROcWCqqkVZKkL-Rizhx7qdSDf44znD0jbzf75qp2EJIb5UTGSWbw"/>
+		<property name="coordinates" ref="gpsCoordinates3"/>
+		<property name="isFinal" value="true"/>
+		<property name="isDeleted" value="false"/>
+		<property name="isForAdults" value="true"/>
+		<property name="user" ref="user1"/>
+		<property name="attendants">
+			<list>
+				<ref bean="user2"/>
+				<ref bean="user6"/>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+				<!-- <ref bean="comment4"/>
+				<ref bean="comment5"/>
+				<ref bean="comment6"/>
+				<ref bean="comment7"/>
+				<ref bean="comment8"/> -->
+			</list>
+		</property>
+		<property name="similarRendezVouses">
+			<list>
+				<ref bean="rendezVous1"/>
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+				<ref bean="question2"/>
+				<ref bean="question3"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="rendezVous4" class="domain.RendezVous">
+		<property name="name" value="Dancers reunion"/>
+		<property name="description" value="Reunion of dancers which want to join me in a dance improvisation in the park."/>
+		<property name="orgDate">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="12/02/2018 17:45"/>
+			</bean>
+		</property>
+		<property name="isFinal" value="false"/>
+		<property name="isDeleted" value="true"/>
+		<property name="isForAdults" value="false"/>
+		<property name="user" ref="user4"/>
+		<property name="attendants">
+			<list>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+			</list>
+		</property>
+		<property name="similarRendezVouses">
+			<list>
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="rendezVous5" class="domain.RendezVous">
+		<property name="name" value="Moms night out!"/>
+		<property name="description" value="Moms reunion to have fun at the disco with no worries! Just as when we were young and had time for these things."/>
+		<property name="orgDate">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="27/06/2018 22:15"/>
+			</bean>
+		</property>
+		<property name="picture" value="https://i.pinimg.com/originals/b3/29/14/b32914e1ee21f01965f2c47e7060acc4.jpg"/>
+		<property name="coordinates" ref="gpsCoordinates4"/>
+		<property name="isFinal" value="false"/>
+		<property name="isDeleted" value="false"/>
+		<property name="isForAdults" value="true"/>
+		<property name="user" ref="user5"/>
+		<property name="attendants">
+			<list>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+				<!-- <ref bean="comment9"/> -->
+			</list>
+		</property>
+		<property name="similarRendezVouses">
+			<list>
+				<ref bean="rendezVous1"/>
+				<ref bean="rendezVous3"/>
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+				<!-- <ref bean="announcement4"/> -->
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- User -->
+	
+	<bean id="user1" class="domain.User">
+		<property name="name" value="Ana Alicia"/>
+		<property name="surnames" value="Guerra Morales"/>
+		<property name="postalAddress" value="C/ Isaac Peral Nº32, Santa Cruz de Tenerife, España"/>
+		<property name="phoneNumber" value="692935782"/>
+		<property name="email" value="anaguerra@gmail.com"/>
+		<property name="userAccount" ref="userAccount2"/>
+		<property name="dateOfBirth">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="18/02/1994 00:00"/>
+			</bean>
+		</property>
+		<property name="answers">
+			<list>
+				<ref bean="answer1"/>
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+				<ref bean="question2"/>
+				<ref bean="question3"/>
+			</list>
+		</property>
+		<property name="createdRendezVouses">
+			<list>
+				<ref bean="rendezVous1"/>
+				<ref bean="rendezVous3"/>
+			</list>
+		</property>
+		<property name="attendedRendezVouses">
+			<list>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+				<!-- <ref bean="comment2"/>
+				<ref bean="comment5"/>
+				<ref bean="comment7"/> -->
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+				<!-- <ref bean="announcement1"/>
+				<ref bean="announcement2"/> -->
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="user2" class="domain.User">
+		<property name="name" value="Aitana"/>
+		<property name="surnames" value="Ocaña Morales"/>
+		<property name="postalAddress" value="C/ Doctor Cantero Cuadrado Nº59, Barcelona, España"/>
+		<property name="phoneNumber" value="615419745"/>
+		<property name="email" value="aitana@gmail.com"/>
+		<property name="userAccount" ref="userAccount3"/>
+		<property name="dateOfBirth">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="27/06/1999 00:00"/>
+			</bean>
+		</property>
+		<property name="answers">
+			<list>
+				<ref bean="answer3"/>
+				<ref bean="answer5"/>
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+			</list>
+		</property>
+		<property name="createdRendezVouses">
+			<list>
+			</list>
+		</property>
+		<property name="attendedRendezVouses">
+			<list>
+				<ref bean="rendezVous1"/>
+				<ref bean="rendezVous3"/>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+				<!-- <ref bean="comment1"/>
+				<ref bean="comment4"/>
+				<ref bean="comment8"/> -->
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="user3" class="domain.User">
+		<property name="name" value="Amaia"/>
+		<property name="surnames" value="Romero Arbizu"/>
+		<property name="postalAddress" value="Av. Pío XII Nº27, Navarra, España"/>
+		<property name="email" value="amaia@gmail.com"/>
+		<property name="userAccount" ref="userAccount4"/>
+		<property name="dateOfBirth">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="03/01/1999 00:00"/>
+			</bean>
+		</property>
+		<property name="answers">
+			<list>
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+				<ref bean="question1"/>
+			</list>
+		</property>
+		<property name="createdRendezVouses">
+			<list>
+				<ref bean="rendezVous2"/>
+			</list>
+		</property>
+		<property name="attendedRendezVouses">
+			<list>
+				<ref bean="rendezVous1"/>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+				<!-- <ref bean="announcement3"/> -->
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="user4" class="domain.User">
+		<property name="name" value="Roi"/>
+		<property name="surnames" value="Méndez Martínez"/>
+		<property name="phoneNumber" value="665143891"/>
+		<property name="email" value="roi@gmail.com"/>
+		<property name="userAccount" ref="userAccount5"/>
+		<property name="dateOfBirth">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="30/09/1993 00:00"/>
+			</bean>
+		</property>
+		<property name="answers">
+			<list>
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+			</list>
+		</property>
+		<property name="createdRendezVouses">
+			<list>
+				<ref bean="rendezVous4"/>
+			</list>
+		</property>
+		<property name="attendedRendezVouses">
+			<list>
+				<ref bean="rendezVous1"/>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="user5" class="domain.User">
+		<property name="name" value="Miriam"/>
+		<property name="surnames" value="Rodríguez Gallego"/>
+		<property name="email" value="miriam@gmail.com"/>
+		<property name="userAccount" ref="userAccount6"/>
+		<property name="dateOfBirth">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="30/09/2002 00:00"/>
+			</bean>
+		</property>
+		<property name="answers">
+			<list>
+				<ref bean="answer2"/>
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+			</list>
+		</property>
+		<property name="createdRendezVouses">
+			<list>
+				<ref bean="rendezVous5"/>
+			</list>
+		</property>
+		<property name="attendedRendezVouses">
+			<list>
+				<ref bean="rendezVous2"/>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+				<!-- <ref bean="comment3"/> -->
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+				<!-- <ref bean="announcement4"/> -->
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="user6" class="domain.User">
+		<property name="name" value="Nerea"/>
+		<property name="surnames" value="Rodríguez Rodríguez"/>
+		<property name="postalAddress" value="C/ Mackai Mcdonald Nº8, Barcelona, España"/>
+		<property name="email" value="nerea@gmail.com"/>
+		<property name="userAccount" ref="userAccount7"/>
+		<property name="dateOfBirth">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="07/02/1999 00:00"/>
+			</bean>
+		</property>
+		<property name="answers">
+			<list>
+				<ref bean="answer4"/>
+				<!-- <ref bean="answer6"/> -->
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+			</list>
+		</property>
+		<property name="createdRendezVouses">
+			<list>
+			</list>
+		</property>
+		<property name="attendedRendezVouses">
+			<list>
+				<ref bean="rendezVous3"/>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+				<!-- <ref bean="comment6"/>
+				<ref bean="comment9"/> -->
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+			</list>
+		</property>
+	</bean>
 	
 </beans>

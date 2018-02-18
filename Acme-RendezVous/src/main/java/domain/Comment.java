@@ -24,7 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Comment extends DomainEntity {
 
 	private String	text;
-	private Date	writeMoment;
+	private Date	writtenMoment;
 	private String	picture;
 
 
@@ -37,8 +37,8 @@ public class Comment extends DomainEntity {
 	@Past
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
-	public Date getWriteMoment() {
-		return this.writeMoment;
+	public Date getWrittenMoment() {
+		return this.writtenMoment;
 	}
 
 	@URL
@@ -50,8 +50,8 @@ public class Comment extends DomainEntity {
 		this.text = text;
 	}
 
-	public void setWriteMoment(final Date writeMoment) {
-		this.writeMoment = writeMoment;
+	public void setWrittenMoment(final Date writtenMoment) {
+		this.writtenMoment = writtenMoment;
 	}
 
 	public void setPicture(final String picture) {

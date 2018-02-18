@@ -114,7 +114,7 @@ public class RendezVous extends DomainEntity {
 	private User						user;
 	private Collection<User>			attendants;
 	private Collection<Comment>			comments;
-	private Collection<RendezVous>		sourceRendezVouses;
+	private Collection<RendezVous>		similarRendezVouses;
 	private Collection<Announcement>	announcements;
 	private Collection<Question>		questions;
 
@@ -143,8 +143,8 @@ public class RendezVous extends DomainEntity {
 	@NotNull
 	@Valid
 	@ManyToMany
-	public Collection<RendezVous> getSourceRendezVouses() {
-		return this.sourceRendezVouses;
+	public Collection<RendezVous> getSimilarRendezVouses() {
+		return this.similarRendezVouses;
 	}
 
 	@NotNull
@@ -173,8 +173,8 @@ public class RendezVous extends DomainEntity {
 		this.comments = comments;
 	}
 
-	public void setSourceRendezVouses(final Collection<RendezVous> sourceRendezVouses) {
-		this.sourceRendezVouses = sourceRendezVouses;
+	public void setSimilarRendezVouses(final Collection<RendezVous> similarRendezVouses) {
+		this.similarRendezVouses = similarRendezVouses;
 	}
 
 	public void setAnnouncements(final Collection<Announcement> announcements) {
