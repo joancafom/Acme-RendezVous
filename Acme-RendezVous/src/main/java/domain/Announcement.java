@@ -57,7 +57,6 @@ public class Announcement extends DomainEntity {
 	/* Relationships */
 
 	private RendezVous	rendezVous;
-	private User		user;
 
 
 	@NotNull
@@ -67,19 +66,8 @@ public class Announcement extends DomainEntity {
 		return this.rendezVous;
 	}
 
-	@NotNull
-	@Valid
-	@ManyToOne(optional = false)
-	public User getUser() {
-		return this.user;
-	}
-
 	public void setRendezVous(final RendezVous rendezVous) {
 		this.rendezVous = rendezVous;
-	}
-
-	public void setUser(final User user) {
-		this.user = user;
 	}
 
 }

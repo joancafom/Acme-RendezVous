@@ -32,16 +32,15 @@ public class Question extends DomainEntity {
 
 	/* Relationships */
 
-	private User				user;
-	private Collection<Answer>	answers;
 	private RendezVous			rendezVous;
+	private Collection<Answer>	answers;
 
 
 	@NotNull
 	@Valid
 	@ManyToOne(optional = false)
-	public User getUser() {
-		return this.user;
+	public RendezVous getRendezVous() {
+		return this.rendezVous;
 	}
 
 	@NotNull
@@ -51,23 +50,12 @@ public class Question extends DomainEntity {
 		return this.answers;
 	}
 
-	@NotNull
-	@Valid
-	@ManyToOne(optional = false)
-	public RendezVous getRendezVous() {
-		return this.rendezVous;
-	}
-
-	public void setUser(final User user) {
-		this.user = user;
+	public void setRendezVous(final RendezVous rendezVous) {
+		this.rendezVous = rendezVous;
 	}
 
 	public void setAnswers(final Collection<Answer> answers) {
 		this.answers = answers;
-	}
-
-	public void setRendezVous(final RendezVous rendezVous) {
-		this.rendezVous = rendezVous;
 	}
 
 }
