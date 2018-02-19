@@ -113,10 +113,10 @@ public class RendezVous extends DomainEntity {
 
 	private User						user;
 	private Collection<User>			attendants;
+	private Collection<Comment>			comments;
 	private Collection<RendezVous>		similarRendezVouses;
 	private Collection<Announcement>	announcements;
 	private Collection<Question>		questions;
-	private Collection<Comment>			comments;
 
 
 	@NotNull
@@ -131,6 +131,13 @@ public class RendezVous extends DomainEntity {
 	@ManyToMany(mappedBy = "attendedRendezVouses")
 	public Collection<User> getAttendants() {
 		return this.attendants;
+	}
+
+	@NotNull
+	@Valid
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "rendezVous")
+	public Collection<Comment> getComments() {
+		return this.comments;
 	}
 
 	@NotNull
@@ -154,19 +161,16 @@ public class RendezVous extends DomainEntity {
 		return this.questions;
 	}
 
-	@NotNull
-	@Valid
-	@OneToMany(mappedBy = "rendezVous")
-	public Collection<Comment> getComments() {
-		return this.comments;
-	}
-
 	public void setUser(final User user) {
 		this.user = user;
 	}
 
 	public void setAttendants(final Collection<User> attendants) {
 		this.attendants = attendants;
+	}
+
+	public void setComments(final Collection<Comment> comments) {
+		this.comments = comments;
 	}
 
 	public void setSimilarRendezVouses(final Collection<RendezVous> similarRendezVouses) {
@@ -179,10 +183,6 @@ public class RendezVous extends DomainEntity {
 
 	public void setQuestions(final Collection<Question> questions) {
 		this.questions = questions;
-	}
-
-	public void setComments(final Collection<Comment> comments) {
-		this.comments = comments;
 	}
 
 }
