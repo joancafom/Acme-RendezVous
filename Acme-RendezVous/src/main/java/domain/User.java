@@ -15,6 +15,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Years;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -30,6 +32,18 @@ public class User extends Actor {
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	public Date getDateOfBirth() {
 		return this.dateOfBirth;
+	}
+
+	public Integer getAge() {
+		final Date dateOfBirth = this.dateOfBirth;
+
+		@SuppressWarnings("deprecation")
+		final LocalDate birthdate = new LocalDate(dateOfBirth.getYear(), dateOfBirth.getMonth(), dateOfBirth.getDay());
+		final LocalDate now = new LocalDate();
+
+		final Years age = Years.yearsBetween(birthdate, now);
+
+		return Integer.valueOf(age.toString());
 	}
 
 	public void setDateOfBirth(final Date dateOfBirth) {
