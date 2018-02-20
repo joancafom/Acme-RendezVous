@@ -109,11 +109,11 @@ $(document).ready(function(){
 
 </style>
 
-<div>
-	<img src="images/logo.png" alt="Sample Co., Inc." />
-</div>
-
-<div>
+<div id="sticky-header">
+	<div id="logo-container">
+		<img src="images/logo.png" alt="Sample Co., Inc." height="100%"/>
+	</div>
+	<div id="menu-container">
 	<ul id="jMenu">
 		<!-- Do not forget the "fNiv" class for the first level links !! -->
 		<security:authorize access="hasRole('ADMIN')">
@@ -144,6 +144,7 @@ $(document).ready(function(){
 			<li id="logout"><a href="j_spring_security_logout"><spring:message code="master.page.logout" /> </a></li>
 		</security:authorize>
 	</ul>
+	</div>
 </div>
 
 <div>

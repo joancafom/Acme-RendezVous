@@ -59,11 +59,12 @@
 
 </head>
 
-<body>
+<body style="margin: 0px;">
 
 	<div>
 		<tiles:insertAttribute name="header" />
 	</div>
+	<div id="content-wrapper">
 	<div>
 		<h1>
 			<tiles:insertAttribute name="title" />
@@ -74,9 +75,9 @@
 			<span class="message"><spring:message code="${message}" /></span>
 		</jstl:if>	
 	</div>
+	</div>
 	<div>
 		<tiles:insertAttribute name="footer" />
 	</div>
-
 </body>
 </html>
