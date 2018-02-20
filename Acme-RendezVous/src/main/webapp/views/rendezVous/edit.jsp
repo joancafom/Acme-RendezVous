@@ -23,29 +23,30 @@
 	
 	<!-- Inputs -->
 	
-	<acme:textbox code="rendezVous.name" path="name"/>
-	<acme:textarea code="rendezVous.description" path="description"/>
+	<acme:textbox code="rendezVous.name" path="name"/><br>
+	<acme:textarea code="rendezVous.description" path="description"/><br>
 	
-	<form:label path="orgDate"><spring:message code="rendezVous.orgDate"/></form:label>
+	<form:label path="orgDate"><strong><spring:message code="rendezVous.orgDate"/>:</strong></form:label>
 	<form:input path="orgDate" placeholder="dd/MM/aaaa HH:mm"/>
-	<form:errors cssClass="error" path="orgDate"/>
+	<form:errors cssClass="error" path="orgDate"/><br><br>
 	
-	<acme:textbox code="rendezVous.picture" path="picture"/>
-	<acme:textbox code="rendezVous.coordinates.latitude" path="coordinates.latitude"/>
-	<acme:textbox code="rendezVous.coordinates.longitude" path="coordinates.longitude"/>
+	<acme:textbox code="rendezVous.picture" path="picture"/><br>
+	<acme:textbox code="rendezVous.coordinates.latitude" path="coordinates.latitude"/><br>
+	<acme:textbox code="rendezVous.coordinates.longitude" path="coordinates.longitude"/><br>
 	
-	<form:label path="isFinal"><spring:message code="rendezVous.isFinal"/></form:label>
+	<form:label path="isFinal"><strong><spring:message code="rendezVous.isFinal"/>:</strong></form:label>
 	<form:radiobutton path="isFinal" value="true"/><spring:message code="rendezVous.yes"/>
 	<form:errors path="isFinal" cssClass="error"/>
 	<form:radiobutton path="isFinal" value="false" checked="checked"/><spring:message code="rendezVous.no"/>
 	<form:errors path="isFinal" cssClass="error"/>
-	<br>
-	<form:label path="isForAdults"><spring:message code="rendezVous.isForAdults"/></form:label>
+	<br><br>
+	<form:label path="isForAdults"><strong><spring:message code="rendezVous.isForAdults"/>:</strong></form:label>
 	<form:radiobutton path="isForAdults" value="true"/><spring:message code="rendezVous.yes"/>
 	<form:errors path="isForAdults" cssClass="error"/>
 	<form:radiobutton path="isForAdults" value="false" checked="checked"/><spring:message code="rendezVous.no"/>
 	<form:errors path="isForAdults" cssClass="error"/>
-	<br>
+	<br><br>
 	<acme:submit name="save" code="rendezVous.save"/>
+	<acme:cancel url="rendezVous/user/listMine.do" code="rendezVous.cancel"/>
 	
 </form:form>

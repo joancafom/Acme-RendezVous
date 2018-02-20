@@ -12,6 +12,25 @@
 	display: table;
 	margin: 0px;
 	padding: 0px;
+	text-align:center;
+	width:100%;
+}
+
+#logout{
+	background-color:#ef5350;
+}
+#logout:hover{
+	background-color:#ef9a9a;
+}
+#login{
+	background-color: #536dfe;
+}
+#login:hover{
+	background-color: #8c9eff;
+}
+
+.jMenu li:hover{
+	background-color: #514c52;
 }
 
 /* First level */

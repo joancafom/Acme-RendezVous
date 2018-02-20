@@ -20,5 +20,10 @@
 		<put-attribute name="title" value="Edit a RendezVous" />
 		<put-attribute name="body" value="/views/rendezVous/edit.jsp" />
 	</definition>
+	
+	<definition name="rendezVous/list" extends="master.page">
+		<put-attribute name="title" value="RendezVouses" />
+		<put-attribute name="body" value="/views/rendezVous/list.jsp" />
+	</definition>
 		
 </tiles-definitions>

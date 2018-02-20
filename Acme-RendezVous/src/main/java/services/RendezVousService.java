@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,6 @@ public class RendezVousService {
 		rendezVous.setCoordinates(coordinates);
 
 		return rendezVous;
-
 	}
 
 	public RendezVous findOne(final int rendezVousId) {
@@ -79,10 +79,18 @@ public class RendezVousService {
 
 		if (rendezVous.getId() != 0) {
 			Assert.isTrue(rendezVous.getIsFinal() == false);
-			Assert.isTrue(rendezVous.getIsFinal() == false);
+			Assert.isTrue(rendezVous.getIsDeleted() == false);
 		}
 
-		return this.rendezVousRepository.save(rendezVous);
+		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
+
+		final RendezVous result = this.rendezVousRepository.save(rendezVous);
+
+		if (rendezVous.getId() == 0) {
+			user.getAttendedRendezVouses().add(result);
+			user.getCreatedRendezVouses().add(result);
+		}
+		return result;
 	}
 
 	/* Functional Requirements */

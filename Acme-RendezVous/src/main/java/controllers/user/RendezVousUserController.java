@@ -5,13 +5,18 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import security.LoginService;
 import services.RendezVousService;
+import services.UserService;
 import domain.RendezVous;
+import domain.User;
 
 @Controller
 @RequestMapping("/rendezVous/user")
@@ -21,6 +26,21 @@ public class RendezVousUserController {
 	@Autowired
 	private RendezVousService	rendezVousService;
 
+	@Autowired
+	private UserService			userService;
+
+
+	@RequestMapping(value = "/listMine", method = RequestMethod.GET)
+	public ModelAndView list() {
+		ModelAndView result;
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(user);
+
+		result = new ModelAndView("rendezVous/list");
+		result.addObject("rendezVouses", user.getCreatedRendezVouses());
+
+		return result;
+	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
@@ -30,6 +50,16 @@ public class RendezVousUserController {
 		result = this.createEditModelAndView(rendezVous);
 
 		return result;
+	}
+
+	@RequestMapping(value = "/edit", method = RequestMethod.GET)
+	public ModelAndView edit(@RequestParam final int rendezVousId) {
+		ModelAndView result;
+		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
+		result = this.createEditModelAndView(rendezVous);
+
+		return result;
+
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")

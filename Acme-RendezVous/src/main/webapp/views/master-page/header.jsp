@@ -103,6 +103,10 @@ $(document).ready(function(){
     margin:0;
 }
 
+*{
+	font-family: Arial;
+}
+
 </style>
 
 <div>
@@ -122,34 +126,22 @@ $(document).ready(function(){
 			</li>
 		</security:authorize>
 		
-		<security:authorize access="hasRole('CUSTOMER')">
-			<li><a class="fNiv"><spring:message	code="master.page.customer" /></a>
-				<ul>
-					<li class="arrow"></li>
-					<li><a href="customer/action-1.do"><spring:message code="master.page.customer.action.1" /></a></li>
-					<li><a href="customer/action-2.do"><spring:message code="master.page.customer.action.2" /></a></li>					
-				</ul>
-			</li>
+		<security:authorize access="hasRole('USER')">
+			<li><a href="rendezVous/user/listMine.do"><spring:message code="master.page.user.myRendezVouses" /></a></li>
+			<li><a href="user/user/list.do"><spring:message code="master.page.user.users" /></a></li>
+			<li><a href="rendezVous/user/listAll.do"><spring:message code="master.page.user.allRendezVouses" /></a></li>
+			<li><a href="announcement/user/list.do"><spring:message code="master.page.user.announcements" /></a></li>
+			<li><a href="user/user/display.do"><spring:message code="master.page.profile" /> (<security:authentication property="principal.username" />)</a></li>
+			
+			 
 		</security:authorize>
 		
 		<security:authorize access="isAnonymous()">
-			<li><a class="fNiv" href="security/login.do"><spring:message code="master.page.login" /></a></li>
+			<li id="login" style="width:50%"><a class="fNiv" href="security/login.do"><spring:message code="master.page.login" /></a></li>
 		</security:authorize>
 		
 		<security:authorize access="isAuthenticated()">
-			<li>
-				<a class="fNiv"> 
-					<spring:message code="master.page.profile" /> 
-			        (<security:authentication property="principal.username" />)
-				</a>
-				<ul>
-					<li class="arrow"></li>
-					<li><a href="profile/action-1.do"><spring:message code="master.page.profile.action.1" /></a></li>
-					<li><a href="profile/action-2.do"><spring:message code="master.page.profile.action.2" /></a></li>
-					<li><a href="profile/action-3.do"><spring:message code="master.page.profile.action.3" /></a></li>					
-					<li><a href="j_spring_security_logout"><spring:message code="master.page.logout" /> </a></li>
-				</ul>
-			</li>
+			<li id="logout"><a href="j_spring_security_logout"><spring:message code="master.page.logout" /> </a></li>
 		</security:authorize>
 	</ul>
 </div>
