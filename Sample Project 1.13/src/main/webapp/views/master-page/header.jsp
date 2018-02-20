@@ -13,65 +13,79 @@
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 
-<spring:message code="cookies" var="cookiesMessage"></spring:message>
+<spring:message code="cookies" var="cookiesMessage"/>
 
 <script>
 
-var dropCookie = true;                      // false disables the Cookie, allowing you to style the banner
-var cookieDuration = 14;                    // Number of days before the cookie expires, and the banner reappears
-var cookieName = 'complianceCookie';        // Name of our cookie
-var cookieValue = 'on';                     // Value of cookie
+var cookieDuration = 14;
+var cookieName = 'bannerCookie';
+var cookieValue = 'on';
 
 function createDiv(){
- var bodytag = document.getElementsByTagName('body')[0];
- var div = document.createElement('div');
- div.setAttribute('id','cookie-law');
- div.innerHTML = '<p>We request your permission to obtain stadistic data from your navigation in this webpage, in accordance with the Royal Decree-Law 13/2012. If you continue navigating, we consider that you accept the use of cookies.</p><p><a class="close-cookie-banner" href="javascript:void(0);" onclick="removeMe();"><span>Got it!</span></a></p><input type="button" value="ReadMore" onclick="toggleMoreInfo();" /><div id="readMore"><p>Hola</p></div>';    
+ 	var body = document.getElementsByTagName('body')[0];
+ 	var div = document.createElement('div');
+ 	
+ 	div.setAttribute('id','cookieBanner');
+ 	div.innerHTML = '${cookiesMessage}';
   
- bodytag.insertBefore(div,bodytag.firstChild); // Adds the Cookie Law Banner just after the opening <body> tag
+ 	// Adds the Cookie Banner just after the opening <body> tag
+ 	body.insertBefore(div, body.firstChild);
   
- document.getElementsByTagName('body')[0].className+=' cookiebanner'; //Adds a class tothe <body> tag when the banner is visible
-  
- createCookie(window.cookieName,window.cookieValue, window.cookieDuration); // Create the cookie
+ 	// Create the cookie
+ 	createCookie(window.cookieName, window.cookieValue, window.cookieDuration);
 }
 
 
 function createCookie(name,value,days) {
- if (days) {
-     var date = new Date();
-     date.setTime(date.getTime()+(days*24*60*60*1000)); 
-     var expires = "; expires="+date.toGMTString(); 
- }
- else var expires = "";
- if(window.dropCookie) { 
-     document.cookie = name+"="+value+expires+"; path=/"; 
- }
+	var expires = "";
+	
+	// Set the expiring date
+ 	if (days) {
+    	var date = new Date();
+     	date.setTime(date.getTime() + (days * 24 * 60 * 60 *1000)); 
+     	
+     	expires = "expires=" + date.toGMTString() + ";"; 
+ 	}
+	
+ 	// Create the cookie with its name, value and expiring date
+ 	document.cookie = name + "=" + value + "; " + expires + " path=/"; 
 }
 
-function checkCookie(name) {
- var nameEQ = name + "=";
- var ca = document.cookie.split(';');
- for(var i=0;i < ca.length;i++) {
-     var c = ca[i];
-     while (c.charAt(0)==' ') c = c.substring(1,c.length);
-     if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
- }
- return null;
-}
 
-function eraseCookie(name) {
- createCookie(name,"",-1);
+function cookieCurrentValue(name) {
+	var nameEquals = name + "=";
+	var languageEquals = window.languageName + "=";
+	
+ 	var allCookies = document.cookie.split(';');
+ 	
+ 	// Iterate over all the cookies that are in the page
+ 	for(var i=0; i < allCookies.length; i++) {
+    	var currentCookie = allCookies[i];
+     
+    	// Eliminate spaces at the begining
+    	while (currentCookie.charAt(0)==' ') currentCookie = currentCookie.substring(1, currentCookie.length);
+    	
+    	// Set language cookie
+    	if (currentCookie.indexOf(languageEquals) == 0) window.languageValue = currentCookie.substring(languageEquals.length, currentCookie.length);
+    	
+    	// When we are in the banner cookie, return a substring with its value
+    	if (currentCookie.indexOf(nameEquals) == 0) return currentCookie.substring(nameEquals.length, currentCookie.length);
+
+ 	}
+ 	return null;
 }
 
 window.onload = function(){
- if(checkCookie(window.cookieName) != window.cookieValue){
-     createDiv(); 
-     $("#readMore").hide();
- }
+	
+	// If the banner cookie isn't on
+	if(cookieCurrentValue(window.cookieName) != window.cookieValue){
+    	createDiv(); 
+    	$("#readMore").hide();
+    }
 }
 
 function removeMe(){
-	var element = document.getElementById('cookie-law');
+	var element = document.getElementById('cookieBanner');
 	element.parentNode.removeChild(element);
 }
 
@@ -83,7 +97,7 @@ function toggleMoreInfo(){
 
 <style>
 
-#cookie-law { 
+#cookieBanner { 
     max-width:940px;
     background:#F5F5F5; 
     margin:10px auto 0; 
@@ -92,12 +106,12 @@ function toggleMoreInfo(){
     -moz-border-radius: 17px;
 }
  
-#cookie-law p { 
+#cookieBanner p, input { 
     padding:10px; 
     font-size:1.2em; 
     font-weight:bold; 
     text-align:center; 
-    color:#FF5A72; 
+    color:#6699ff; 
     margin:0;
 }
 
