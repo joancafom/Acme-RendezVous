@@ -51,7 +51,7 @@ public class RendezVousService {
 		final Collection<RendezVous> similarRendezVouses = new HashSet<RendezVous>();
 		final GPSCoordinates coordinates = new GPSCoordinates();
 
-		rendezVous.setUser(user);
+		rendezVous.setCreator(user);
 		rendezVous.setComments(comments);
 		rendezVous.setSimilarRendezVouses(similarRendezVouses);
 		rendezVous.setAnnouncements(announcements);
@@ -75,7 +75,7 @@ public class RendezVousService {
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 
 		if (user != null)
-			Assert.isTrue(rendezVous.getUser().equals(user));
+			Assert.isTrue(rendezVous.getCreator().equals(user));
 
 		if (rendezVous.getId() != 0)
 			Assert.isTrue(this.rendezVousRepository.findOne(rendezVous.getId()).getIsFinal() == false);
@@ -97,7 +97,7 @@ public class RendezVousService {
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 
 		if (user != null)
-			Assert.isTrue(rendezVous.getUser().equals(user));
+			Assert.isTrue(rendezVous.getCreator().equals(user));
 
 		rendezVous.setIsDeleted(true);
 

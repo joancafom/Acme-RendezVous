@@ -111,7 +111,7 @@ public class RendezVous extends DomainEntity {
 
 	/* Relationships */
 
-	private User						user;
+	private User						creator;
 	private Collection<User>			attendants;
 	private Collection<Comment>			comments;
 	private Collection<RendezVous>		similarRendezVouses;
@@ -122,8 +122,8 @@ public class RendezVous extends DomainEntity {
 	@NotNull
 	@Valid
 	@ManyToOne(optional = false)
-	public User getUser() {
-		return this.user;
+	public User getCreator() {
+		return this.creator;
 	}
 
 	@NotNull
@@ -161,8 +161,8 @@ public class RendezVous extends DomainEntity {
 		return this.questions;
 	}
 
-	public void setUser(final User user) {
-		this.user = user;
+	public void setCreator(final User creator) {
+		this.creator = creator;
 	}
 
 	public void setAttendants(final Collection<User> attendants) {
