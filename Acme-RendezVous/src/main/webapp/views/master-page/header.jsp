@@ -116,14 +116,8 @@ $(document).ready(function(){
 	<div id="menu-container">
 	<ul id="jMenu">
 		<!-- Do not forget the "fNiv" class for the first level links !! -->
-		<security:authorize access="hasRole('ADMIN')">
-			<li><a class="fNiv"><spring:message	code="master.page.administrator" /></a>
-				<ul>
-					<li class="arrow"></li>
-					<li><a href="administrator/action-1.do"><spring:message code="master.page.administrator.action.1" /></a></li>
-					<li><a href="administrator/action-2.do"><spring:message code="master.page.administrator.action.2" /></a></li>					
-				</ul>
-			</li>
+		<security:authorize access="hasRole('ADMINISTRATOR')">
+			<li><a href="administrator/display-dashboard.do"><spring:message code="master.page.administrator.dashboard"/></a></li>
 		</security:authorize>
 		
 		<security:authorize access="hasRole('USER')">
@@ -132,8 +126,6 @@ $(document).ready(function(){
 			<li><a href="rendezVous/user/list.do"><spring:message code="master.page.user.allRendezVouses" /></a></li>
 			<li><a href="announcement/user/list.do"><spring:message code="master.page.user.announcements" /></a></li>
 			<li><a href="user/user/display.do"><spring:message code="master.page.profile" /> (<security:authentication property="principal.username" />)</a></li>
-			
-			 
 		</security:authorize>
 		
 		<security:authorize access="isAnonymous()">

@@ -10,40 +10,41 @@
 
 package controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import services.AdministratorService;
 
 @Controller
 @RequestMapping("/administrator")
 public class AdministratorController extends AbstractController {
 
-	// Constructors -----------------------------------------------------------
+	// Services ------------------------------------------------
 
-	public AdministratorController() {
-		super();
-	}
+	@Autowired
+	private AdministratorService	administratorService;
 
-	// Action-1 ---------------------------------------------------------------		
 
-	@RequestMapping("/action-1")
-	public ModelAndView action1() {
-		ModelAndView result;
+	// Display Dashboard ---------------------------------------
 
-		result = new ModelAndView("administrator/action-1");
+	@RequestMapping("/display-dashboard")
+	public ModelAndView dashboard() {
+		final ModelAndView res;
 
-		return result;
-	}
+		res = new ModelAndView("administrator/display-dashboard");
 
-	// Action-2 ---------------------------------------------------------------
+		res.addObject("avgCreatedRendezVousesPerUser", this.administratorService.getAvgCreatedRendezVousesPerUser());
+		res.addObject("stdDeviationCreatedRendezVousesPerUser", this.administratorService.getStdDeviationCreatedRendezVousesPerUser());
+		res.addObject("usersWithCreatedRendezVousesVSUsersWithoutCreatedRendezVouses", this.administratorService.getUsersWithCreatedRendezVousesVSUsersWithoutCreatedRendezVouses());
+		res.addObject("avgUsersPerRendezVous", this.administratorService.getAvgUsersPerRendezVous());
+		res.addObject("stdDeviationUsersPerRendezVous", this.administratorService.getStdDeviationUsersPerRendezVous());
+		res.addObject("avgRSVPPerUser", this.administratorService.getAvgRSVPPerUser());
+		res.addObject("stdDeviationRSVPPerUser", this.administratorService.getStdDeviationRSVPPerUser());
+		res.addObject("topTenMoreRSVP", this.administratorService.getTopTenMoreRSVP());
 
-	@RequestMapping("/action-2")
-	public ModelAndView action2() {
-		ModelAndView result;
-
-		result = new ModelAndView("administrator/action-2");
-
-		return result;
+		return res;
 	}
 
 }

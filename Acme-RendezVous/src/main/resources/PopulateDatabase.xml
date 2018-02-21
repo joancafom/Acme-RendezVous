@@ -648,6 +648,9 @@
 		</property>
 		<property name="attendedRendezVouses">
 			<list>
+				<ref bean="rendezVous1"/>
+				<ref bean="rendezVous2"/>
+				<ref bean="rendezVous3"/>
 			</list>
 		</property>
 		<property name="comments">
