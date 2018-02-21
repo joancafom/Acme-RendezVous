@@ -17,7 +17,7 @@
 	<spring:message code="rendezVous.name" />: <jstl:out value="${rendezVous.name}" />
 </p>
 <p>
-	<spring:message code="rendezVous.creator" />: <a href="user/${actorWS}display.do?userId=<jstl:out value="${rendezVous.user.id}" />"><jstl:out value="${rendezVous.user.name}" /></a>
+	<spring:message code="rendezVous.creator" />: <a href="user/${actorWS}display.do?userId=<jstl:out value="${rendezVous.creator.id}" />"><jstl:out value="${rendezVous.creator.name}" /></a>
 </p>
 <jstl:if test="${rendezVous.isDeleted==true}">
 	<p style="color:red;"><strong><spring:message code="rendezVous.deleted"/></strong></p>
