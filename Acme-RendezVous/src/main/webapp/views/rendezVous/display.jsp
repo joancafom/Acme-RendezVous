@@ -32,8 +32,7 @@
 
 <p>
 	<spring:message code="rendezVous.orgDate" />:
-	<spring:message code="date.format2" var="dateFormat"></spring:message>
-	<fmt:formatDate value="${rendezVous.orgDate}" pattern="${dateFormat}" type="date"/>
+	<acme:dateFormat code="date.format2" value="${rendezVous.orgDate}"/>
 </p>
 
 <jstl:if test="${rendezVous.coordinates.latitude ne null and rendezVous.coordinates.longitude ne null}">
@@ -49,3 +48,23 @@
 		<a href="user/${actorWS}display.do?userId=<jstl:out value="${attendant.id}" />"><jstl:out value="${attendant.name}" /></a>
 	</display:column>
 </display:table>
+<h1>
+	<spring:message code="rendezVous.comments" />: 
+</h1>
+<display:table name="rendezVous.comments" id="comment" requestURI="" class="displaytag">
+	<display:column titleKey="comment.text" property="text" style="text-align:center;" />
+	<display:column titleKey="comment.writtenMoment" style="text-align:center;">
+		<acme:dateFormat code="date.format2" value="${comment.writtenMoment}"/>
+	</display:column>
+	<jstl:if test="${comment.picture ne null}">
+	<display:column>
+			<img src="<jstl:out value="${comment.picture}" />" />
+	</display:column>
+	</jstl:if>
+</display:table>
+
+<security:authorize access="hasRole('USER')">
+	<jstl:if test="${canComment ne null and canComment == true}">
+		<a href="comment/user/create.do?rendezVousId=<jstl:out value="${rendezVous.id}" />"><spring:message code="comment.create" /></a>
+	</jstl:if>
+</security:authorize>
