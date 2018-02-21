@@ -121,9 +121,10 @@ $(document).ready(function(){
 		</security:authorize>
 		
 		<security:authorize access="hasRole('USER')">
-			<li><a href="rendezVous/user/list.do?showMine=true"><spring:message code="master.page.user.myRendezVouses" /></a></li>
+			<li><a href="rendezVous/user/list.do?show=mine"><spring:message code="master.page.user.myRendezVouses" /></a></li>
+			<li><a href="rendezVous/user/list.do?show=attended"><spring:message code="master.page.user.attendedRendezVouses" /></a></li>
 			<li><a href="user/user/list.do"><spring:message code="master.page.user.users" /></a></li>
-			<li><a href="rendezVous/user/list.do"><spring:message code="master.page.user.allRendezVouses" /></a></li>
+			<li><a href="rendezVous/user/list.do?show=all"><spring:message code="master.page.user.allRendezVouses" /></a></li>
 			<li><a href="announcement/user/list.do"><spring:message code="master.page.user.announcements" /></a></li>
 			<li><a href="user/user/display.do"><spring:message code="master.page.profile" /> (<security:authentication property="principal.username" />)</a></li>
 		</security:authorize>
@@ -138,9 +139,5 @@ $(document).ready(function(){
 		</security:authorize>
 	</ul>
 	</div>
-</div>
-
-<div>
-	<a href="?language=en">en</a> | <a href="?language=es">es</a>
 </div>
 

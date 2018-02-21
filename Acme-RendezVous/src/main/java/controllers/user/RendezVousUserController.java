@@ -31,20 +31,26 @@ public class RendezVousUserController {
 
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ModelAndView list(@RequestParam(required = false) final Boolean showMine) {
+	public ModelAndView list(@RequestParam final String show) {
 		ModelAndView result;
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+
 		Assert.notNull(user);
 
 		result = new ModelAndView("rendezVous/list");
 
-		if (showMine != null && showMine) {
+		if (show.equals("mine")) {
 			result.addObject("rendezVouses", user.getCreatedRendezVouses());
 			result.addObject("listMode", "mine");
-			result.addObject("actorWS", "user/");
+
+		} else if (show.equals("attended")) {
+			result.addObject("rendezVouses", user.getAttendedRendezVouses());
+			result.addObject("listMode", "all");
 		} else {
 			/* TODO: */
 		}
+
+		result.addObject("actorWS", "user/");
 
 		return result;
 	}

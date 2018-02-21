@@ -66,6 +66,9 @@
 	</div>
 	<div id="content-wrapper">
 	<div>
+		<a href="?language=en">en</a> | <a href="?language=es">es</a>
+	</div>
+	<div>
 		<h1>
 			<tiles:insertAttribute name="title" />
 		</h1>
