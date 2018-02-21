@@ -77,10 +77,8 @@ public class RendezVousService {
 		if (user != null)
 			Assert.isTrue(rendezVous.getUser().equals(user));
 
-		if (rendezVous.getId() != 0) {
+		if (rendezVous.getId() != 0)
 			Assert.isTrue(this.rendezVousRepository.findOne(rendezVous.getId()).getIsFinal() == false);
-			Assert.isTrue(this.rendezVousRepository.findOne(rendezVous.getId()).getIsDeleted() == false);
-		}
 
 		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
 
@@ -95,10 +93,13 @@ public class RendezVousService {
 
 	/* Functional Requirements */
 
-	public void RSVP(final RendezVous rendezVous) {
-		final User attendant = this.userService.findByUserAccount(LoginService.getPrincipal());
-		rendezVous.getAttendants().add(attendant);
-		attendant.getAttendedRendezVouses().add(rendezVous);
+	public void virtualDelete(final RendezVous rendezVous) {
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+
+		if (user != null)
+			Assert.isTrue(rendezVous.getUser().equals(user));
+
+		rendezVous.setIsDeleted(true);
 
 		this.rendezVousRepository.save(rendezVous);
 

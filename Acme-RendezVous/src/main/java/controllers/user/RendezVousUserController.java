@@ -82,14 +82,16 @@ public class RendezVousUserController {
 	public ModelAndView save(@Valid final RendezVous rendezVous, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(rendezVous);
-		else
+			result.addObject("toEdit", true);
+		} else
 			try {
 				this.rendezVousService.save(rendezVous);
 				result = new ModelAndView("redirect:listMine.do");
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(rendezVous, "rendezVous.commit.error");
+				result.addObject("toEdit", true);
 			}
 
 		return result;
@@ -97,18 +99,20 @@ public class RendezVousUserController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST, params = "delete")
-	public ModelAndView virtualDelete(@Valid final RendezVous rendezVous, final BindingResult binding) {
+	public ModelAndView delete(@Valid final RendezVous rendezVous, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(rendezVous);
-		else
+			result.addObject("toDelete", true);
+		} else
 			try {
-				rendezVous.setIsDeleted(true);
-				this.rendezVousService.save(rendezVous);
+
+				this.rendezVousService.virtualDelete(rendezVous);
 				result = new ModelAndView("redirect:listMine.do");
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(rendezVous, "rendezVous.commit.error");
+				result.addObject("toDelete", true);
 			}
 
 		return result;
