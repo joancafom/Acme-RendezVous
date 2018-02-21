@@ -243,6 +243,7 @@
 		<property name="user" ref="user1"></property>
 		<property name="attendants">
 			<list>
+				<ref bean="user1"/>
 				<ref bean="user2"/>
 				<ref bean="user3"/>
 				<ref bean="user4"/>
@@ -326,6 +327,7 @@
 		<property name="user" ref="user1"/>
 		<property name="attendants">
 			<list>
+				<ref bean="user1"/>
 				<ref bean="user2"/>
 				<ref bean="user6"/>
 			</list>
