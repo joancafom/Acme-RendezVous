@@ -49,6 +49,8 @@ public class RendezVousUserController {
 
 		result = this.createEditModelAndView(rendezVous);
 
+		result.addObject("toEdit", true);
+
 		return result;
 	}
 
@@ -57,6 +59,20 @@ public class RendezVousUserController {
 		ModelAndView result;
 		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
 		result = this.createEditModelAndView(rendezVous);
+
+		result.addObject("toEdit", true);
+
+		return result;
+
+	}
+
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	public ModelAndView delete(@RequestParam final int rendezVousId) {
+		ModelAndView result;
+		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
+		result = this.createEditModelAndView(rendezVous);
+
+		result.addObject("toDelete", true);
 
 		return result;
 
@@ -71,7 +87,26 @@ public class RendezVousUserController {
 		else
 			try {
 				this.rendezVousService.save(rendezVous);
-				result = new ModelAndView("redirect:");
+				result = new ModelAndView("redirect:listMine.do");
+			} catch (final Throwable oops) {
+				result = this.createEditModelAndView(rendezVous, "rendezVous.commit.error");
+			}
+
+		return result;
+
+	}
+
+	@RequestMapping(value = "/delete", method = RequestMethod.POST, params = "delete")
+	public ModelAndView virtualDelete(@Valid final RendezVous rendezVous, final BindingResult binding) {
+		ModelAndView result;
+
+		if (binding.hasErrors())
+			result = this.createEditModelAndView(rendezVous);
+		else
+			try {
+				rendezVous.setIsDeleted(true);
+				this.rendezVousService.save(rendezVous);
+				result = new ModelAndView("redirect:listMine.do");
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(rendezVous, "rendezVous.commit.error");
 			}

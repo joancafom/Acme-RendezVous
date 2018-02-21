@@ -1,6 +1,7 @@
 <%@page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 
 <%@taglib prefix="jstl"	uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
@@ -12,43 +13,57 @@
 		text-align:center;
 	}
 </style>
-
-
 <display:table name="rendezVouses" id="rendezVous" requestURI="rendezVous/user/list.do" class="displaytag">
+	<display:column titleKey="rendezVous.state" class="tableRendezVous">
+		<jstl:if test="${rendezVous.isDeleted==true}">
+			<p style="color:red;"><strong><spring:message code="rendezVous.deleted"/></strong></p>
+		</jstl:if>
+		<jstl:if test="${rendezVous.isDeleted==false}">
+			<p style="color:green;"><strong><spring:message code="rendezVous.public"/></strong></p>
+		</jstl:if>
+	
+	</display:column>
 	<display:column titleKey="rendezVous.name">
 		<p><jstl:out value="${rendezVous.name}"/></p>
 	</display:column>
-	<display:column titleKey="rendezVous.description">
+	<display:column titleKey="rendezVous.description" style="width: 20%;">
 		<p><jstl:out value="${rendezVous.description}"/></p>
 	</display:column>
 	<display:column titleKey="rendezVous.orgDate" class="tableRendezVous">
-		<p><jstl:out value="${rendezVous.orgDate}"/></p>
+		<spring:message code="date.format2" var="dateFormat"></spring:message>
+		<p><fmt:formatDate value="${rendezVous.orgDate}" pattern="${dateFormat}" type="both"/></p>
 	</display:column>
 	<display:column titleKey="rendezVous.coordinates" class="tableRendezVous">
 		<p>(Lat: <jstl:out value="${rendezVous.coordinates.latitude}"/>, Long: <jstl:out value="${rendezVous.coordinates.longitude}"/>)</p>
 	</display:column>
 	<display:column titleKey="rendezVous.restrictions" class="tableRendezVous">
 		<jstl:if test="${rendezVous.isForAdults==true}">
-			<p>+18</p>
+			<p style="color:red; text-decoration: underline;"><strong>+18</strong></p>
 		</jstl:if>
 		<jstl:if test="${rendezVous.isForAdults==false}">
 			<p>-</p>
 		</jstl:if>
 	</display:column>
 	<display:column titleKey="rendezVous.mode" class="tableRendezVous">
-		<jstl:if test="${rendezVous.isFinal==true}">
+		<jstl:if test="${rendezVous.isFinal==false}">
 			<p><spring:message code="rendezVous.mode.draft"/></p>
 		</jstl:if>
-		<jstl:if test="${rendezVous.isForAdults==false}">
+		<jstl:if test="${rendezVous.isFinal==true}">
 			<p><spring:message code="rendezVous.mode.final"/></p>
 		</jstl:if>
 	</display:column>
 	<display:column class="tableRendezVous">
+	
 		<p><a href="rendezVous/user/display.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.display"/></a></p>
 	</display:column>
 	<display:column class="tableRendezVous">
-		<p><a href="rendezVous/user/edit.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.edit"/></a>
-		<a href="rendezVous/user/delete.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.delete"/></a></p>
+		<jstl:if test="${rendezVous.isDeleted==false}">
+			<p>
+			<jstl:if test="${rendezVous.isFinal==false}">
+				<a href="rendezVous/user/edit.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.edit"/></a>
+			</jstl:if>
+			<a href="rendezVous/user/delete.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.delete"/></a></p>
+		</jstl:if>
 	</display:column>
 </display:table>
 

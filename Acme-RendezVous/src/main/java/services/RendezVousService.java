@@ -78,8 +78,8 @@ public class RendezVousService {
 			Assert.isTrue(rendezVous.getUser().equals(user));
 
 		if (rendezVous.getId() != 0) {
-			Assert.isTrue(rendezVous.getIsFinal() == false);
-			Assert.isTrue(rendezVous.getIsDeleted() == false);
+			Assert.isTrue(this.rendezVousRepository.findOne(rendezVous.getId()).getIsFinal() == false);
+			Assert.isTrue(this.rendezVousRepository.findOne(rendezVous.getId()).getIsDeleted() == false);
 		}
 
 		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
@@ -102,11 +102,6 @@ public class RendezVousService {
 
 		this.rendezVousRepository.save(rendezVous);
 
-	}
-
-	public void deleteVirtual(final RendezVous rendezVous) {
-		rendezVous.setIsDeleted(true);
-		this.rendezVousRepository.save(rendezVous);
 	}
 
 }
