@@ -30,18 +30,24 @@ public class RendezVousUserController {
 	private UserService			userService;
 
 
-	@RequestMapping(value = "/listMine", method = RequestMethod.GET)
-	public ModelAndView list() {
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public ModelAndView list(@RequestParam(required = false) final Boolean showMine) {
 		ModelAndView result;
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 		Assert.notNull(user);
 
 		result = new ModelAndView("rendezVous/list");
-		result.addObject("rendezVouses", user.getCreatedRendezVouses());
+
+		if (showMine != null && showMine) {
+			result.addObject("rendezVouses", user.getCreatedRendezVouses());
+			result.addObject("listMode", "mine");
+			result.addObject("actorWS", "user/");
+		} else {
+			/* TODO: */
+		}
 
 		return result;
 	}
-
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
 		final ModelAndView result;

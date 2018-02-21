@@ -127,9 +127,9 @@ $(document).ready(function(){
 		</security:authorize>
 		
 		<security:authorize access="hasRole('USER')">
-			<li><a href="rendezVous/user/listMine.do"><spring:message code="master.page.user.myRendezVouses" /></a></li>
+			<li><a href="rendezVous/user/list.do?showMine=true"><spring:message code="master.page.user.myRendezVouses" /></a></li>
 			<li><a href="user/user/list.do"><spring:message code="master.page.user.users" /></a></li>
-			<li><a href="rendezVous/user/listAll.do"><spring:message code="master.page.user.allRendezVouses" /></a></li>
+			<li><a href="rendezVous/user/list.do"><spring:message code="master.page.user.allRendezVouses" /></a></li>
 			<li><a href="announcement/user/list.do"><spring:message code="master.page.user.announcements" /></a></li>
 			<li><a href="user/user/display.do"><spring:message code="master.page.profile" /> (<security:authentication property="principal.username" />)</a></li>
 			
@@ -137,6 +137,7 @@ $(document).ready(function(){
 		</security:authorize>
 		
 		<security:authorize access="isAnonymous()">
+			<li><a href="rendezVous/list.do"><spring:message code="master.page.user.allRendezVouses" /></a></li>
 			<li id="login" style="width:50%"><a class="fNiv" href="security/login.do"><spring:message code="master.page.login" /></a></li>
 		</security:authorize>
 		

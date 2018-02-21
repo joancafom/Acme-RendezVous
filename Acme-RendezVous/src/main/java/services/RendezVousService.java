@@ -105,4 +105,9 @@ public class RendezVousService {
 
 	}
 
+	public Collection<RendezVous> findAllNotAdult() {
+
+		return this.rendezVousRepository.findAllNotAdult();
+	}
+
 }
