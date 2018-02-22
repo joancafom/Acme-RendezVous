@@ -29,7 +29,17 @@
 <jstl:if test="${rendezVous.isForAdults==true}">
 	<p style="color:red; text-decoration: underline;"><strong>+18</strong></p>
 </jstl:if>
-
+<p>
+	<jstl:choose>
+		<jstl:when test="${rendezVous.isFinal}">
+			<spring:message code="rendezVous.final" />
+		</jstl:when>
+		<jstl:otherwise>
+			<spring:message code="rendezVous.draft" />
+		</jstl:otherwise>
+	</jstl:choose>
+	
+</p>
 <p>
 	<spring:message code="rendezVous.orgDate" />:
 	<acme:dateFormat code="date.format2" value="${rendezVous.orgDate}"/>
@@ -56,11 +66,12 @@
 	<display:column titleKey="comment.writtenMoment" style="text-align:center;">
 		<acme:dateFormat code="date.format2" value="${comment.writtenMoment}"/>
 	</display:column>
-	<jstl:if test="${comment.picture ne null}">
+	
 	<display:column>
+		<jstl:if test="${comment.picture ne null}">
 			<img src="<jstl:out value="${comment.picture}" />" />
+		</jstl:if>
 	</display:column>
-	</jstl:if>
 </display:table>
 
 <security:authorize access="hasRole('USER')">

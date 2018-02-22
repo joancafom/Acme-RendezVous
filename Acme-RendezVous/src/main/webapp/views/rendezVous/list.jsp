@@ -13,6 +13,7 @@
 		text-align:center;
 	}
 </style>
+<jsp:useBean id="now" class="java.util.Date" />
 
 <jstl:if test="${!own}">
 	<display:table name="rendezVouses" id="rendezVous" requestURI="rendezVous${actorWS}/list.do" class="displaytag">
@@ -22,6 +23,9 @@
 			</jstl:if>
 			<jstl:if test="${rendezVous.isDeleted==false}">
 				<p style="color:green;"><strong><spring:message code="rendezVous.public"/></strong></p>
+			</jstl:if>
+			<jstl:if test="${rendezVous.orgDate < now and rendezVous.isDeleted==false}">
+				<p style="color:gray;"><strong><spring:message code="rendezVous.ended"/></strong></p>
 			</jstl:if>
 		</display:column>
 		<display:column titleKey="rendezVous.name">
@@ -47,6 +51,9 @@
 			</jstl:if>
 			<jstl:if test="${rendezVous.isDeleted==false}">
 				<p style="color:green;"><strong><spring:message code="rendezVous.public"/></strong></p>
+			</jstl:if>
+			<jstl:if test="${rendezVous.orgDate < now and rendezVous.isDeleted==false}">
+				<p style="color:gray;"><strong><spring:message code="rendezVous.ended"/></strong></p>
 			</jstl:if>
 		
 		</display:column>
