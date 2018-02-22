@@ -46,13 +46,12 @@
 		<security:intercept-url pattern="/rendezVous/display.do" access="isAnonymous()" /> 
 		<security:intercept-url pattern="/rendezVous/user/create.do" access="hasRole('USER')" />
 		<security:intercept-url pattern="/rendezVous/user/**" access="hasRole('USER')" />
+		<security:intercept-url pattern="/rendezVous/administrator/list.do" access="hasRole('ADMINISTRATOR')" />
+		<security:intercept-url pattern="/rendezVous/administrator/display.do" access="hasRole('ADMINISTRATOR')" />
 
 		<security:intercept-url pattern="/welcome/index.do" access="permitAll" /> 
 		
 		<security:intercept-url pattern="/administrator/display-dashboard.do" access="hasRole('ADMINISTRATOR')" /> 
-
-		<security:intercept-url pattern="/customer/action-1.do" access="hasRole('CUSTOMER')" /> 
-		<security:intercept-url pattern="/customer/action-2.do" access="hasRole('CUSTOMER')" /> 
 
 		<security:intercept-url pattern="/profile/action-1.do" access="isAuthenticated()" /> 
 		<security:intercept-url pattern="/profile/action-2.do" access="isAuthenticated()" /> 

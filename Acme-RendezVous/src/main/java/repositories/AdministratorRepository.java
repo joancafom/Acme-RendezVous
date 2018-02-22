@@ -37,4 +37,7 @@ public interface AdministratorRepository extends JpaRepository<Administrator, In
 	@Query(value = "select rv from RendezVous rv order by rv.attendants.size desc")
 	Page<RendezVous> topMoreRSVP(Pageable pageable);
 
+	@Query("select a from Administrator a where a.userAccount.id=?1")
+	Administrator findByUserAccount(int userAccountId);
+
 }
