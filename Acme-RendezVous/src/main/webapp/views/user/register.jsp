@@ -6,9 +6,6 @@
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
 <spring:message code="user.userAccount.passwordMatch" var="passwordMatchError"></spring:message>
 <script type="text/javascript">
 	function checkData(){
@@ -61,7 +58,7 @@
 	<acme:textbox code="user.email" path="email"/><br>
 	<acme:date code="user.dateOfBirth" path="dateOfBirth"/>
 	
-	<form:checkbox path="termsAndConditions" onchange="checkData()" id="checkbox" name="checkbox" /><spring:message code="user.accept"/> <a href="misc/termsAndConditions.jsp"><spring:message code="user.termsAndConditions"/></a>
+	<form:checkbox path="termsAndConditions" onchange="checkData()" id="checkbox" name="checkbox" /><spring:message code="user.accept"/> <a href="misc/termsAndConditions.do" target="_blank"><spring:message code="user.termsAndConditions"/></a>
 	<br><br>
 	<input type="submit" name="save" value="<spring:message code="user.save"/>" id="boton" disabled="disabled"/>
 	<acme:cancel url="welcome/index.do" code="user.cancel"/>	

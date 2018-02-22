@@ -20,5 +20,16 @@
 		<put-attribute name="title" value="Registrarse como Usuario" />
 		<put-attribute name="body" value="/views/user/register.jsp" />
 	</definition>
+	
+	
+	<definition name="user/list" extends="master.page">
+		<put-attribute name="title" value="Usuarios" />
+		<put-attribute name="body" value="/views/user/list.jsp" />
+	</definition>
+	
+	<definition name="user/display" extends="master.page">
+		<put-attribute name="title" value="Usuario" />
+		<put-attribute name="body" value="/views/user/display.jsp" />
+	</definition>
 		
 </tiles-definitions>

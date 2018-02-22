@@ -110,4 +110,12 @@ public class RendezVousService {
 		return this.rendezVousRepository.findAllNotAdult();
 	}
 
+	public Collection<RendezVous> findAllNotAdultByUser(final User user) {
+		final Collection<RendezVous> notAdult = new HashSet<RendezVous>();
+		for (final RendezVous rv : user.getAttendedRendezVouses())
+			if (rv.getIsForAdults() == false)
+				notAdult.add(rv);
+		return notAdult;
+	}
+
 }
