@@ -49,7 +49,7 @@ public class RendezVousUserController {
 		} else if (show.equals("attended")) {
 			rendezVouses = user.getAttendedRendezVouses();
 			result.addObject("listMode", "all");
-		} else if (user.getAge() < 18) {
+		} else if (show.equals("all") && user.getAge() < 18) {
 			rendezVouses = this.rendezVousService.findAllNotAdult();
 			result.addObject("listMode", "all");
 		} else {
