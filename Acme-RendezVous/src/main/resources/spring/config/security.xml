@@ -46,6 +46,8 @@
 		<security:intercept-url pattern="/rendezVous/display.do" access="isAnonymous()" /> 
 		<security:intercept-url pattern="/rendezVous/user/create.do" access="hasRole('USER')" />
 		<security:intercept-url pattern="/rendezVous/user/**" access="hasRole('USER')" />
+		<security:intercept-url pattern="/rendezVous/user/cancel.do" access="hasRole('USER')" />
+		<security:intercept-url pattern="/rendezVous/user/rsvp.do" access="hasRole('USER')" />
 		<security:intercept-url pattern="/rendezVous/administrator/list.do" access="hasRole('ADMINISTRATOR')" />
 		<security:intercept-url pattern="/rendezVous/administrator/display.do" access="hasRole('ADMINISTRATOR')" />
 

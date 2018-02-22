@@ -41,8 +41,29 @@
 		<display:column class="tableRendezVous">
 			<p><a href="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.display"/></a></p>
 		</display:column>
+		
+		
+		<display:column class="tableRendezVous">
+			<jstl:set var="contains" value="false"/>
+			<jstl:forEach var="attendant" items="${rendezVous.attendants}">
+				<jstl:if test="${attendant eq me}">
+					<jstl:set var="contains" value="true"/>
+				</jstl:if>
+			</jstl:forEach>
+			
+			<jstl:if test="${contains and rendezVous.orgDate >= now and !rendezVous.isDeleted}">
+				<a href="rendezVous/${actorWS}cancel.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.rsvp.cancel"/></a>
+			</jstl:if>
+			
+			<jstl:if test="${!contains and rendezVous.orgDate >= now and !rendezVous.isDeleted}">
+				<a href="rendezVous/${actorWS}rsvp.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.rsvp.accept"/></a>
+			</jstl:if>
+		</display:column>
+		
+		
 	</display:table>
 </jstl:if>
+
 <jstl:if test="${own}">
 	<display:table name="rendezVouses" id="rendezVous" requestURI="rendezVous/user/list.do" class="displaytag">
 		<display:column titleKey="rendezVous.state" class="tableRendezVous">
@@ -99,6 +120,24 @@
 				<a href="rendezVous/user/delete.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.delete"/></a></p>
 			</jstl:if>
 		</display:column>
+		
+		<display:column class="tableRendezVous">
+			<jstl:set var="contains" value="false"/>
+			<jstl:forEach var="attendant" items="${rendezVous.attendants}">
+				<jstl:if test="${attendant eq me}">
+					<jstl:set var="contains" value="true"/>
+				</jstl:if>
+			</jstl:forEach>
+			
+			<jstl:if test="${contains and rendezVous.orgDate >= now and !rendezVous.isDeleted}">
+				<a href="rendezVous/${actorWS}cancel.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.rsvp.cancel"/></a>
+			</jstl:if>
+			
+			<jstl:if test="${!contains and rendezVous.orgDate >= now and !rendezVous.isDeleted}">
+				<a href="rendezVous/${actorWS}rsvp.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.rsvp.accept"/></a>
+			</jstl:if>
+		</display:column>
+		
 	</display:table>
 	
 	<a href="rendezVous/user/create.do"><spring:message code="rendezVous.create"/></a>

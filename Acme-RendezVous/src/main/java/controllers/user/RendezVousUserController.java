@@ -37,6 +37,7 @@ public class RendezVousUserController {
 		ModelAndView result;
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 		final Collection<RendezVous> rendezVouses;
+		final User me = user;
 
 		Assert.notNull(user);
 
@@ -55,6 +56,7 @@ public class RendezVousUserController {
 			rendezVouses = this.rendezVousService.findAll();
 
 		result.addObject("own", own);
+		result.addObject("me", me);
 		result.addObject("actorWS", "user/");
 		result.addObject("rendezVouses", rendezVouses);
 
@@ -78,6 +80,70 @@ public class RendezVousUserController {
 		result.addObject("rendezVous", rendezVous);
 
 		return result;
+	}
+
+	@RequestMapping(value = "/cancel", method = RequestMethod.GET)
+	public ModelAndView cancel(@RequestParam final int rendezVousId) {
+		final ModelAndView res;
+		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
+
+		res = new ModelAndView("rendezVous/cancel");
+		res.addObject("rendezVous", rendezVous);
+
+		return res;
+	}
+
+	@RequestMapping(value = "/cancel", method = RequestMethod.POST)
+	public ModelAndView cancel(@Valid RendezVous rendezVous, final BindingResult binding) {
+		ModelAndView res = null;
+
+		rendezVous = this.rendezVousService.reconstruct(rendezVous, binding);
+
+		res = new ModelAndView("rendezVous/cancel");
+
+		if (binding.hasErrors())
+			res.addObject("rendezVous", rendezVous);
+		else
+			try {
+				this.rendezVousService.cancelRSVP(rendezVous);
+				res = new ModelAndView("redirect:list.do?show=all");
+			} catch (final Throwable oops) {
+				res.addObject("messageCode", "rendezVous.commit.error");
+				res.addObject("rendezVous", rendezVous);
+			}
+		return res;
+	}
+
+	@RequestMapping(value = "/rsvp", method = RequestMethod.GET)
+	public ModelAndView rsvp(@RequestParam final int rendezVousId) {
+		final ModelAndView res;
+		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
+
+		res = new ModelAndView("rendezVous/rsvp");
+		res.addObject("rendezVous", rendezVous);
+
+		return res;
+	}
+
+	@RequestMapping(value = "/rsvp", method = RequestMethod.POST)
+	public ModelAndView rsvp(@Valid RendezVous rendezVous, final BindingResult binding) {
+		ModelAndView res = null;
+
+		rendezVous = this.rendezVousService.reconstruct(rendezVous, binding);
+
+		res = new ModelAndView("rendezVous/rsvp");
+
+		if (binding.hasErrors())
+			res.addObject("rendezVous", rendezVous);
+		else
+			try {
+				this.rendezVousService.acceptRSVP(rendezVous);
+				res = new ModelAndView("redirect:list.do?show=all");
+			} catch (final Throwable oops) {
+				res.addObject("messageCode", "rendezVous.commit.error");
+				res.addObject("rendezVous", rendezVous);
+			}
+		return res;
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)

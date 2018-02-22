@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.RendezVousRepository;
 import security.LoginService;
@@ -33,6 +35,9 @@ public class RendezVousService {
 
 	@Autowired
 	private UserService				userService;
+
+	@Autowired
+	private Validator				validator;
 
 
 	/* Business Methods */
@@ -109,13 +114,60 @@ public class RendezVousService {
 
 		return this.rendezVousRepository.findAllNotAdult();
 	}
-
+	
 	public Collection<RendezVous> findAllNotAdultByUser(final User user) {
 		final Collection<RendezVous> notAdult = new HashSet<RendezVous>();
 		for (final RendezVous rv : user.getAttendedRendezVouses())
 			if (rv.getIsForAdults() == false)
 				notAdult.add(rv);
 		return notAdult;
+	}
+
+	public void cancelRSVP(final RendezVous rendezVous) {
+		Assert.notNull(rendezVous);
+
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(user);
+
+		Assert.isTrue(!rendezVous.getIsDeleted());
+		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
+		Assert.isTrue(rendezVous.getAttendants().contains(user));
+
+		rendezVous.getAttendants().remove(user);
+		user.getAttendedRendezVouses().remove(rendezVous);
+
+		this.rendezVousRepository.save(rendezVous);
+
+	}
+
+	public void acceptRSVP(final RendezVous rendezVous) {
+		Assert.notNull(rendezVous);
+
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(user);
+
+		Assert.isTrue(!rendezVous.getIsDeleted());
+		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
+		Assert.isTrue(!rendezVous.getAttendants().contains(user));
+
+		rendezVous.getAttendants().add(user);
+		user.getAttendedRendezVouses().add(rendezVous);
+
+		this.rendezVousRepository.save(rendezVous);
+
+	}
+
+	public RendezVous reconstruct(final RendezVous rendezVous, final BindingResult binding) {
+		final RendezVous result;
+
+		if (rendezVous.getId() == 0)
+			result = rendezVous;
+		else {
+			result = this.rendezVousRepository.findOne(rendezVous.getId());
+			this.validator.validate(result, binding);
+		}
+
+		return result;
 	}
 
 }
