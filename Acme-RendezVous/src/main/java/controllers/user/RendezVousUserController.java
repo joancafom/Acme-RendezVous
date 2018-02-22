@@ -62,6 +62,26 @@ public class RendezVousUserController {
 
 		return result;
 	}
+
+	@RequestMapping(value = "/display", method = RequestMethod.GET)
+	public ModelAndView display(@RequestParam final int rendezVousId) {
+
+		ModelAndView result;
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
+
+		Assert.notNull(rendezVous);
+
+		if (user.getAge() < 18)
+			Assert.isTrue(!rendezVous.getIsForAdults());
+
+		result = new ModelAndView("rendezVous/display");
+
+		result.addObject("rendezVous", rendezVous);
+
+		return result;
+	}
+
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
 		final ModelAndView result;
