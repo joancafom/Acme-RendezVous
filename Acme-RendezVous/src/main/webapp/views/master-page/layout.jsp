@@ -29,12 +29,10 @@
 <script type="text/javascript" src="scripts/jquery.js"></script>
 <script type="text/javascript" src="scripts/jquery-ui.js"></script>
 <script type="text/javascript" src="scripts/jmenu.js"></script>
-<script type="text/javascript" src="scripts/cookieBanner.js"></script>
 
 <link rel="stylesheet" href="styles/common.css" type="text/css">
 <link rel="stylesheet" href="styles/jmenu.css" media="screen" type="text/css" />
 <link rel="stylesheet" href="styles/displaytag.css" type="text/css">
-<link rel="stylesheet" href="styles/cookieBanner.css" type="text/css">
 
 <title><tiles:insertAttribute name="title" ignore="true" /></title>
 
@@ -61,15 +59,12 @@
 
 </head>
 
-<body style="margin: 0px; font-family: Arial;">
+<body style="margin: 0px;">
 
 	<div>
 		<tiles:insertAttribute name="header" />
 	</div>
 	<div id="content-wrapper">
-	<div>
-		<a href="?language=en">en</a> | <a href="?language=es">es</a>
-	</div>
 	<div>
 		<h1>
 			<tiles:insertAttribute name="title" />
@@ -84,6 +79,5 @@
 	<div>
 		<tiles:insertAttribute name="footer" />
 	</div>
-
 </body>
 </html>

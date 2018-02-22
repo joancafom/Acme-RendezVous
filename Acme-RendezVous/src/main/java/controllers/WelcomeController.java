@@ -45,4 +45,5 @@ public class WelcomeController extends AbstractController {
 
 		return result;
 	}
+
 }

@@ -17,7 +17,7 @@
 	<spring:message code="rendezVous.name" />: <jstl:out value="${rendezVous.name}" />
 </p>
 <p>
-	<spring:message code="rendezVous.creator" />: <a href="user/${actorWS}display.do?userId=<jstl:out value="${rendezVous.creator.id}" />"><jstl:out value="${rendezVous.creator.name}" /></a>
+	<spring:message code="rendezVous.creator" />: <a href="user/${actorWS}display.do?userId=<jstl:out value="${rendezVous.user.id}" />"><jstl:out value="${rendezVous.user.name}" /></a>
 </p>
 <jstl:if test="${rendezVous.isDeleted==true}">
 	<p style="color:red;"><strong><spring:message code="rendezVous.deleted"/></strong></p>
@@ -29,20 +29,11 @@
 <jstl:if test="${rendezVous.isForAdults==true}">
 	<p style="color:red; text-decoration: underline;"><strong>+18</strong></p>
 </jstl:if>
-<p>
-	<jstl:choose>
-		<jstl:when test="${rendezVous.isFinal}">
-			<spring:message code="rendezVous.final" />
-		</jstl:when>
-		<jstl:otherwise>
-			<spring:message code="rendezVous.draft" />
-		</jstl:otherwise>
-	</jstl:choose>
-	
-</p>
+
 <p>
 	<spring:message code="rendezVous.orgDate" />:
-	<acme:dateFormat code="date.format2" value="${rendezVous.orgDate}"/>
+	<spring:message code="date.format2" var="dateFormat"></spring:message>
+	<fmt:formatDate value="${rendezVous.orgDate}" pattern="${dateFormat}" type="date"/>
 </p>
 
 <jstl:if test="${rendezVous.coordinates.latitude ne null and rendezVous.coordinates.longitude ne null}">
@@ -58,24 +49,3 @@
 		<a href="user/${actorWS}display.do?userId=<jstl:out value="${attendant.id}" />"><jstl:out value="${attendant.name}" /></a>
 	</display:column>
 </display:table>
-<h1>
-	<spring:message code="rendezVous.comments" />: 
-</h1>
-<display:table name="rendezVous.comments" id="comment" requestURI="" class="displaytag">
-	<display:column titleKey="comment.text" property="text" style="text-align:center;" />
-	<display:column titleKey="comment.writtenMoment" style="text-align:center;">
-		<acme:dateFormat code="date.format2" value="${comment.writtenMoment}"/>
-	</display:column>
-	
-	<display:column>
-		<jstl:if test="${comment.picture ne null}">
-			<img src="<jstl:out value="${comment.picture}" />" />
-		</jstl:if>
-	</display:column>
-</display:table>
-
-<security:authorize access="hasRole('USER')">
-	<jstl:if test="${canComment ne null and canComment == true}">
-		<a href="comment/user/create.do?rendezVousId=<jstl:out value="${rendezVous.id}" />"><spring:message code="comment.create" /></a>
-	</jstl:if>
-</security:authorize>

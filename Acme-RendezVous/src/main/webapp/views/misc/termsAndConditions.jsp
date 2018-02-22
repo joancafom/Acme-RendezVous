@@ -14,7 +14,7 @@
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
-<jstl:if test="${cookie.language.value eq null or cookie.language.value eq 'en'}">
+<jstl:if test="${cookie.language.value eq 'en'}">
 
 <h3>1. Introduction</h3>
 <p>The current general use conditions of the web page, regulate the terms and conditions of access and 

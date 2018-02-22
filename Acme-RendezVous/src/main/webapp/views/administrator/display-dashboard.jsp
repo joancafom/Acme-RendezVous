@@ -13,13 +13,13 @@
 <spring:message code="number.format" var="numberFormat"/>
 <spring:message code="date.format" var="dateFormat"/>
 
-<p><strong><spring:message code="avg.rendezvousesCreatedPerUser"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgCreatedRendezVousesPerUser}" /></p>
-<p><strong><spring:message code="std.rendezvousesCreatedPerUser"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdDeviationCreatedRendezVousesPerUser}"/></p>
-<p><strong><spring:message code="ratio.usersCreatedRendevouses"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${usersWithCreatedRendezVousesVSUsersWithoutCreatedRendezVouses}"/></p>
-<p><strong><spring:message code="avg.usersPerRendezvous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgUsersPerRendezVous}"/></p>
-<p><strong><spring:message code="std.usersPerRendezvous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdDeviationUsersPerRendezVous}"/></p>
-<p><strong><spring:message code="avg.RSVPPerUser"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgRSVPPerUser}"/></p>
-<p><strong><spring:message code="std.RSVPPerUser"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdDeviationRSVPPerUser}"/>
+<p><spring:message code="avg.rendezvousesCreatedPerUser"/>: <fmt:formatNumber pattern="${numberFormat}" value="${avgCreatedRendezVousesPerUser}" /></p>
+<p><spring:message code="std.rendezvousesCreatedPerUser"/>: <fmt:formatNumber pattern="${numberFormat}" value="${stdDeviationCreatedRendezVousesPerUser}"/></p>
+<p><spring:message code="ratio.usersCreatedRendevouses"/>: <fmt:formatNumber pattern="${numberFormat}" value="${usersWithCreatedRendezVousesVSUsersWithoutCreatedRendezVouses}"/></p>
+<p><spring:message code="avg.usersPerRendezvous"/>: <fmt:formatNumber pattern="${numberFormat}" value="${avgUsersPerRendezVous}"/></p>
+<p><spring:message code="std.usersPerRendezvous"/>: <fmt:formatNumber pattern="${numberFormat}" value="${stdDeviationUsersPerRendezVous}"/></p>
+<p><spring:message code="avg.RSVPPerUser"/>: <fmt:formatNumber pattern="${numberFormat}" value="${avgRSVPPerUser}"/></p>
+<p><spring:message code="std.RSVPPerUser"/>: <fmt:formatNumber pattern="${numberFormat}" value="${stdDeviationRSVPPerUser}"/>
 
 <display:table name="topTenMoreRSVP" id="rendezVous" requestURI="administrator/display-dashboard.do" class="displaytag">
 	<display:column property="name" titleKey="rendezVous.name"/>
