@@ -126,7 +126,7 @@ public class RendezVousUserController {
 		} else
 			try {
 				this.rendezVousService.save(rendezVous);
-				result = new ModelAndView("redirect:listMine.do");
+				result = new ModelAndView("redirect:list.do?show=mine");
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(rendezVous, "rendezVous.commit.error");
 				result.addObject("toEdit", true);
@@ -147,7 +147,7 @@ public class RendezVousUserController {
 			try {
 
 				this.rendezVousService.virtualDelete(rendezVous);
-				result = new ModelAndView("redirect:listMine.do");
+				result = new ModelAndView("redirect:list.do?show=mine");
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(rendezVous, "rendezVous.commit.error");
 				result.addObject("toDelete", true);

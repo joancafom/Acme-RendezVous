@@ -47,6 +47,9 @@
 		<bean class="converters.RendezVousToStringConverter"/>
 		<bean class="converters.StringToRendezVousConverter"/>
 		
+		<bean class="converters.UserAccountToStringConverter"/>
+		<bean class="converters.StringToUserAccountConverter"/>
+		
 		<bean class="converters.UserToStringConverter"/>
 		<bean class="converters.StringToUserConverter"/>
 		

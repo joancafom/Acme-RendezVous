@@ -14,7 +14,7 @@
 
 	<form:hidden path="id"/>
 	<form:hidden path="version"/>
-	<form:hidden path="user"/>
+	<form:hidden path="creator"/>
 	<form:hidden path="attendants"/>
 	<form:hidden path="questions"/>
 	<form:hidden path="comments"/>
@@ -59,7 +59,7 @@
 	
 	<form:hidden path="id"/>
 	<form:hidden path="version"/>
-	<form:hidden path="user"/>
+	<form:hidden path="creator"/>
 	<form:hidden path="attendants"/>
 	<form:hidden path="questions"/>
 	<form:hidden path="comments"/>
