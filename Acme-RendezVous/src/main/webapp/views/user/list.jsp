@@ -28,6 +28,6 @@
 		<acme:dateFormat code="date.format2" value="${user.dateOfBirth}"/>
 	</display:column>
 	<display:column class="tableRendezVous">
-		<a href="user/display.do?userId=${user.id}"><spring:message code="user.display"/></a>
+		<a href="${userURI}${user.id}"><spring:message code="user.display"/></a>
 	</display:column>
 </display:table>

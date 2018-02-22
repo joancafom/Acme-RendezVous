@@ -8,6 +8,8 @@
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
+<jsp:useBean id="now" class="java.util.Date" />
+
 <jstl:if test="${rendezVous.picture ne null}">
 	<p>
 		<img src="<jstl:out value="${rendezVous.picture}" />" style="max-width: 200px;" />
@@ -58,6 +60,15 @@
 		<a href="user/${actorWS}display.do?userId=<jstl:out value="${attendant.id}" />"><jstl:out value="${attendant.name}" /></a>
 	</display:column>
 </display:table>
+
+<jstl:if test="${hasRSVP and rendezVous.orgDate >= now and !rendezVous.isDeleted}">
+	<a href="rendezVous/${actorWS}cancel.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.rsvp.cancel"/></a>
+</jstl:if>
+
+<jstl:if test="${!hasRSVP and rendezVous.orgDate >= now and !rendezVous.isDeleted}">
+	<a href="rendezVous/${actorWS}rsvp.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.rsvp.accept"/></a>
+</jstl:if>
+
 <h1>
 	<spring:message code="rendezVous.comments" />: 
 </h1>

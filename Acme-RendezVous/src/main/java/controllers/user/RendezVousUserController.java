@@ -70,22 +70,21 @@ public class RendezVousUserController extends AbstractController {
 		ModelAndView result;
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
-
+		final boolean hasRSVP = user.getAttendedRendezVouses().contains(rendezVous);
+		
 		Assert.notNull(rendezVous);
 
 		if (user.getAge() < 18)
 			Assert.isTrue(!rendezVous.getIsForAdults());
 
-		final boolean hasRSVP = user.getAttendedRendezVouses().contains(rendezVous);
-
 		result = new ModelAndView("rendezVous/display");
 
 		result.addObject("rendezVous", rendezVous);
 		result.addObject("hasRSVP", hasRSVP);
+		result.addObject("actorWS", "user/");
 
 		return result;
 	}
-
 	@RequestMapping(value = "/cancel", method = RequestMethod.GET)
 	public ModelAndView cancel(@RequestParam final int rendezVousId) {
 		final ModelAndView res;
@@ -98,7 +97,7 @@ public class RendezVousUserController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/cancel", method = RequestMethod.POST)
-	public ModelAndView cancel(@Valid RendezVous rendezVous, final BindingResult binding) {
+	public ModelAndView cancel(RendezVous rendezVous, final BindingResult binding) {
 		ModelAndView res = null;
 
 		rendezVous = this.rendezVousService.reconstruct(rendezVous, binding);
@@ -130,7 +129,7 @@ public class RendezVousUserController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/rsvp", method = RequestMethod.POST)
-	public ModelAndView rsvp(@Valid RendezVous rendezVous, final BindingResult binding) {
+	public ModelAndView rsvp(RendezVous rendezVous, final BindingResult binding) {
 		ModelAndView res = null;
 
 		rendezVous = this.rendezVousService.reconstruct(rendezVous, binding);

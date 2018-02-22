@@ -65,6 +65,8 @@
 		<security:intercept-url pattern="/user/register.do" access="isAnonymous()" /> 
 		<security:intercept-url pattern="/user/list.do" access="isAnonymous()" /> 
 		<security:intercept-url pattern="/user/display.do" access="isAnonymous()" /> 
+		<security:intercept-url pattern="/user/user/list.do" access="hasRole('USER')" /> 
+		<security:intercept-url pattern="/user/user/display.do" access="hasRole('USER')" /> 
 	
 		<security:intercept-url pattern="/**" access="hasRole('NONE')" />
 

@@ -41,7 +41,7 @@
 			<p><jstl:out value="${rendezVous.description}"/></p>
 		</display:column>
 		<display:column titleKey="user.rendezVous.orgDate" class="tableRendezVous">
-			<spring:message code="date.format2" var="dateFormat"></spring:message>
+			<spring:message code="date.format3" var="dateFormat"></spring:message>
 			<p><fmt:formatDate value="${rendezVous.orgDate}" pattern="${dateFormat}" type="both"/></p>
 		</display:column>
 		<display:column class="tableRendezVous">

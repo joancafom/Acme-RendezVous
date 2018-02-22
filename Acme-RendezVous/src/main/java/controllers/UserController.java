@@ -48,6 +48,7 @@ public class UserController extends AbstractController {
 
 		result = new ModelAndView("user/list");
 		result.addObject("users", users);
+		result.addObject("userURI", "user/display.do?userId=");
 
 		return result;
 	}
@@ -62,10 +63,10 @@ public class UserController extends AbstractController {
 		result.addObject("user", user);
 		final Collection<RendezVous> rendezVouses = this.rendezVousService.findAllNotAdultByUser(user);
 		result.addObject("attendedRendezVouses", rendezVouses);
+		result.addObject("actorWS", "");
 
 		return result;
 	}
-
 	@RequestMapping(value = "/register", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(@Valid final UserRegisterForm userRegisterForm, final BindingResult binding) {
 		ModelAndView result;
