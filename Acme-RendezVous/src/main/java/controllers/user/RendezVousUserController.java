@@ -1,6 +1,8 @@
 
 package controllers.user;
 
+import java.util.Collection;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,23 +36,29 @@ public class RendezVousUserController {
 	public ModelAndView list(@RequestParam final String show) {
 		ModelAndView result;
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		final Collection<RendezVous> rendezVouses;
 
 		Assert.notNull(user);
 
 		result = new ModelAndView("rendezVous/list");
 
 		if (show.equals("mine")) {
-			result.addObject("rendezVouses", user.getCreatedRendezVouses());
+			rendezVouses = user.getCreatedRendezVouses();
 			result.addObject("listMode", "mine");
 
 		} else if (show.equals("attended")) {
-			result.addObject("rendezVouses", user.getAttendedRendezVouses());
+			rendezVouses = user.getAttendedRendezVouses();
+			result.addObject("listMode", "all");
+		} else if (user.getAge() < 18) {
+			rendezVouses = this.rendezVousService.findAllNotAdult();
 			result.addObject("listMode", "all");
 		} else {
-			/* TODO: */
+			rendezVouses = this.rendezVousService.findAll();
+			result.addObject("listMode", "all");
 		}
 
 		result.addObject("actorWS", "user/");
+		result.addObject("rendezVouses", rendezVouses);
 
 		return result;
 	}
