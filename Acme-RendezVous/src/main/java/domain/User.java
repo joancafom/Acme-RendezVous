@@ -1,6 +1,7 @@
 
 package domain;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
@@ -38,14 +39,15 @@ public class User extends Actor {
 	@Transient
 	public Integer getAge() {
 		final Date dateOfBirth = this.dateOfBirth;
+		final Calendar c = Calendar.getInstance();
+		c.setTime(dateOfBirth);
 
-		@SuppressWarnings("deprecation")
-		final LocalDate birthdate = new LocalDate(dateOfBirth.getYear(), dateOfBirth.getMonth(), dateOfBirth.getDay());
+		final LocalDate birthdate = LocalDate.fromCalendarFields(c);
 		final LocalDate now = new LocalDate();
 
 		final Years age = Years.yearsBetween(birthdate, now);
 
-		return Integer.valueOf(age.toString());
+		return Integer.valueOf(age.getYears());
 	}
 
 	public void setDateOfBirth(final Date dateOfBirth) {
@@ -70,7 +72,7 @@ public class User extends Actor {
 
 	@NotNull
 	@Valid
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "creator")
 	public Collection<RendezVous> getCreatedRendezVouses() {
 		return this.createdRendezVouses;
 	}

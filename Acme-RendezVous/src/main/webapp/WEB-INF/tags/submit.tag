@@ -24,7 +24,6 @@
 
 <%@ attribute name="name" required="true" %> 
 <%@ attribute name="code" required="true" %>
-<%@ attribute name="id" required="false" %>
 
 <%-- Definition --%>
 

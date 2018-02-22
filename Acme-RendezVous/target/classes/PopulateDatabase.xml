@@ -240,7 +240,7 @@
 		<property name="isFinal" value="true"/>
 		<property name="isDeleted" value="false"/>
 		<property name="isForAdults" value="true"/>
-		<property name="user" ref="user1"></property>
+		<property name="creator" ref="user1"></property>
 		<property name="attendants">
 			<list>
 				<ref bean="user1"/>
@@ -283,7 +283,7 @@
 		<property name="isFinal" value="true"/>
 		<property name="isDeleted" value="false"/>
 		<property name="isForAdults" value="false"/>
-		<property name="user" ref="user3"/>
+		<property name="creator" ref="user3"/>
 		<property name="attendants">
 			<list>
 				<ref bean="user5"/>
@@ -324,7 +324,7 @@
 		<property name="isFinal" value="true"/>
 		<property name="isDeleted" value="false"/>
 		<property name="isForAdults" value="true"/>
-		<property name="user" ref="user1"/>
+		<property name="creator" ref="user1"/>
 		<property name="attendants">
 			<list>
 				<ref bean="user1"/>
@@ -369,7 +369,7 @@
 		<property name="isFinal" value="false"/>
 		<property name="isDeleted" value="true"/>
 		<property name="isForAdults" value="false"/>
-		<property name="user" ref="user4"/>
+		<property name="creator" ref="user4"/>
 		<property name="attendants">
 			<list>
 			</list>
@@ -406,7 +406,7 @@
 		<property name="isFinal" value="false"/>
 		<property name="isDeleted" value="false"/>
 		<property name="isForAdults" value="true"/>
-		<property name="user" ref="user5"/>
+		<property name="creator" ref="user5"/>
 		<property name="attendants">
 			<list>
 			</list>

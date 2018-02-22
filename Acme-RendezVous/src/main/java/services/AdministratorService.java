@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import repositories.AdministratorRepository;
+import security.UserAccount;
+import domain.Administrator;
 import domain.RendezVous;
 
 @Service
@@ -56,5 +58,9 @@ public class AdministratorService {
 	public Collection<RendezVous> getTopTenMoreRSVP() {
 		final Page<RendezVous> rendezVousPage = this.administratorRepository.topMoreRSVP(new PageRequest(0, 10));
 		return rendezVousPage.getContent();
+	}
+
+	public Administrator findByUserAccount(final UserAccount userAccount) {
+		return this.administratorRepository.findByUserAccount(userAccount.getId());
 	}
 }

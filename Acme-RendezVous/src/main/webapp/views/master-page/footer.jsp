@@ -21,3 +21,4 @@
 <hr />
 
 <b>Copyright &copy; <fmt:formatDate value="${date}" pattern="yyyy" /> Sample Co., Inc.</b>
+<a href="misc/identification.do"><spring:message code="footer.identification" /></a>

@@ -48,7 +48,7 @@
 	<form:errors path="isForAdults" cssClass="error"/>
 	<br><br>
 	<acme:submit name="save" code="rendezVous.save"/>
-	<acme:cancel url="rendezVous/user/listMine.do" code="rendezVous.cancel"/>
+	<acme:cancel url="rendezVous/user/list.do?show=mine" code="rendezVous.cancel"/>
 	
 </form:form>
 </jstl:if>
@@ -76,6 +76,6 @@
 	
 	<p><spring:message code="rendezVous.delete.confirmation"/></p>
 	<acme:submit name="delete" code="rendezVous.yes"/>
-	<acme:cancel url="rendezVous/user/listMine.do" code="rendezVous.no"/>
+	<acme:cancel url="rendezVous/user/list.do?show=mine" code="rendezVous.no"/>
 </form:form>
 </jstl:if>
