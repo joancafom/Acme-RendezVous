@@ -10,7 +10,7 @@
 
 <jstl:if test="${rendezVous.picture ne null}">
 	<p>
-		<img src="<jstl:out value="${rendezVous.picture}" />" />
+		<img src="<jstl:out value="${rendezVous.picture}" />" style="max-width: 200px;" />
 	</p>
 </jstl:if>
 <p>
@@ -61,21 +61,24 @@
 <h1>
 	<spring:message code="rendezVous.comments" />: 
 </h1>
-<display:table name="rendezVous.comments" id="comment" requestURI="" class="displaytag">
-	<display:column titleKey="comment.text" property="text" style="text-align:center;" />
-	<display:column titleKey="comment.writtenMoment" style="text-align:center;">
+<display:table name="rendezVous.comments" id="comment" requestURI="" style="text-align:center;" class="displaytag">
+	<display:column titleKey="comment.user">
+		<a href="<jstl:out value="${comment.user.id}" />"><jstl:out value="${comment.user.name}" /></a>
+	</display:column>
+	<display:column titleKey="comment.text" property="text" />
+	<display:column titleKey="comment.writtenMoment">
 		<acme:dateFormat code="date.format2" value="${comment.writtenMoment}"/>
 	</display:column>
 	
 	<display:column>
 		<jstl:if test="${comment.picture ne null}">
-			<img src="<jstl:out value="${comment.picture}" />" />
+			<img src="<jstl:out value="${comment.picture}" />" style="max-width: 200px;" />
 		</jstl:if>
 	</display:column>
 </display:table>
 
 <security:authorize access="hasRole('USER')">
-	<jstl:if test="${canComment ne null and canComment == true}">
+	<jstl:if test="${hasRSVP}">
 		<a href="comment/user/create.do?rendezVousId=<jstl:out value="${rendezVous.id}" />"><spring:message code="comment.create" /></a>
 	</jstl:if>
 </security:authorize>

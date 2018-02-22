@@ -17,12 +17,13 @@ import org.springframework.web.servlet.ModelAndView;
 import security.LoginService;
 import services.RendezVousService;
 import services.UserService;
+import controllers.AbstractController;
 import domain.RendezVous;
 import domain.User;
 
 @Controller
 @RequestMapping("/rendezVous/user")
-public class RendezVousUserController {
+public class RendezVousUserController extends AbstractController {
 
 	/* Services */
 	@Autowired
@@ -75,9 +76,12 @@ public class RendezVousUserController {
 		if (user.getAge() < 18)
 			Assert.isTrue(!rendezVous.getIsForAdults());
 
+		final boolean hasRSVP = user.getAttendedRendezVouses().contains(rendezVous);
+
 		result = new ModelAndView("rendezVous/display");
 
 		result.addObject("rendezVous", rendezVous);
+		result.addObject("hasRSVP", hasRSVP);
 
 		return result;
 	}

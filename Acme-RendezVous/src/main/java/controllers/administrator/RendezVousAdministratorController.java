@@ -14,12 +14,13 @@ import org.springframework.web.servlet.ModelAndView;
 import security.LoginService;
 import services.AdministratorService;
 import services.RendezVousService;
+import controllers.AbstractController;
 import domain.Administrator;
 import domain.RendezVous;
 
 @Controller
 @RequestMapping("/rendezVous/administrator")
-public class RendezVousAdministratorController {
+public class RendezVousAdministratorController extends AbstractController {
 
 	/* Services */
 	@Autowired
