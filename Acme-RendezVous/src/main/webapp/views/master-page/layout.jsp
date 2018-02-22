@@ -61,7 +61,7 @@
 
 </head>
 
-<body style="margin: 0px;">
+<body style="margin: 0px; font-family: Arial;">
 
 	<div>
 		<tiles:insertAttribute name="header" />

@@ -14,7 +14,7 @@
 	}
 </style>
 
-<jstl:if test="${listMode == 'all'}">
+<jstl:if test="${!own}">
 	<display:table name="rendezVouses" id="rendezVous" requestURI="rendezVous${actorWS}/list.do" class="displaytag">
 		<display:column titleKey="rendezVous.state" class="tableRendezVous">
 			<jstl:if test="${rendezVous.isDeleted==true}">
@@ -39,7 +39,7 @@
 		</display:column>
 	</display:table>
 </jstl:if>
-<jstl:if test="${listMode == 'mine'}">
+<jstl:if test="${own}">
 	<display:table name="rendezVouses" id="rendezVous" requestURI="rendezVous/user/listMine.do" class="displaytag">
 		<display:column titleKey="rendezVous.state" class="tableRendezVous">
 			<jstl:if test="${rendezVous.isDeleted==true}">

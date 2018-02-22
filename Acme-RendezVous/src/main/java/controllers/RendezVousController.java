@@ -49,7 +49,7 @@ public class RendezVousController {
 		result = new ModelAndView("rendezVous/list");
 
 		result.addObject("rendezVouses", rendezVouses);
-		result.addObject("listMode", "all");
+		result.addObject("own", false);
 		result.addObject("actorWS", "");
 
 		return result;

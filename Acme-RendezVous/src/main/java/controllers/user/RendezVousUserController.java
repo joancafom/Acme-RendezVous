@@ -41,22 +41,20 @@ public class RendezVousUserController {
 		Assert.notNull(user);
 
 		result = new ModelAndView("rendezVous/list");
+		boolean own = false;
 
 		if (show.equals("mine")) {
 			rendezVouses = user.getCreatedRendezVouses();
-			result.addObject("listMode", "mine");
+			own = true;
 
-		} else if (show.equals("attended")) {
+		} else if (show.equals("attended"))
 			rendezVouses = user.getAttendedRendezVouses();
-			result.addObject("listMode", "all");
-		} else if (show.equals("all") && user.getAge() < 18) {
+		else if (show.equals("all") && user.getAge() < 18)
 			rendezVouses = this.rendezVousService.findAllNotAdult();
-			result.addObject("listMode", "all");
-		} else {
+		else
 			rendezVouses = this.rendezVousService.findAll();
-			result.addObject("listMode", "all");
-		}
 
+		result.addObject("own", own);
 		result.addObject("actorWS", "user/");
 		result.addObject("rendezVouses", rendezVouses);
 
