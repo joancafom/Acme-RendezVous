@@ -42,10 +42,16 @@ public class UserUserController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/display", method = RequestMethod.GET)
-	public ModelAndView display(@RequestParam final int userId) {
+	public ModelAndView display(@RequestParam(required = false) final Integer userId) {
 		ModelAndView result;
-		final User user = this.userService.findOne(userId);
 		final User principal = this.userService.findByUserAccount(LoginService.getPrincipal());
+		final User user;
+
+		if (userId == null)
+			user = principal;
+		else
+			user = this.userService.findOne(userId);
+
 		Assert.notNull(user);
 
 		result = new ModelAndView("user/display");
