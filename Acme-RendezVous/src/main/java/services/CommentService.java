@@ -84,11 +84,23 @@ public class CommentService {
 
 		Assert.notNull(comment);
 
-		this.commentRepository.delete(comment);
+		if (comment.getParentComment() != null)
+			comment.getParentComment().getReplies().remove(comment);
+
+		this.deleteWithReferences(comment);
 
 	}
 
 	//Other Business Methods
+
+	private void deleteWithReferences(final Comment comment) {
+
+		for (final Comment reply : comment.getReplies())
+			this.deleteWithReferences(reply);
+
+		this.commentRepository.delete(comment);
+
+	}
 
 	public Comment reconstructCreate(final Comment prunedComment, final BindingResult binding) {
 

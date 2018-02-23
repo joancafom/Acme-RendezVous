@@ -77,10 +77,24 @@
 	<a href="rendezVous/administrator/remove.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.remove"/></a>
 </security:authorize>
 
+<security:authorize access="isAnonymous()">
+	<!-- Announcements -->
+	<h1>
+		<spring:message code="rendezVous.announcements" />: 
+	</h1>
+	<display:table name="rendezVous.announcements" id="announcement" requestURI="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}" pagesize="3" style="text-align:center;" class="displaytag">
+		<display:column titleKey="announcement.title" property="title" />
+		<display:column titleKey="announcement.description" property="description" />
+		<display:column titleKey="announcement.moment">
+			<acme:dateFormat code="date.format2" value="${announcement.creationMoment}"/>
+		</display:column>
+	</display:table>
+</security:authorize>
+<!-- Comments -->
 <h1>
 	<spring:message code="rendezVous.comments" />: 
 </h1>
-<display:table name="rendezVous.comments" id="comment" requestURI="" style="text-align:center;" class="displaytag">
+<display:table name="rendezVous.comments" id="comment" requestURI="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}" pagesize="5" style="text-align:center;" class="displaytag">
 	<display:column titleKey="comment.user">
 		<a href="user/${actorWS}display.do?userId=<jstl:out value="${comment.user.id}" />"><jstl:out value="${comment.user.name}" /></a>
 	</display:column>
