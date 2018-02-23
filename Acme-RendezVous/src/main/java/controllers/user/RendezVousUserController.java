@@ -113,7 +113,7 @@ public class RendezVousUserController extends AbstractController {
 				this.rendezVousService.cancelRSVP(rendezVous);
 				res = new ModelAndView("redirect:list.do?show=all");
 			} catch (final Throwable oops) {
-				res.addObject("messageCode", "rendezVous.commit.error");
+				res.addObject("message", "rendezVous.commit.error");
 				res.addObject("rendezVous", rendezVous);
 			}
 		return res;
@@ -145,7 +145,7 @@ public class RendezVousUserController extends AbstractController {
 				this.rendezVousService.acceptRSVP(rendezVous);
 				res = new ModelAndView("redirect:list.do?show=all");
 			} catch (final Throwable oops) {
-				res.addObject("messageCode", "rendezVous.commit.error");
+				res.addObject("message", "rendezVous.commit.error");
 				res.addObject("rendezVous", rendezVous);
 			}
 		return res;

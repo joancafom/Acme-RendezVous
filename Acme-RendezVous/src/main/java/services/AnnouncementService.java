@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,10 @@ public class AnnouncementService {
 		return announcement;
 	}
 
+	public Announcement findOne(final int announcementId) {
+		return this.announcementRepository.findOne(announcementId);
+	}
+
 	public Announcement save(final Announcement announcement) {
 
 		Assert.notNull(announcement);
@@ -59,6 +64,22 @@ public class AnnouncementService {
 		return this.announcementRepository.save(announcement);
 	}
 
+	public void delete(final Announcement announcement) {
+
+		Assert.notNull(announcement);
+
+		this.announcementRepository.delete(announcement);
+	}
+
 	//Other Business Methods
+
+	public Collection<Announcement> findByCurrentChronological() {
+
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(user);
+
+		return this.announcementRepository.findByUserIDChronological(user.getId());
+	}
 
 }

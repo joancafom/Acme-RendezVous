@@ -2,6 +2,7 @@
 package controllers.user;
 
 import javax.validation.Valid;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,17 @@ public class AnnouncementUserController extends AbstractController {
 	private RendezVousService	rendezVousService;
 
 
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public ModelAndView list() {
+
+		final ModelAndView res;
+		final Collection<Announcement> announcementStream = this.announcementService.findByCurrentChronological();
+
+		res = new ModelAndView("announcement/list");
+		res.addObject("announcements", announcementStream);
+
+		return res;
+	}
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create(@RequestParam final int rendezVousId) {
 

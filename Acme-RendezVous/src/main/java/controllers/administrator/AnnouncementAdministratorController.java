@@ -9,35 +9,36 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import services.CommentService;
+import services.AnnouncementService;
 import controllers.AbstractController;
-import domain.Comment;
+import domain.Announcement;
 
 @Controller
-@RequestMapping("/comment/administrator")
-public class CommentAdministratorController extends AbstractController {
+@RequestMapping("/announcement/administrator")
+public class AnnouncementAdministratorController extends AbstractController {
 
 	/* Services */
 	@Autowired
-	private CommentService	commentService;
+	private AnnouncementService	announcementService;
 
 
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public ModelAndView delete(@RequestParam final int commentId) {
+	public ModelAndView delete(@RequestParam final int announcementId) {
 
 		ModelAndView res;
-		final Comment comment = this.commentService.findOne(commentId);
+		final Announcement announcement = this.announcementService.findOne(announcementId);
 
-		Assert.notNull(comment);
+		Assert.notNull(announcement);
 
-		res = new ModelAndView("redirect:/rendezVous/administrator/display.do?rendezVousId=" + comment.getRendezVous().getId());
+		res = new ModelAndView("redirect:/rendezVous/administrator/display.do?rendezVousId=" + announcement.getRendezVous().getId());
 
 		try {
-			this.commentService.delete(comment);
+			this.announcementService.delete(announcement);
 		} catch (final Throwable oops) {
-			res.addObject("message", "comment.commit.error");
+			res.addObject("message", "announcement.commit.error");
 		}
 
 		return res;
 	}
+
 }

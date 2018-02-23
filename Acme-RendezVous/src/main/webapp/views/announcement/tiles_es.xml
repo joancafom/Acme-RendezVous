@@ -20,5 +20,10 @@
 		<put-attribute name="title" value="Crear un anuncio" />
 		<put-attribute name="body" value="/views/announcement/edit.jsp" />
 	</definition>
+	
+	<definition name="announcement/list" extends="master.page">
+		<put-attribute name="title" value="Listado de Anuncios" />
+		<put-attribute name="body" value="/views/announcement/list.jsp" />
+	</definition>
 		
 </tiles-definitions>

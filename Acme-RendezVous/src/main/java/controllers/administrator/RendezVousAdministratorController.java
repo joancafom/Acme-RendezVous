@@ -91,7 +91,7 @@ public class RendezVousAdministratorController extends AbstractController {
 				this.rendezVousService.delete(rendezVous);
 				res = new ModelAndView("redirect:list.do?show=all");
 			} catch (final Throwable oops) {
-				res.addObject("messageCode", "rendezVous.commit.error");
+				res.addObject("message", "rendezVous.commit.error");
 				res.addObject("rendezVous", rendezVous);
 			}
 		return res;

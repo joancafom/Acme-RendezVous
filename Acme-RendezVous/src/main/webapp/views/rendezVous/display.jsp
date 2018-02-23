@@ -81,8 +81,8 @@
 	<a href="announcement/user/create.do?rendezVousId=${rendezVous.id}"><spring:message code="announcement.create"/></a>
 </jstl:if>
 
-
-<security:authorize access="isAnonymous()">
+<security:authorize access="!hasRole('USER')">
+>>>>>>> Stashed changes
 	<!-- Announcements -->
 	<h1>
 		<spring:message code="rendezVous.announcements" />: 
@@ -93,6 +93,11 @@
 		<display:column titleKey="announcement.moment">
 			<acme:dateFormat code="date.format2" value="${announcement.creationMoment}"/>
 		</display:column>
+		<security:authorize access="hasRole('ADMINISTRATOR')">
+			<display:column>
+				<a href="announcement/administrator/delete.do?announcementId=<jstl:out value="${announcement.id}" />"><spring:message code="announcement.delete" /></a>
+			</display:column>
+		</security:authorize>
 	</display:table>
 </security:authorize>
 <!-- Comments -->
