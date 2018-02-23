@@ -1,6 +1,8 @@
 
 package repositories;
 
+import java.util.Collection;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,6 +38,18 @@ public interface AdministratorRepository extends JpaRepository<Administrator, In
 
 	@Query(value = "select rv from RendezVous rv order by rv.attendants.size desc")
 	Page<RendezVous> topMoreRSVP(Pageable pageable);
+
+	@Query("select avg(rv.announcements.size) from RendezVous rv")
+	Double avgAnnouncementsPerRendezVous();
+
+	@Query("select sqrt(sum(rv.announcements.size * rv.announcements.size) / count(rv.announcements.size) - avg(rv.announcements.size) * avg(rv.announcements.size)) from RendezVous rv")
+	Double stdAnnouncementsPerRendezVous();
+
+	@Query("select rv1 from RendezVous rv1 where rv1.announcements.size > (select avg(rv2.announcements.size) from RendezVous rv2) * 0.75")
+	Collection<RendezVous> rendezVousAbove75AvgAnnouncements();
+
+	@Query("select rv1 from RendezVous rv1 where rv1.similarRendezVouses.size > (select avg(rv2.similarRendezVouses.size + (select avg(rv3.similarRendezVouses.size) * 0.1 from RendezVous rv3)) from RendezVous rv2)")
+	Collection<RendezVous> rendezVousAboveAvgPlus10SimilarRendezVouses();
 
 	@Query("select a from Administrator a where a.userAccount.id=?1")
 	Administrator findByUserAccount(int userAccountId);

@@ -60,6 +60,22 @@ public class AdministratorService {
 		return rendezVousPage.getContent();
 	}
 
+	public Double getAvgAnnouncementsPerRendezVous() {
+		return this.administratorRepository.avgAnnouncementsPerRendezVous();
+	}
+
+	public Double getStdAnnouncementsPerRendezVous() {
+		return this.administratorRepository.stdAnnouncementsPerRendezVous();
+	}
+
+	public Collection<RendezVous> getRendezVousAbove75AvgAnnouncements() {
+		return this.administratorRepository.rendezVousAbove75AvgAnnouncements();
+	}
+
+	public Collection<RendezVous> getRendezVousAboveAvgPlus10SimilarRendezVouses() {
+		return this.administratorRepository.rendezVousAboveAvgPlus10SimilarRendezVouses();
+	}
+
 	public Administrator findByUserAccount(final UserAccount userAccount) {
 		return this.administratorRepository.findByUserAccount(userAccount.getId());
 	}

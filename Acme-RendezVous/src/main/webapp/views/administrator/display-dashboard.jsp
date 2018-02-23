@@ -21,11 +21,70 @@
 <p><strong><spring:message code="avg.RSVPPerUser"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgRSVPPerUser}"/></p>
 <p><strong><spring:message code="std.RSVPPerUser"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdDeviationRSVPPerUser}"/>
 
-<display:table name="topTenMoreRSVP" id="rendezVous" requestURI="administrator/display-dashboard.do" class="displaytag">
-	<display:column property="name" titleKey="rendezVous.name"/>
+<h4><spring:message code="topTenMoreRSVP"/>:</h4>
+<display:table name="topTenMoreRSVP" id="rendezVous" requestURI="administrator/display-dashboard.do" class="displaytag" pagesize="5">
+	<display:column>
+		<p><a href="rendezVous/administrator/display.do?rendezVousId=${rendezVous.id}"><jstl:out value="${rendezVous.name}"/></a></p>
+	</display:column>
 	<display:column property="orgDate" titleKey="rendezVous.orgDate" format="${dateFormat}"/>
 	<display:column titleKey="rendezVous.coordinates">
-		<p>(Lat: <jstl:out value="${rendezVous.coordinates.latitude}"/>, Long: <jstl:out value="${rendezVous.coordinates.longitude}"/>)</p>
+		<jstl:if test="${rendezVous.coordinates ne null}">
+			<p>(Lat: <jstl:out value="${rendezVous.coordinates.latitude}"/>, Long: <jstl:out value="${rendezVous.coordinates.longitude}"/>)</p>
+		</jstl:if>
+		<jstl:if test="${rendezVous.coordinates eq null}">
+			<p>-</p>
+		</jstl:if>
+	</display:column>
+	<display:column titleKey="rendezVous.restrictions">
+		<jstl:if test="${rendezVous.isForAdults == true}">
+			<p>+18</p>
+		</jstl:if>
+		<jstl:if test="${rendezVous.isForAdults == false}">
+			<p>-</p>
+		</jstl:if>
+	</display:column>
+</display:table>
+
+<p><strong><spring:message code="avg.announcementsPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgAnnouncementsPerRendezVous}"/></p>
+<p><strong><spring:message code="std.announcementsPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdAnnouncementsPerRendezVous}"/></p>
+
+<h4><spring:message code="rendezVousAbove75"/>:</h4>
+<display:table name="rendezVousAbove75" id="rendezVous" requestURI="administrator/display-dashboard.do" class="displaytag" pagesize="5">
+	<display:column>
+		<p><a href="rendezVous/administrator/display.do?rendezVousId=${rendezVous.id}"><jstl:out value="${rendezVous.name}"/></a></p>
+	</display:column>
+	<display:column property="orgDate" titleKey="rendezVous.orgDate" format="${dateFormat}"/>
+	<display:column titleKey="rendezVous.coordinates">
+		<jstl:if test="${rendezVous.coordinates ne null}">
+			<p>(Lat: <jstl:out value="${rendezVous.coordinates.latitude}"/>, Long: <jstl:out value="${rendezVous.coordinates.longitude}"/>)</p>
+		</jstl:if>
+		<jstl:if test="${rendezVous.coordinates eq null}">
+			<p>-</p>
+		</jstl:if>
+	</display:column>
+	<display:column titleKey="rendezVous.restrictions">
+		<jstl:if test="${rendezVous.isForAdults == true}">
+			<p>+18</p>
+		</jstl:if>
+		<jstl:if test="${rendezVous.isForAdults == false}">
+			<p>-</p>
+		</jstl:if>
+	</display:column>
+</display:table>
+
+<h4><spring:message code="rendezVousAboveAvgPlus10"/>:</h4>
+<display:table name="rendezVousAboveAvgPlus10" id="rendezVous" requestURI="administrator/display-dashboard.do" class="displaytag" pagesize="5">
+	<display:column>
+		<p><a href="rendezVous/administrator/display.do?rendezVousId=${rendezVous.id}"><jstl:out value="${rendezVous.name}"/></a></p>
+	</display:column>
+	<display:column property="orgDate" titleKey="rendezVous.orgDate" format="${dateFormat}"/>
+	<display:column titleKey="rendezVous.coordinates">
+		<jstl:if test="${rendezVous.coordinates ne null}">
+			<p>(Lat: <jstl:out value="${rendezVous.coordinates.latitude}"/>, Long: <jstl:out value="${rendezVous.coordinates.longitude}"/>)</p>
+		</jstl:if>
+		<jstl:if test="${rendezVous.coordinates eq null}">
+			<p>-</p>
+		</jstl:if>
 	</display:column>
 	<display:column titleKey="rendezVous.restrictions">
 		<jstl:if test="${rendezVous.isForAdults == true}">

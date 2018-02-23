@@ -69,6 +69,7 @@
 		<security:intercept-url pattern="/user/display.do" access="isAnonymous()" /> 
 		<security:intercept-url pattern="/user/user/list.do" access="hasRole('USER')" /> 
 		<security:intercept-url pattern="/user/user/display.do" access="hasRole('USER')" /> 
+		<security:intercept-url pattern="/user/administrator/display.do" access="hasRole('ADMINISTRATOR')" /> 
 	
 		<security:intercept-url pattern="/**" access="hasRole('NONE')" />
 
