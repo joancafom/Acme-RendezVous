@@ -80,6 +80,14 @@ public class CommentService {
 
 	}
 
+	public void delete(final Comment comment) {
+
+		Assert.notNull(comment);
+
+		this.commentRepository.delete(comment);
+
+	}
+
 	//Other Business Methods
 
 	public Comment reconstructCreate(final Comment prunedComment, final BindingResult binding) {

@@ -94,6 +94,12 @@
 			<img src="<jstl:out value="${comment.picture}" />" style="max-width: 200px;" />
 		</jstl:if>
 	</display:column>
+	
+	<security:authorize access="hasRole('ADMINISTRATOR')">
+		<display:column>
+			<a href="comment/administrator/delete.do?commentId=<jstl:out value="${comment.id}" />"><spring:message code="comment.delete" /></a>
+		</display:column>
+	</security:authorize>
 </display:table>
 
 <security:authorize access="hasRole('USER')">

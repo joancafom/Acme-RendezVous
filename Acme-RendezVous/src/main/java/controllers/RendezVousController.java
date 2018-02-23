@@ -16,7 +16,7 @@ import domain.RendezVous;
 
 @Controller
 @RequestMapping("/rendezVous")
-public class RendezVousController {
+public class RendezVousController extends AbstractController {
 
 	/* Services */
 	@Autowired
