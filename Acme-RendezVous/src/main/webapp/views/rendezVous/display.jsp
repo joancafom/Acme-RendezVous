@@ -121,3 +121,9 @@
 		<a href="comment/user/create.do?rendezVousId=<jstl:out value="${rendezVous.id}" />"><spring:message code="comment.create" /></a>
 	</jstl:if>
 </security:authorize>
+
+<br/>
+
+<jstl:if test="${own}">
+	<a href="announcement/user/create.do?rendezVousId=${rendezVous.id}"><spring:message code="announcement.create"/></a>
+</jstl:if>

@@ -71,7 +71,8 @@ public class RendezVousUserController extends AbstractController {
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
 		final boolean hasRSVP = user.getAttendedRendezVouses().contains(rendezVous);
-		
+		final boolean own = rendezVous.getCreator().equals(user);
+
 		Assert.notNull(rendezVous);
 
 		if (user.getAge() < 18)
@@ -81,6 +82,7 @@ public class RendezVousUserController extends AbstractController {
 
 		result.addObject("rendezVous", rendezVous);
 		result.addObject("hasRSVP", hasRSVP);
+		result.addObject("own", own);
 		result.addObject("actorWS", "user/");
 
 		return result;

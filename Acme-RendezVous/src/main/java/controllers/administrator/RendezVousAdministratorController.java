@@ -61,7 +61,6 @@ public class RendezVousAdministratorController extends AbstractController {
 
 		result.addObject("actorWS", "administrator/");
 		result.addObject("rendezVous", rendezVous);
-		result.addObject("actorWS", "administrator/");
 
 		return result;
 	}
