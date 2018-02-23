@@ -61,20 +61,28 @@
 	</display:column>
 </display:table>
 
-<jstl:if test="${hasRSVP and rendezVous.orgDate >= now and !rendezVous.isDeleted}">
-	<a href="rendezVous/${actorWS}cancel.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.rsvp.cancel"/></a>
-</jstl:if>
+<br/>
 
-<jstl:if test="${!hasRSVP and rendezVous.orgDate >= now and !rendezVous.isDeleted}">
-	<a href="rendezVous/${actorWS}rsvp.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.rsvp.accept"/></a>
-</jstl:if>
+<security:authorize access="hasRole('USER')">
+	<jstl:if test="${hasRSVP and rendezVous.orgDate >= now and !rendezVous.isDeleted}">
+		<h3><a href="rendezVous/${actorWS}cancel.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.rsvp.cancel"/></a></h3>
+	</jstl:if>
+
+	<jstl:if test="${!hasRSVP and rendezVous.orgDate >= now and !rendezVous.isDeleted}">
+		<h3><a href="rendezVous/${actorWS}rsvp.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.rsvp.accept"/></a></h3>
+	</jstl:if>
+</security:authorize>
+
+<security:authorize access="hasRole('ADMINISTRATOR')">
+	<a href="rendezVous/administrator/remove.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.remove"/></a>
+</security:authorize>
 
 <h1>
 	<spring:message code="rendezVous.comments" />: 
 </h1>
 <display:table name="rendezVous.comments" id="comment" requestURI="" style="text-align:center;" class="displaytag">
 	<display:column titleKey="comment.user">
-		<a href="<jstl:out value="${comment.user.id}" />"><jstl:out value="${comment.user.name}" /></a>
+		<a href="user/${actorWS}display.do?userId=<jstl:out value="${comment.user.id}" />"><jstl:out value="${comment.user.name}" /></a>
 	</display:column>
 	<display:column titleKey="comment.text" property="text" />
 	<display:column titleKey="comment.writtenMoment">

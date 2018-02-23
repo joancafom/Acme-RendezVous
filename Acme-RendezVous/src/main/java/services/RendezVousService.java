@@ -37,6 +37,9 @@ public class RendezVousService {
 	private UserService				userService;
 
 	@Autowired
+	private QuestionService			questionService;
+
+	@Autowired
 	private Validator				validator;
 
 
@@ -96,6 +99,23 @@ public class RendezVousService {
 		return result;
 	}
 
+	public void delete(final RendezVous rendezVous) {
+		Assert.notNull(rendezVous);
+
+		Assert.isTrue(this.rendezVousRepository.exists(rendezVous.getId()));
+
+		for (final User u : rendezVous.getAttendants())
+			u.getAttendedRendezVouses().remove(rendezVous);
+
+		for (final RendezVous rv : this.rendezVousRepository.findAll())
+			if (rv.getSimilarRendezVouses().contains(rendezVous))
+				rv.getSimilarRendezVouses().remove(rendezVous);
+
+		for (final Question q : rendezVous.getQuestions())
+			this.questionService.delete(q);
+
+		this.rendezVousRepository.delete(rendezVous);
+	}
 	/* Functional Requirements */
 
 	public void virtualDelete(final RendezVous rendezVous) {
@@ -114,7 +134,7 @@ public class RendezVousService {
 
 		return this.rendezVousRepository.findAllNotAdult();
 	}
-	
+
 	public Collection<RendezVous> findAllNotAdultByUser(final User user) {
 		final Collection<RendezVous> notAdult = new HashSet<RendezVous>();
 		for (final RendezVous rv : user.getAttendedRendezVouses())

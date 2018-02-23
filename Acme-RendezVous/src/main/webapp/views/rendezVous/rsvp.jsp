@@ -16,20 +16,6 @@
 	
 	<form:hidden path="id"/>
 	<form:hidden path="version"/>
-	<%-- <form:hidden path="name"/>
-	<form:hidden path="description"/>
-	<form:hidden path="orgDate"/>
-	<form:hidden path="picture"/>
-	<form:hidden path="coordinates"/>
-	<form:hidden path="isFinal"/>
-	<form:hidden path="isDeleted"/>
-	<form:hidden path="isForAdults"/>
-	<form:hidden path="creator"/>
-	<form:hidden path="attendants"/>
-	<form:hidden path="comments"/>
-	<form:hidden path="similarRendezVouses"/>
-	<form:hidden path="announcements"/>
-	<form:hidden path="questions"/> --%>
 
 	<input type="submit" id="submitButton" value="<spring:message code="rendezVous.rsvp.accept"/>">
 	<input type="button" name="back" value="<spring:message code="rendezVous.back"/>" onclick="javascript: relativeRedir('rendezVous/user/list.do?show=all');" />

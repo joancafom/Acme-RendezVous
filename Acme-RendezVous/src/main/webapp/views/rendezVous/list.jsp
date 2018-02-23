@@ -42,7 +42,7 @@
 			<p><a href="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.display"/></a></p>
 		</display:column>
 		
-		
+		<security:authorize access="hasRole('USER')">
 		<display:column class="tableRendezVous">
 			<jstl:set var="contains" value="false"/>
 			<jstl:forEach var="attendant" items="${rendezVous.attendants}">
@@ -59,6 +59,13 @@
 				<a href="rendezVous/${actorWS}rsvp.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.rsvp.accept"/></a>
 			</jstl:if>
 		</display:column>
+		</security:authorize>
+		
+		<security:authorize access="hasRole('ADMINISTRATOR')">
+		<display:column class="tableRendezVous">
+			<a href="rendezVous/administrator/remove.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.remove"/></a>
+		</display:column>
+		</security:authorize>
 		
 		
 	</display:table>
@@ -120,6 +127,7 @@
 				<a href="rendezVous/user/delete.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.delete"/></a></p>
 			</jstl:if>
 		</display:column>
+		
 		
 		<display:column class="tableRendezVous">
 			<jstl:set var="contains" value="false"/>

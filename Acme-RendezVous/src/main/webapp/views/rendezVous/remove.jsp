@@ -8,15 +8,15 @@
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
-<h3><spring:message code="rendezVous.rsvp.cancel.confirmation"/></h3>
+<h3><spring:message code="rendezVous.remove.confirmation"/></h3>
 
 <br/>
 
-<form:form action="rendezVous/user/cancel.do" modelAttribute="rendezVous">
+<form:form action="rendezVous/administrator/remove.do" modelAttribute="rendezVous">
 	
 	<form:hidden path="id"/>
 	<form:hidden path="version"/>
 
-	<input type="submit" id="submitButton" value="<spring:message code="rendezVous.rsvp.cancel"/>">
-	<input type="button" name="back" value="<spring:message code="rendezVous.back"/>" onclick="javascript: relativeRedir('rendezVous/user/list.do?show=all');" />
+	<input type="submit" id="submitButton" value="<spring:message code="rendezVous.remove"/>">
+	<input type="button" name="back" value="<spring:message code="rendezVous.back"/>" onclick="javascript: relativeRedir('rendezVous/administrator/list.do?show=all');" />
 </form:form>	

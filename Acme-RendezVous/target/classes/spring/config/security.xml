@@ -53,6 +53,7 @@
 		<security:intercept-url pattern="/rendezVous/user/rsvp.do" access="hasRole('USER')" />
 		<security:intercept-url pattern="/rendezVous/administrator/list.do" access="hasRole('ADMINISTRATOR')" />
 		<security:intercept-url pattern="/rendezVous/administrator/display.do" access="hasRole('ADMINISTRATOR')" />
+		<security:intercept-url pattern="/rendezVous/administrator/remove.do" access="hasRole('ADMINISTRATOR')" />
 
 		<security:intercept-url pattern="/welcome/index.do" access="permitAll" /> 
 		
