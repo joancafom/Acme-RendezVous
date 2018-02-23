@@ -77,6 +77,11 @@
 	<a href="rendezVous/administrator/remove.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.remove"/></a>
 </security:authorize>
 
+<jstl:if test="${own}">
+	<a href="announcement/user/create.do?rendezVousId=${rendezVous.id}"><spring:message code="announcement.create"/></a>
+</jstl:if>
+
+
 <security:authorize access="isAnonymous()">
 	<!-- Announcements -->
 	<h1>
@@ -125,5 +130,17 @@
 <br/>
 
 <jstl:if test="${own}">
-	<a href="announcement/user/create.do?rendezVousId=${rendezVous.id}"><spring:message code="announcement.create"/></a>
+	<h1><spring:message code="rendezVous.questions"/></h1>
+	
+	<display:table name="rendezVous.questions" id="question" requestURI="rendezVous/user/display.do?rendezVousId=${rendezVous.id}" pagesize="5" style="text-align:center;" class="displaytag">
+		<display:column titleKey="question.text">
+			<a href="question/user/display.do?questionId=${question.id}"><jstl:out value="${question.text}"/></a>
+		</display:column>
+		
+		<display:column>
+			<a href="question/user/delete.do?questionId=${question.id}"><spring:message code="question.delete" /></a>
+		</display:column>
+	</display:table>
+	
+	<a href="question/user/create.do?rendezVousId=${rendezVous.id}"><spring:message code="question.create"/></a>
 </jstl:if>

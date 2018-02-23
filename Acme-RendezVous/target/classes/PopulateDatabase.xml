@@ -193,7 +193,7 @@
 	<!-- Question -->
 	
 	<bean id="question1" class="domain.Question">
-		<property name="question" value="Will you bring a professional camera?"/>
+		<property name="text" value="Will you bring a professional camera?"/>
 		<property name="rendezVous" ref="rendezVous2"/>
 		<property name="answers">
 			<list>
@@ -204,7 +204,7 @@
 	</bean>
 	
 	<bean id="question2" class="domain.Question">
-		<property name="question" value="What kind of music do you like?"/>
+		<property name="text" value="What kind of music do you like?"/>
 		<property name="rendezVous" ref="rendezVous3"/>
 		<property name="answers">
 			<list>
@@ -215,7 +215,7 @@
 	</bean>
 	
 	<bean id="question3" class="domain.Question">
-		<property name="question" value="Are you working in the music industry?"/>
+		<property name="text" value="Are you working in the music industry?"/>
 		<property name="rendezVous" ref="rendezVous3"/>
 		<property name="answers">
 			<list>
@@ -585,37 +585,37 @@
 	<!-- Answer -->
 	 
 	<bean id="answer1" class="domain.Answer">
-		<property name="answer" value="Yes! I'll bring my new Canon."/>
+		<property name="text" value="Yes! I'll bring my new Canon."/>
 		<property name="user" ref="user1"/>
 		<property name="question" ref="question1"/>
 	</bean>
 	
 	<bean id="answer2" class="domain.Answer">
-		<property name="answer" value="No, I'll bring my phone."/>
+		<property name="text" value="No, I'll bring my phone."/>
 		<property name="user" ref="user5"/>
 		<property name="question" ref="question1"/>
 	</bean>
 	
 	<bean id="answer3" class="domain.Answer">
-		<property name="answer" value="Pop and Rock."/>
+		<property name="text" value="Pop and Rock."/>
 		<property name="user" ref="user2"/>
 		<property name="question" ref="question2"/>
 	</bean>
 	
 	<bean id="answer4" class="domain.Answer">
-		<property name="answer" value="Pop, Indie, Soundtracks, Classical and more."/>
+		<property name="text" value="Pop, Indie, Soundtracks, Classical and more."/>
 		<property name="user" ref="user6"/>
 		<property name="question" ref="question2"/>
 	</bean>
 	
 	<bean id="answer5" class="domain.Answer">
-		<property name="answer" value="I work some weekends singing in a club."/>
+		<property name="text" value="I work some weekends singing in a club."/>
 		<property name="user" ref="user2"/>
 		<property name="question" ref="question3"/>
 	</bean>
 	
 	<bean id="answer6" class="domain.Answer">
-		<property name="answer" value="No, I've never worked as a singer."/>
+		<property name="text" value="No, I've never worked as a singer."/>
 		<property name="user" ref="user6"/>
 		<property name="question" ref="question3"/>
 	</bean>

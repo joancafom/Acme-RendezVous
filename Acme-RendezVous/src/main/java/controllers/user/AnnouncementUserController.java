@@ -1,6 +1,8 @@
 
 package controllers.user;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -55,7 +57,7 @@ public class AnnouncementUserController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
-	public ModelAndView edit(final Announcement announcement, final BindingResult binding) {
+	public ModelAndView edit(@Valid final Announcement announcement, final BindingResult binding) {
 
 		ModelAndView res;
 
@@ -86,6 +88,7 @@ public class AnnouncementUserController extends AbstractController {
 
 		final ModelAndView result;
 		result = new ModelAndView("announcement/edit");
+		result.addObject("rendezVousId", announcement.getRendezVous().getId());
 		result.addObject("announcement", announcement);
 		result.addObject("message", message);
 

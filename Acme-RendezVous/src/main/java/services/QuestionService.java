@@ -1,20 +1,26 @@
 
 package services;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.QuestionRepository;
+import security.LoginService;
 import domain.Answer;
 import domain.Question;
+import domain.RendezVous;
+import domain.User;
 
 @Service
 @Transactional
 public class QuestionService {
 
-	/* Repositories */
+	// Repository and services --------------
 
 	@Autowired
 	private QuestionRepository	questionRepository;
@@ -22,8 +28,43 @@ public class QuestionService {
 	@Autowired
 	private AnswerService		answerService;
 
+	@Autowired
+	private UserService			userService;
 
-	/* Business Methods */
+
+	// CRUD methods -------------------------
+
+	public Question create(final RendezVous rendezVous) {
+
+		final Question question = new Question();
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(rendezVous);
+		Assert.isTrue(rendezVous.getCreator().equals(user));
+
+		final Collection<Answer> answers = new HashSet<Answer>();
+
+		question.setRendezVous(rendezVous);
+		question.setAnswers(answers);
+
+		return question;
+	}
+
+	public Question save(final Question question) {
+
+		Assert.notNull(question);
+
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.isTrue(question.getId() == 0);
+		Assert.isTrue(question.getRendezVous().getCreator().equals(user));
+
+		return this.questionRepository.save(question);
+	}
+
+	public Question findOne(final int questionId) {
+		return this.questionRepository.findOne(questionId);
+	}
 
 	public void delete(final Question question) {
 		Assert.notNull(question);
