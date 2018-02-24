@@ -15,4 +15,10 @@ public interface RendezVousRepository extends JpaRepository<RendezVous, Integer>
 	@Query("select r from RendezVous r where r.isForAdults = false")
 	Collection<RendezVous> findAllNotAdult();
 
+	@Query("select r from RendezVous r where r.creator.id !=?1")
+	Collection<RendezVous> findAllExceptCreatedByUser(int id);
+
+	@Query("select r from RendezVous r where r.isForAdults=false and r.creator.id!=?1")
+	Collection<RendezVous> findAllNotAdultExceptCreatedByUser(int id);
+
 }

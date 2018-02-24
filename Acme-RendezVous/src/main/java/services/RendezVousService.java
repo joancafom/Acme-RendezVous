@@ -21,6 +21,7 @@ import domain.GPSCoordinates;
 import domain.Question;
 import domain.RendezVous;
 import domain.User;
+import forms.SimilarRendezVousForm;
 
 @Service
 @Transactional
@@ -188,6 +189,40 @@ public class RendezVousService {
 		}
 
 		return result;
+	}
+
+	public Collection<RendezVous> findAllExceptCreatedByUser(final User user) {
+		return this.rendezVousRepository.findAllExceptCreatedByUser(user.getId());
+	}
+
+	public Collection<RendezVous> findAllNotAdultExceptCreatedByUser(final User user) {
+		return this.rendezVousRepository.findAllNotAdultExceptCreatedByUser(user.getId());
+	}
+
+	public RendezVous getSimilarRendezVousByForm(final SimilarRendezVousForm rendezVous) {
+		return this.rendezVousRepository.findOne(rendezVous.getRendezVous());
+	}
+
+	public RendezVous getParentRendezVousByForm(final SimilarRendezVousForm rendezVous) {
+		return this.rendezVousRepository.findOne(rendezVous.getId());
+	}
+
+	public void addSimilarRendezVous(final RendezVous pRV, final RendezVous sRV) {
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.isTrue(pRV.getCreator().equals(user));
+		Assert.isTrue(user.getCreatedRendezVouses().contains(pRV));
+		Assert.isTrue(!pRV.getSimilarRendezVouses().contains(sRV));
+		Assert.isTrue(pRV.getIsDeleted() == false);
+		pRV.getSimilarRendezVouses().add(sRV);
+	}
+
+	public void deleteSimilarRendezVous(final RendezVous pRV, final RendezVous sRV) {
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.isTrue(pRV.getCreator().equals(user));
+		Assert.isTrue(user.getCreatedRendezVouses().contains(pRV));
+		Assert.isTrue(pRV.getSimilarRendezVouses().contains(sRV));
+		Assert.isTrue(pRV.getIsDeleted() == false);
+		pRV.getSimilarRendezVouses().remove(sRV);
 	}
 
 }

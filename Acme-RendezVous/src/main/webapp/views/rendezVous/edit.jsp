@@ -79,3 +79,25 @@
 	<acme:cancel url="rendezVous/user/list.do?show=mine" code="rendezVous.no"/>
 </form:form>
 </jstl:if>
+
+<jstl:if test="${toAddLink==true}">
+<form:form action="rendezVous/user/editLink.do" modelAttribute="rendezVousForm">
+	<form:hidden path="id"/>
+	<acme:select items="${rendezVouses}" itemLabel="name" code="rendezVous.selectRendezVous" path="rendezVous"/>
+	<br><br>
+	<acme:submit name="save" code="rendezVous.save"/>
+	<acme:cancel url="rendezVous/user/display.do?rendezVousId=${rendezVousForm.id}" code="rendezVous.cancel"/>
+</form:form>
+</jstl:if>
+
+<jstl:if test="${toDeleteLink==true}">
+<form:form action="rendezVous/user/deleteLink.do" modelAttribute="rendezVousForm">
+	<form:hidden path="id"/>
+	<form:hidden path="rendezVous"/>
+	
+	<p><spring:message code="rendezVous.link.deleteConfirmation"/></p>
+	
+	<acme:submit name="delete" code="rendezVous.delete"/>
+	<acme:cancel url="rendezVous/user/display.do?rendezVousId=${rendezVousForm.id}" code="rendezVous.cancel"/>
+</form:form>
+</jstl:if>

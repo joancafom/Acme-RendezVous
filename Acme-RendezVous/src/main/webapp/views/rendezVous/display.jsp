@@ -9,6 +9,9 @@
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
 <jsp:useBean id="now" class="java.util.Date" />
+<jstl:set var="rvid" value="${rendezVous.id}"/>
+<jstl:set var="isDeleted" value="${rendezVous.isDeleted}"/>
+
 
 <jstl:if test="${rendezVous.picture ne null}">
 	<p>
@@ -55,6 +58,47 @@
 <p>
 	<spring:message code="rendezVous.description" />: <jstl:out value="${rendezVous.description}" />
 </p>
+
+<!-- Similar RendezVouses -->
+<h2><spring:message code="rendezVous.similarRendezVouses"/></h2>
+<display:table name="rendezVous.similarRendezVouses" id="rendezVous" requestURI="" class="displaytag" style="width:50%;">
+	<display:column titleKey="rendezVous.state" class="tableRendezVous">
+		<jstl:if test="${rendezVous.isDeleted==true}">
+			<p style="color:red;"><strong><spring:message code="rendezVous.deleted"/></strong></p>
+		</jstl:if>
+		<jstl:if test="${rendezVous.isDeleted==false}">
+			<p style="color:green;"><strong><spring:message code="rendezVous.public"/></strong></p>
+		</jstl:if>
+		<jstl:if test="${rendezVous.orgDate < now and rendezVous.isDeleted==false}">
+			<p style="color:gray;"><strong><spring:message code="rendezVous.ended"/></strong></p>
+		</jstl:if>
+	</display:column>
+	<display:column titleKey="rendezVous.name">
+		<p><jstl:out value="${rendezVous.name}"/></p>
+	</display:column>
+	<display:column titleKey="rendezVous.description">
+		<p><jstl:out value="${rendezVous.description}"/></p>
+	</display:column>
+	<display:column titleKey="rendezVous.orgDate" class="tableRendezVous">
+		<spring:message code="date.format2" var="dateFormat"></spring:message>
+		<p><fmt:formatDate value="${rendezVous.orgDate}" pattern="${dateFormat}" type="both"/></p>
+	</display:column>
+	<display:column class="tableRendezVous">
+		<p><a href="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.display"/></a></p>
+	</display:column>
+	<jstl:if test="${own && isDeleted==false}">
+		<display:column class="tableRendezVous">
+			<p><a href="rendezVous/user/deleteLink.do?similarRendezVousId=${rendezVous.id}&parentRendezVousId=${rvid}"><spring:message code="rendezVous.delete"/></a></p>
+		</display:column>
+	</jstl:if>
+</display:table>
+
+<jstl:if test="${own && isDeleted==false}">
+	<a href="rendezVous/user/createLink.do?rendezVousId=${rvid}"><spring:message code="rendezVous.createLink"/></a>
+</jstl:if>
+
+
+
 <display:table name="rendezVous.attendants" id="attendant" requestURI="" class="displaytag" style="width:25%;">
 	<display:column titleKey="rendezVous.attendants" style="text-align:center;">
 		<a href="user/${actorWS}display.do?userId=<jstl:out value="${attendant.id}" />"><jstl:out value="${attendant.name}" /></a>
@@ -82,7 +126,6 @@
 </jstl:if>
 
 <security:authorize access="!hasRole('USER')">
->>>>>>> Stashed changes
 	<!-- Announcements -->
 	<h1>
 		<spring:message code="rendezVous.announcements" />: 

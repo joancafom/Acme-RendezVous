@@ -20,6 +20,7 @@ import services.UserService;
 import controllers.AbstractController;
 import domain.RendezVous;
 import domain.User;
+import forms.SimilarRendezVousForm;
 
 @Controller
 @RequestMapping("/rendezVous/user")
@@ -187,6 +188,40 @@ public class RendezVousUserController extends AbstractController {
 
 	}
 
+	@RequestMapping(value = "/createLink", method = RequestMethod.GET)
+	public ModelAndView createLink(@RequestParam final int rendezVousId) {
+		final ModelAndView result;
+		final SimilarRendezVousForm rendezVous = new SimilarRendezVousForm();
+		rendezVous.setId(rendezVousId);
+
+		result = this.createEditModelAndView(rendezVous);
+		result.addObject("toAddLink", true);
+
+		return result;
+
+	}
+
+	@RequestMapping(value = "/deleteLink", method = RequestMethod.GET)
+	public ModelAndView deleteLink(@RequestParam final int parentRendezVousId, @RequestParam final int similarRendezVousId) {
+		final ModelAndView result;
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		final RendezVous parentRendezVous = this.rendezVousService.findOne(parentRendezVousId);
+		final RendezVous similarRendezVous = this.rendezVousService.findOne(similarRendezVousId);
+
+		Assert.isTrue(user.getCreatedRendezVouses().contains(parentRendezVous));
+		Assert.isTrue(parentRendezVous.getSimilarRendezVouses().contains(similarRendezVous));
+
+		final SimilarRendezVousForm rendezVous = new SimilarRendezVousForm();
+		rendezVous.setId(parentRendezVousId);
+		rendezVous.setRendezVous(similarRendezVousId);
+
+		result = this.createEditModelAndView(rendezVous);
+		result.addObject("toDeleteLink", true);
+
+		return result;
+
+	}
+
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(@Valid final RendezVous rendezVous, final BindingResult binding) {
 		ModelAndView result;
@@ -228,6 +263,50 @@ public class RendezVousUserController extends AbstractController {
 
 	}
 
+	@RequestMapping(value = "/editLink", method = RequestMethod.POST, params = "save")
+	public ModelAndView saveLink(@Valid final SimilarRendezVousForm rendezVous, final BindingResult binding) {
+		ModelAndView result;
+
+		if (binding.hasErrors()) {
+			result = this.createEditModelAndView(rendezVous);
+			result.addObject("toAddLink", true);
+		} else
+			try {
+				final RendezVous sRV = this.rendezVousService.getSimilarRendezVousByForm(rendezVous);
+				final RendezVous pRV = this.rendezVousService.getParentRendezVousByForm(rendezVous);
+				this.rendezVousService.addSimilarRendezVous(pRV, sRV);
+				result = new ModelAndView("redirect:display.do?rendezVousId=" + pRV.getId());
+			} catch (final Throwable oops) {
+				result = this.createEditModelAndView(rendezVous, "rendezVous.commit.error");
+				result.addObject("toAddLink", true);
+			}
+
+		return result;
+
+	}
+
+	@RequestMapping(value = "/deleteLink", method = RequestMethod.POST, params = "delete")
+	public ModelAndView deleteLink(@Valid final SimilarRendezVousForm rendezVous, final BindingResult binding) {
+		ModelAndView result;
+
+		if (binding.hasErrors()) {
+			result = this.createEditModelAndView(rendezVous);
+			result.addObject("toDeleteLink", true);
+		} else
+			try {
+				final RendezVous sRV = this.rendezVousService.getSimilarRendezVousByForm(rendezVous);
+				final RendezVous pRV = this.rendezVousService.getParentRendezVousByForm(rendezVous);
+				this.rendezVousService.deleteSimilarRendezVous(pRV, sRV);
+				result = new ModelAndView("redirect:display.do?rendezVousId=" + pRV.getId());
+			} catch (final Throwable oops) {
+				result = this.createEditModelAndView(rendezVous, "rendezVous.commit.error");
+				result.addObject("toDeleteLink", true);
+			}
+
+		return result;
+
+	}
+
 	protected ModelAndView createEditModelAndView(final RendezVous rendezVous) {
 		ModelAndView result;
 		result = this.createEditModelAndView(rendezVous, null);
@@ -239,6 +318,30 @@ public class RendezVousUserController extends AbstractController {
 		result = new ModelAndView("rendezVous/edit");
 		result.addObject("rendezVous", rendezVous);
 		result.addObject("message", message);
+
+		return result;
+	}
+
+	protected ModelAndView createEditModelAndView(final SimilarRendezVousForm rendezVous) {
+		ModelAndView result;
+		result = this.createEditModelAndView(rendezVous, null);
+		return result;
+	}
+
+	private ModelAndView createEditModelAndView(final SimilarRendezVousForm rendezVous, final String message) {
+		final ModelAndView result;
+		result = new ModelAndView("rendezVous/edit");
+		result.addObject("rendezVousForm", rendezVous);
+		result.addObject("message", message);
+
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Collection<RendezVous> rendezVouses;
+		if (user.getAge() >= 18)
+			rendezVouses = this.rendezVousService.findAllExceptCreatedByUser(user);
+		else
+			rendezVouses = this.rendezVousService.findAllNotAdultExceptCreatedByUser(user);
+
+		result.addObject("rendezVouses", rendezVouses);
 
 		return result;
 	}
