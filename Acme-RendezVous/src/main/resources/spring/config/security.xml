@@ -54,6 +54,10 @@
 		<security:intercept-url pattern="/announcement/user/edit.do" access="hasRole('USER')"/> 
 		<security:intercept-url pattern="/announcement/administrator/delete.do" access="hasRole('ADMINISTRATOR')"/> 
 		
+		<security:intercept-url pattern="/answer/list.do" access="isAnonymous()"/> 
+		<security:intercept-url pattern="/answer/user/list.do" access="hasRole('USER')"/> 
+		<security:intercept-url pattern="/answer/administrator/list.do" access="hasRole('ADMINISTRATOR')"/> 
+		
 		<security:intercept-url pattern="/comment/user/create.do" access="hasRole('USER')" />
 		<security:intercept-url pattern="/comment/user/edit.do" access="hasRole('USER')" />
 		<security:intercept-url pattern="/comment/administrator/delete.do" access="hasRole('ADMINISTRATOR')" />

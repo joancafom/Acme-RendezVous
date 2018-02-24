@@ -54,4 +54,10 @@ public interface AdministratorRepository extends JpaRepository<Administrator, In
 	@Query("select a from Administrator a where a.userAccount.id=?1")
 	Administrator findByUserAccount(int userAccountId);
 
+	@Query("select avg(rv.questions.size) from RendezVous rv")
+	Double avgQuestionsPerRendezVous();
+
+	@Query("select sqrt(sum(rv.questions.size * rv.questions.size) / count(rv.questions.size) - avg(rv.questions.size) * avg(rv.questions.size)) from RendezVous rv")
+	Double stdQuestionsPerRendezVous();
+
 }

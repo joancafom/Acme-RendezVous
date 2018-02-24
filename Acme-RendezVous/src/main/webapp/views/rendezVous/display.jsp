@@ -97,14 +97,20 @@
 	<a href="rendezVous/user/createLink.do?rendezVousId=${rvid}"><spring:message code="rendezVous.createLink"/></a>
 </jstl:if>
 
-
+<!-- Attendants -->
+<h2><spring:message code="rendezVous.attendants"/></h2>
 
 <display:table name="rendezVous.attendants" id="attendant" requestURI="" class="displaytag" style="width:25%;">
 	<display:column titleKey="rendezVous.attendants" style="text-align:center;">
 		<a href="user/${actorWS}display.do?userId=<jstl:out value="${attendant.id}" />"><jstl:out value="${attendant.name}" /></a>
 	</display:column>
+	<display:column titleKey="attendant.surnames" property="surnames" style="text-align:center;" />
+	<jstl:if test="${not empty rendezVous.questions}">
+		<display:column>
+			<a href="answer/${actorWS}list.do?rendezVousId=<jstl:out value="${rendezVous.id}" />&userId=<jstl:out value="${attendant.id}" />" ><spring:message code="answers.show" /></a>
+		</display:column>
+	</jstl:if>
 </display:table>
-
 <br/>
 
 <security:authorize access="hasRole('USER')">

@@ -25,6 +25,7 @@
 		
 		<value>/views/administrator/messages</value>
 		<value>/views/announcement/messages</value>
+		<value>/views/answer/messages</value>
 		<value>/views/comment/messages</value>
 		<value>/views/question/messages</value>
 		<value>/views/rendezVous/messages</value>
