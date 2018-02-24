@@ -76,6 +76,22 @@ public class AdministratorService {
 		return this.administratorRepository.rendezVousAboveAvgPlus10SimilarRendezVouses();
 	}
 
+	public Double getAvgQuestionsPerRendezVous() {
+		return this.administratorRepository.avgQuestionsPerRendezVous();
+	}
+
+	public Double getStdQuestionsPerRendezVous() {
+		return this.administratorRepository.stdQuestionsPerRendezVous();
+	}
+
+	public Double getAvgRepliesPerComment() {
+		return this.administratorRepository.avgRepliesPerComment();
+	}
+
+	public Double getStdRepliesPerComment() {
+		return this.administratorRepository.stdRepliesPerComment();
+	}
+
 	public Administrator findByUserAccount(final UserAccount userAccount) {
 		return this.administratorRepository.findByUserAccount(userAccount.getId());
 	}

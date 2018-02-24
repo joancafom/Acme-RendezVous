@@ -60,4 +60,10 @@ public interface AdministratorRepository extends JpaRepository<Administrator, In
 	@Query("select sqrt(sum(rv.questions.size * rv.questions.size) / count(rv.questions.size) - avg(rv.questions.size) * avg(rv.questions.size)) from RendezVous rv")
 	Double stdQuestionsPerRendezVous();
 
+	@Query("select avg(c.replies.size) from Comment c")
+	Double avgRepliesPerComment();
+
+	@Query("select sqrt(sum(c.replies.size * c.replies.size) / count(c.replies.size) - avg(c.replies.size) * avg(c.replies.size)) from Comment c")
+	Double stdRepliesPerComment();
+
 }

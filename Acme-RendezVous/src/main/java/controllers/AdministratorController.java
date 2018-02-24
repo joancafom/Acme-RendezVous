@@ -45,6 +45,10 @@ public class AdministratorController extends AbstractController {
 		res.addObject("topTenMoreRSVP", this.administratorService.getTopTenMoreRSVP());
 		res.addObject("avgAnnouncementsPerRendezVous", this.administratorService.getAvgAnnouncementsPerRendezVous());
 		res.addObject("stdAnnouncementsPerRendezVous", this.administratorService.getStdAnnouncementsPerRendezVous());
+		res.addObject("avgQuestionsPerRendezVous", this.administratorService.getAvgQuestionsPerRendezVous());
+		res.addObject("stdQuestionsPerRendezVous", this.administratorService.getStdQuestionsPerRendezVous());
+		res.addObject("avgRepliesPerComment", this.administratorService.getAvgRepliesPerComment());
+		res.addObject("stdRepliesPerComment", this.administratorService.getStdRepliesPerComment());
 		res.addObject("rendezVousAbove75", this.administratorService.getRendezVousAbove75AvgAnnouncements());
 		res.addObject("rendezVousAboveAvgPlus10", this.administratorService.getRendezVousAboveAvgPlus10SimilarRendezVouses());
 

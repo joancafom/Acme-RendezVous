@@ -47,6 +47,10 @@
 
 <p><strong><spring:message code="avg.announcementsPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgAnnouncementsPerRendezVous}"/></p>
 <p><strong><spring:message code="std.announcementsPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdAnnouncementsPerRendezVous}"/></p>
+<p><strong><spring:message code="avg.questionsPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgQuestionsPerRendezVous}"/></p>
+<p><strong><spring:message code="std.questionsPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdQuestionsPerRendezVous}"/></p>
+<p><strong><spring:message code="avg.repliesPerComment"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgRepliesPerComment}"/></p>
+<p><strong><spring:message code="std.repliesPerComment"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdRepliesPerComment}"/></p>
 
 <h4><spring:message code="rendezVousAbove75"/>:</h4>
 <display:table name="rendezVousAbove75" id="rendezVous" requestURI="administrator/display-dashboard.do" class="displaytag" pagesize="5">
