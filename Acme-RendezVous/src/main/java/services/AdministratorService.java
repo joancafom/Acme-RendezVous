@@ -24,6 +24,9 @@ public class AdministratorService {
 	@Autowired
 	private AdministratorRepository	administratorRepository;
 
+	@Autowired
+	private RendezVousService		rendezVousService;
+
 
 	// Other Business Process ---------------------------
 
@@ -90,6 +93,41 @@ public class AdministratorService {
 
 	public Double getStdRepliesPerComment() {
 		return this.administratorRepository.stdRepliesPerComment();
+	}
+
+	public Double getAvgAnswersPerRendezVous() {
+
+		final Collection<Long> answerPerRendezVous = this.administratorRepository.answerPerRendezVous();
+
+		Long sum = 0L;
+
+		for (final Long a : answerPerRendezVous)
+			sum += a;
+
+		Double res = 0.0;
+		final Double count = new Double(this.rendezVousService.findAll().size());
+
+		if (count != 0.0)
+			res = sum / count;
+
+		return res;
+	}
+	public Double getStdAnswersPerRendezVous() {
+
+		final Collection<Long> answerPerRendezVous = this.administratorRepository.answerPerRendezVous();
+
+		Long sumSq = 0L;
+
+		for (final Long a : answerPerRendezVous)
+			sumSq += a * a;
+
+		Double res = 0.0;
+		final Double count = new Double(this.rendezVousService.findAll().size());
+
+		if (count != 0.0)
+			res = Math.sqrt((sumSq / count) - Math.pow(this.getAvgAnswersPerRendezVous(), 2));
+
+		return res;
 	}
 
 	public Administrator findByUserAccount(final UserAccount userAccount) {

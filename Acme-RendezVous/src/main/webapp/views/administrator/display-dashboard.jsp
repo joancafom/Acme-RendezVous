@@ -51,6 +51,8 @@
 <p><strong><spring:message code="std.questionsPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdQuestionsPerRendezVous}"/></p>
 <p><strong><spring:message code="avg.repliesPerComment"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgRepliesPerComment}"/></p>
 <p><strong><spring:message code="std.repliesPerComment"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdRepliesPerComment}"/></p>
+<p><strong><spring:message code="avg.answersPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgAnswersPerRendezVous}"/></p>
+<p><strong><spring:message code="std.answersPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdAnswersPerRendezVous}"/></p>
 
 <h4><spring:message code="rendezVousAbove75"/>:</h4>
 <display:table name="rendezVousAbove75" id="rendezVous" requestURI="administrator/display-dashboard.do" class="displaytag" pagesize="5">
