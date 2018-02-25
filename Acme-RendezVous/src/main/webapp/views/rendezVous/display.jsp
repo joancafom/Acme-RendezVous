@@ -130,24 +130,26 @@
 	<a href="announcement/user/create.do?rendezVousId=${rendezVous.id}"><spring:message code="announcement.create"/></a>
 </jstl:if>
 
-<security:authorize access="!hasRole('USER')">
-	<!-- Announcements -->
-	<h1>
-		<spring:message code="rendezVous.announcements" />: 
-	</h1>
-	<display:table name="rendezVous.announcements" id="announcement" requestURI="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}" pagesize="3" style="text-align:center;" class="displaytag">
-		<display:column titleKey="announcement.title" property="title" />
-		<display:column titleKey="announcement.description" property="description" />
-		<display:column titleKey="announcement.moment">
-			<acme:dateFormat code="date.format2" value="${announcement.creationMoment}"/>
+<!-- Announcements -->
+
+<h1>
+	<spring:message code="rendezVous.announcements" />: 
+</h1>
+
+<display:table name="rendezVous.announcements" id="announcement" requestURI="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}" pagesize="3" style="text-align:center;" class="displaytag">
+	<display:column titleKey="announcement.title" property="title" />
+	<display:column titleKey="announcement.description" property="description" />
+	<display:column titleKey="announcement.moment">
+		<acme:dateFormat code="date.format2" value="${announcement.creationMoment}"/>
+	</display:column>
+
+	<security:authorize access="hasRole('ADMINISTRATOR')">
+		<display:column>
+			<a href="announcement/administrator/delete.do?announcementId=<jstl:out value="${announcement.id}" />"><spring:message code="announcement.delete" /></a>
 		</display:column>
-		<security:authorize access="hasRole('ADMINISTRATOR')">
-			<display:column>
-				<a href="announcement/administrator/delete.do?announcementId=<jstl:out value="${announcement.id}" />"><spring:message code="announcement.delete" /></a>
-			</display:column>
-		</security:authorize>
-	</display:table>
-</security:authorize>
+	</security:authorize>
+</display:table>
+
 <!-- Comments -->
 <h1>
 	<spring:message code="rendezVous.comments" />: 
