@@ -12,7 +12,6 @@
 <jstl:set var="rvid" value="${rendezVous.id}"/>
 <jstl:set var="isDeleted" value="${rendezVous.isDeleted}"/>
 
-
 <jstl:if test="${rendezVous.picture ne null}">
 	<p>
 		<img src="<jstl:out value="${rendezVous.picture}" />" style="max-width: 200px;" />
@@ -61,34 +60,34 @@
 
 <!-- Similar RendezVouses -->
 <h2><spring:message code="rendezVous.similarRendezVouses"/></h2>
-<display:table name="rendezVous.similarRendezVouses" id="rendezVous" requestURI="" class="displaytag" style="width:50%;">
+<display:table name="rendezVous.similarRendezVouses" id="similarRendezVous" requestURI="" class="displaytag" style="width:50%;">
 	<display:column titleKey="rendezVous.state" class="tableRendezVous">
-		<jstl:if test="${rendezVous.isDeleted==true}">
+		<jstl:if test="${similarRendezVous.isDeleted==true}">
 			<p style="color:red;"><strong><spring:message code="rendezVous.deleted"/></strong></p>
 		</jstl:if>
-		<jstl:if test="${rendezVous.isDeleted==false}">
+		<jstl:if test="${similarRendezVous.isDeleted==false}">
 			<p style="color:green;"><strong><spring:message code="rendezVous.public"/></strong></p>
 		</jstl:if>
-		<jstl:if test="${rendezVous.orgDate < now and rendezVous.isDeleted==false}">
+		<jstl:if test="${similarRendezVous.orgDate < now and similarRendezVous.isDeleted==false}">
 			<p style="color:gray;"><strong><spring:message code="rendezVous.ended"/></strong></p>
 		</jstl:if>
 	</display:column>
 	<display:column titleKey="rendezVous.name">
-		<p><jstl:out value="${rendezVous.name}"/></p>
+		<p><jstl:out value="${similarRendezVous.name}"/></p>
 	</display:column>
 	<display:column titleKey="rendezVous.description">
-		<p><jstl:out value="${rendezVous.description}"/></p>
+		<p><jstl:out value="${similarRendezVous.description}"/></p>
 	</display:column>
 	<display:column titleKey="rendezVous.orgDate" class="tableRendezVous">
 		<spring:message code="date.format2" var="dateFormat"></spring:message>
-		<p><fmt:formatDate value="${rendezVous.orgDate}" pattern="${dateFormat}" type="both"/></p>
+		<p><fmt:formatDate value="${similarRendezVous.orgDate}" pattern="${dateFormat}" type="both"/></p>
 	</display:column>
 	<display:column class="tableRendezVous">
-		<p><a href="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.display"/></a></p>
+		<p><a href="rendezVous/${actorWS}display.do?rendezVousId=${similarRendezVous.id}"><spring:message code="rendezVous.display"/></a></p>
 	</display:column>
 	<jstl:if test="${own && isDeleted==false}">
 		<display:column class="tableRendezVous">
-			<p><a href="rendezVous/user/deleteLink.do?similarRendezVousId=${rendezVous.id}&parentRendezVousId=${rvid}"><spring:message code="rendezVous.delete"/></a></p>
+			<p><a href="rendezVous/user/deleteLink.do?similarRendezVousId=${similarRendezVous.id}&parentRendezVousId=${rvid}"><spring:message code="rendezVous.delete"/></a></p>
 		</display:column>
 	</jstl:if>
 </display:table>
