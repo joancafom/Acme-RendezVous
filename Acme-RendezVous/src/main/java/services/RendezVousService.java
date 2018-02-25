@@ -170,6 +170,8 @@ public class RendezVousService {
 		Assert.isTrue(!rendezVous.getIsDeleted());
 		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
 		Assert.isTrue(!rendezVous.getAttendants().contains(user));
+		if (rendezVous.getIsForAdults())
+			Assert.isTrue(user.getAge() >= 18);
 
 		rendezVous.getAttendants().add(user);
 		user.getAttendedRendezVouses().add(rendezVous);
