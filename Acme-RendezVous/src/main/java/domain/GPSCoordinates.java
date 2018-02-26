@@ -4,7 +4,6 @@ package domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotNull;
 
 @Embeddable
 @Access(AccessType.PROPERTY)
@@ -14,12 +13,10 @@ public class GPSCoordinates {
 	private Double	longitude;
 
 
-	@NotNull
 	public Double getLatitude() {
 		return this.latitude;
 	}
 
-	@NotNull
 	public Double getLongitude() {
 		return this.longitude;
 	}

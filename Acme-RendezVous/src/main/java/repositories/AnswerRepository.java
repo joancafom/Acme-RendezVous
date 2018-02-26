@@ -15,4 +15,7 @@ public interface AnswerRepository extends JpaRepository<Answer, Integer> {
 	@Query("select a from Answer a where a.user.id = ?2 and a.question.rendezVous.id = ?1")
 	Collection<Answer> findAllByRendezVousAndUserIds(int rendezVousId, int userId);
 
+	@Query("select a from Answer a where a.user.id =?1 and a.question.rendezVous.id=?2")
+	Collection<Answer> findAllByUserAndRendezVous(int userId, int rendezVousId);
+
 }

@@ -2,6 +2,8 @@
 package controllers.user;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -15,11 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import security.LoginService;
+import services.AnswerService;
+import services.QuestionService;
 import services.RendezVousService;
 import services.UserService;
 import controllers.AbstractController;
+import domain.Answer;
+import domain.Question;
 import domain.RendezVous;
 import domain.User;
+import forms.RSVPForm;
 import forms.SimilarRendezVousForm;
 
 @Controller
@@ -32,6 +39,12 @@ public class RendezVousUserController extends AbstractController {
 
 	@Autowired
 	private UserService			userService;
+
+	@Autowired
+	private AnswerService		answerService;
+
+	@Autowired
+	private QuestionService		questionService;
 
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -103,7 +116,9 @@ public class RendezVousUserController extends AbstractController {
 	public ModelAndView cancel(RendezVous rendezVous, final BindingResult binding) {
 		ModelAndView res = null;
 
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 		rendezVous = this.rendezVousService.reconstruct(rendezVous, binding);
+		final Collection<Answer> answers = this.answerService.findAllByUserAndRendezVous(user, rendezVous);
 
 		res = new ModelAndView("rendezVous/cancel");
 
@@ -111,6 +126,8 @@ public class RendezVousUserController extends AbstractController {
 			res.addObject("rendezVous", rendezVous);
 		else
 			try {
+				for (final Answer a : answers)
+					this.answerService.delete(a);
 				this.rendezVousService.cancelRSVP(rendezVous);
 				res = new ModelAndView("redirect:list.do?show=all");
 			} catch (final Throwable oops) {
@@ -124,34 +141,53 @@ public class RendezVousUserController extends AbstractController {
 	public ModelAndView rsvp(@RequestParam final int rendezVousId) {
 		final ModelAndView res;
 		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
+		final RSVPForm rsvpForm = new RSVPForm();
+
+		rsvpForm.setRendezVous(rendezVousId);
 
 		res = new ModelAndView("rendezVous/rsvp");
-		res.addObject("rendezVous", rendezVous);
+		res.addObject("rsvpForm", rsvpForm);
+
+		final Collection<String> answers = new LinkedList<String>();
+		final Collection<Question> questions = this.questionService.findAllOrderedByRendezVous(rendezVous);
+
+		for (@SuppressWarnings("unused")
+		final Question q : questions)
+			answers.add(new String());
+
+		res.addObject("answersBlank", answers);
+		res.addObject("questions", questions);
 
 		return res;
 	}
-
 	@RequestMapping(value = "/rsvp", method = RequestMethod.POST)
-	public ModelAndView rsvp(RendezVous rendezVous, final BindingResult binding) {
+	public ModelAndView rsvp(final RSVPForm rendezVous, final BindingResult binding) {
 		ModelAndView res = null;
+		RendezVous result;
 
-		rendezVous = this.rendezVousService.reconstruct(rendezVous, binding);
+		result = this.rendezVousService.reconstruct(rendezVous, binding);
+		final List<Answer> answers = this.answerService.reconstuct(rendezVous, binding);
 
 		res = new ModelAndView("rendezVous/rsvp");
 
-		if (binding.hasErrors())
-			res.addObject("rendezVous", rendezVous);
-		else
+		if (binding.hasErrors()) {
+			res.addObject("rsvpForm", rendezVous);
+			res.addObject("questions", this.questionService.findAllOrderedByRendezVous(result));
+			res.addObject("message", "rendezVous.emptyInput.error");
+		} else
 			try {
-				this.rendezVousService.acceptRSVP(rendezVous);
-				res = new ModelAndView("redirect:list.do?show=all");
+				for (final Answer a : answers)
+					//Assert.isTrue(a.getText() != "" || a.getText() == null);
+					this.answerService.save(a);
+				this.rendezVousService.acceptRSVP(result);
+
+				res = new ModelAndView("redirect:display.do?rendezVousId=" + rendezVous.getRendezVous());
 			} catch (final Throwable oops) {
 				res.addObject("message", "rendezVous.commit.error");
-				res.addObject("rendezVous", rendezVous);
+				res.addObject("rsvpForm", rendezVous);
 			}
 		return res;
 	}
-
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
 		final ModelAndView result;
@@ -168,8 +204,11 @@ public class RendezVousUserController extends AbstractController {
 	public ModelAndView edit(@RequestParam final int rendezVousId) {
 		ModelAndView result;
 		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
-		result = this.createEditModelAndView(rendezVous);
 
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.isTrue(user.getCreatedRendezVouses().contains(rendezVous));
+
+		result = this.createEditModelAndView(rendezVous);
 		result.addObject("toEdit", true);
 
 		return result;
@@ -180,8 +219,11 @@ public class RendezVousUserController extends AbstractController {
 	public ModelAndView delete(@RequestParam final int rendezVousId) {
 		ModelAndView result;
 		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
-		result = this.createEditModelAndView(rendezVous);
 
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.isTrue(user.getCreatedRendezVouses().contains(rendezVous));
+
+		result = this.createEditModelAndView(rendezVous);
 		result.addObject("toDelete", true);
 
 		return result;
@@ -191,6 +233,11 @@ public class RendezVousUserController extends AbstractController {
 	@RequestMapping(value = "/createLink", method = RequestMethod.GET)
 	public ModelAndView createLink(@RequestParam final int rendezVousId) {
 		final ModelAndView result;
+
+		final RendezVous rendezVousParent = this.rendezVousService.findOne(rendezVousId);
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.isTrue(user.getCreatedRendezVouses().contains(rendezVousParent));
+
 		final SimilarRendezVousForm rendezVous = new SimilarRendezVousForm();
 		rendezVous.setId(rendezVousId);
 

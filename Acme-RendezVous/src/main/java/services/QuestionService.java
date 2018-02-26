@@ -3,6 +3,7 @@ package services;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,6 +76,10 @@ public class QuestionService {
 			this.answerService.delete(a);
 
 		this.questionRepository.delete(question);
+	}
+
+	public List<Question> findAllOrderedByRendezVous(final RendezVous rendezVous) {
+		return this.questionRepository.findAllOrderedByRendezVous(rendezVous.getId());
 	}
 
 }

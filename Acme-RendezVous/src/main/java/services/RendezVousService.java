@@ -21,6 +21,7 @@ import domain.GPSCoordinates;
 import domain.Question;
 import domain.RendezVous;
 import domain.User;
+import forms.RSVPForm;
 import forms.SimilarRendezVousForm;
 
 @Service
@@ -170,7 +171,7 @@ public class RendezVousService {
 		Assert.isTrue(!rendezVous.getIsDeleted());
 		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
 		Assert.isTrue(!rendezVous.getAttendants().contains(user));
-		if (rendezVous.getIsForAdults())
+        if (rendezVous.getIsForAdults())
 			Assert.isTrue(user.getAge() >= 18);
 
 		rendezVous.getAttendants().add(user);
@@ -184,9 +185,22 @@ public class RendezVousService {
 		final RendezVous result;
 
 		if (rendezVous.getId() == 0)
-			result = rendezVous;
+			result = this.rendezVousRepository.findOne(rendezVous.getId());
 		else {
 			result = this.rendezVousRepository.findOne(rendezVous.getId());
+			this.validator.validate(result, binding);
+		}
+
+		return result;
+	}
+
+	public RendezVous reconstruct(final RSVPForm rendezVous, final BindingResult binding) {
+		final RendezVous result;
+
+		if (rendezVous.getRendezVous() == 0)
+			result = this.rendezVousRepository.findOne(rendezVous.getRendezVous());
+		else {
+			result = this.rendezVousRepository.findOne(rendezVous.getRendezVous());
 			this.validator.validate(result, binding);
 		}
 
