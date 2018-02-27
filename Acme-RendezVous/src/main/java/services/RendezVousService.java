@@ -69,9 +69,10 @@ public class RendezVousService {
 		attendants.add(user);
 		rendezVous.setAttendants(attendants);
 		rendezVous.setCoordinates(coordinates);
-
+		
 		if (user.getAge() < 18)
 			rendezVous.setIsForAdults(false);
+		
 
 		return rendezVous;
 	}
@@ -94,6 +95,7 @@ public class RendezVousService {
 			Assert.isTrue(this.rendezVousRepository.findOne(rendezVous.getId()).getIsFinal() == false);
 
 		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
+
 		final RendezVous result = this.rendezVousRepository.save(rendezVous);
 
 		if (rendezVous.getId() == 0) {
@@ -187,7 +189,7 @@ public class RendezVousService {
 		final RendezVous result;
 
 		if (rendezVous.getId() == 0)
-			result = this.rendezVousRepository.findOne(rendezVous.getId());
+			result = rendezVous;
 		else {
 			result = this.rendezVousRepository.findOne(rendezVous.getId());
 			this.validator.validate(result, binding);
