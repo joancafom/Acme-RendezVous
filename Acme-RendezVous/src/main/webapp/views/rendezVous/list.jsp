@@ -96,7 +96,9 @@
 			<p><fmt:formatDate value="${rendezVous.orgDate}" pattern="${dateFormat}" type="both"/></p>
 		</display:column>
 		<display:column titleKey="rendezVous.coordinates" class="tableRendezVous">
-			<p>(Lat: <jstl:out value="${rendezVous.coordinates.latitude}"/>, Long: <jstl:out value="${rendezVous.coordinates.longitude}"/>)</p>
+			<jstl:if test="${rendezVous.coordinates.latitude!=null || rendezVous.coordinates.longitude!=null}">
+				<p>(Lat: <jstl:out value="${rendezVous.coordinates.latitude}"/>, Long: <jstl:out value="${rendezVous.coordinates.longitude}"/>)</p>
+			</jstl:if>
 		</display:column>
 		<display:column titleKey="rendezVous.restrictions" class="tableRendezVous">
 			<jstl:if test="${rendezVous.isForAdults==true}">

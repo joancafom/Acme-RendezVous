@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import security.LoginService;
 import services.AnswerService;
 import services.RendezVousService;
 import services.UserService;
@@ -41,7 +40,7 @@ public class AnswerAdministratorController extends AbstractController {
 		ModelAndView result;
 		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
 		final User user = this.userService.findOne(userId);
-		final User viewer = this.userService.findByUserAccount(LoginService.getPrincipal());
+		//final User viewer = this.userService.findByUserAccount(LoginService.getPrincipal());
 
 		Assert.notNull(rendezVous);
 		Assert.notNull(user);

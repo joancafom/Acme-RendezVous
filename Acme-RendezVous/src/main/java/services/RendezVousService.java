@@ -69,10 +69,9 @@ public class RendezVousService {
 		attendants.add(user);
 		rendezVous.setAttendants(attendants);
 		rendezVous.setCoordinates(coordinates);
-		
+
 		if (user.getAge() < 18)
 			rendezVous.setIsForAdults(false);
-		
 
 		return rendezVous;
 	}
@@ -95,7 +94,6 @@ public class RendezVousService {
 			Assert.isTrue(this.rendezVousRepository.findOne(rendezVous.getId()).getIsFinal() == false);
 
 		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
-
 		final RendezVous result = this.rendezVousRepository.save(rendezVous);
 
 		if (rendezVous.getId() == 0) {
@@ -245,4 +243,47 @@ public class RendezVousService {
 		pRV.getSimilarRendezVouses().remove(sRV);
 	}
 
+	public RendezVous reconstructRendezVous(final RendezVous prunedRendezVous, final BindingResult binding) {
+		final RendezVous result;
+
+		if (prunedRendezVous.getId() == 0) {
+			result = prunedRendezVous;
+			final UserAccount userAccount = LoginService.getPrincipal();
+
+			final User user = this.userService.findByUserAccount(userAccount);
+
+			final Collection<Comment> comments = new HashSet<Comment>();
+			final Collection<User> attendants = new HashSet<User>();
+			final Collection<Question> questions = new HashSet<Question>();
+			final Collection<Announcement> announcements = new HashSet<Announcement>();
+			final Collection<RendezVous> similarRendezVouses = new HashSet<RendezVous>();
+
+			result.setCreator(user);
+			result.setComments(comments);
+			result.setSimilarRendezVouses(similarRendezVouses);
+			result.setAnnouncements(announcements);
+			result.setQuestions(questions);
+			attendants.add(user);
+			result.setAttendants(attendants);
+
+			if (user.getAge() < 18)
+				result.setIsForAdults(false);
+
+			this.validator.validate(result, binding);
+		} else {
+			final RendezVous savedRendezVous = this.rendezVousRepository.findOne(prunedRendezVous.getId());
+			result = prunedRendezVous;
+
+			result.setCreator(savedRendezVous.getCreator());
+			result.setComments(savedRendezVous.getComments());
+			result.setSimilarRendezVouses(savedRendezVous.getSimilarRendezVouses());
+			result.setAnnouncements(savedRendezVous.getAnnouncements());
+			result.setQuestions(savedRendezVous.getQuestions());
+			result.setAttendants(savedRendezVous.getAttendants());
+
+			this.validator.validate(result, binding);
+		}
+
+		return result;
+	}
 }

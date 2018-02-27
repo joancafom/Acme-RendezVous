@@ -30,7 +30,7 @@ window.onload = function(){
 
 <div id="sticky-header">
 	<div id="logo-container">
-		<img src="images/logo.png" alt="Acme, Inc" height="100%"/>
+		<a href=""><img src="images/logo.png" alt="Acme, Inc" height="100%"/></a>
 	</div>
 	<div id="menu-container">
 	<ul id="jMenu">

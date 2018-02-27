@@ -198,11 +198,9 @@ public class RendezVousUserController extends AbstractController {
 	public ModelAndView create() {
 		final ModelAndView result;
 		final RendezVous rendezVous = this.rendezVousService.create();
-		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		//final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 
 		result = this.createEditModelAndView(rendezVous);
-		if (user.getAge() < 18)
-			result.addObject("under18", true);
 
 		result.addObject("toEdit", true);
 
@@ -218,12 +216,9 @@ public class RendezVousUserController extends AbstractController {
 		Assert.isTrue(user.getCreatedRendezVouses().contains(rendezVous));
 		Assert.isTrue(rendezVous.getIsFinal() == false);
 		Assert.isTrue(rendezVous.getIsDeleted() == false);
-		Assert.isTrue(rendezVous.getOrgDate().before(new Date()));
+		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
 
 		result = this.createEditModelAndView(rendezVous);
-
-		if (user.getAge() < 18)
-			result.addObject("under18", true);
 
 		result.addObject("toEdit", true);
 
@@ -286,8 +281,10 @@ public class RendezVousUserController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@Valid final RendezVous rendezVous, final BindingResult binding) {
+	public ModelAndView save(RendezVous rendezVous, final BindingResult binding) {
 		ModelAndView result;
+
+		rendezVous = this.rendezVousService.reconstructRendezVous(rendezVous, binding);
 
 		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(rendezVous);
@@ -306,21 +303,17 @@ public class RendezVousUserController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST, params = "delete")
-	public ModelAndView delete(@Valid final RendezVous rendezVous, final BindingResult binding) {
+	public ModelAndView delete(final RendezVous rendezVous, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors()) {
-			result = this.createEditModelAndView(rendezVous);
-			result.addObject("toDelete", true);
-		} else
-			try {
+		try {
 
-				this.rendezVousService.virtualDelete(rendezVous);
-				result = new ModelAndView("redirect:list.do?show=mine");
-			} catch (final Throwable oops) {
-				result = this.createEditModelAndView(rendezVous, "rendezVous.commit.error");
-				result.addObject("toDelete", true);
-			}
+			this.rendezVousService.virtualDelete(rendezVous);
+			result = new ModelAndView("redirect:list.do?show=mine");
+		} catch (final Throwable oops) {
+			result = this.createEditModelAndView(rendezVous, "rendezVous.commit.error");
+			result.addObject("toDelete", true);
+		}
 
 		return result;
 
@@ -378,13 +371,16 @@ public class RendezVousUserController extends AbstractController {
 
 	private ModelAndView createEditModelAndView(final RendezVous rendezVous, final String message) {
 		final ModelAndView result;
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 		result = new ModelAndView("rendezVous/edit");
 		result.addObject("rendezVous", rendezVous);
 		result.addObject("message", message);
 
+		if (user.getAge() < 18)
+			result.addObject("under18", true);
+
 		return result;
 	}
-
 	protected ModelAndView createEditModelAndView(final SimilarRendezVousForm rendezVous) {
 		ModelAndView result;
 		result = this.createEditModelAndView(rendezVous, null);

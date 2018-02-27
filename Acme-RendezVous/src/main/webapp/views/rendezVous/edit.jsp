@@ -14,13 +14,7 @@
 
 	<form:hidden path="id"/>
 	<form:hidden path="version"/>
-	<form:hidden path="creator"/>
-	<form:hidden path="attendants"/>
-	<form:hidden path="questions"/>
-	<form:hidden path="comments"/>
-	<form:hidden path="announcements"/>
-	<form:hidden path="similarRendezVouses"/>
-	<form:hidden path="isDeleted"/>
+	
 	
 	<!-- Inputs -->
 	
