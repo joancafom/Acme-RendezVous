@@ -20,7 +20,7 @@
 	<p><strong><spring:message code="welcome.registerQuestion"/><a href="user/register.do"><spring:message code="welcome.here"/></a></strong></p>
 </security:authorize>
 <security:authorize access="isAuthenticated()">
-	<p><spring:message code="welcome.greeting.prefix" /> ${name}<spring:message code="welcome.greeting.suffix" /></p>
+	<p><spring:message code="welcome.greeting.prefix" /><spring:message code="welcome.greeting.suffix" /></p>
 </security:authorize>
 
 
