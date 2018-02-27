@@ -23,8 +23,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.hibernate.validator.constraints.SafeHtml;
-import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
@@ -57,7 +55,6 @@ public class UserAccount extends DomainEntity implements UserDetails {
 
 	@Size(min = 5, max = 32)
 	@Column(unique = true)
-	@SafeHtml(whitelistType = WhiteListType.NONE)
 	@Override
 	public String getUsername() {
 		return this.username;
@@ -80,7 +77,6 @@ public class UserAccount extends DomainEntity implements UserDetails {
 	@NotEmpty
 	@Valid
 	@ElementCollection
-	@SafeHtml(whitelistType = WhiteListType.NONE)
 	@Override
 	public Collection<Authority> getAuthorities() {
 		// WARNING: Should return an unmodifiable copy, but it's not possible with hibernate!
