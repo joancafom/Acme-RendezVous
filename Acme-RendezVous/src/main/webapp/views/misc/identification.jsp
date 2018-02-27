@@ -33,9 +33,7 @@
 	<p>
 	28001 Madrid (MADRID)
 	</p>
-	<p>
-	VAT Number Identifier: <strong>ESA0011012B</strong>
-	</p>
+	
 </div>
 </jstl:if>
 <jstl:if test="${cookie.language.value eq 'es'}">
@@ -65,8 +63,6 @@
 	<p>
 	28001 Madrid (MADRID)
 	</p>
-	<p>
-	Identificador fiscal: <strong>ESA0011012B</strong>
-	</p>
+	
 </div>
 </jstl:if>
