@@ -70,6 +70,9 @@ public class RendezVousService {
 		rendezVous.setAttendants(attendants);
 		rendezVous.setCoordinates(coordinates);
 
+		if (user.getAge() < 18)
+			rendezVous.setIsForAdults(false);
+
 		return rendezVous;
 	}
 
@@ -91,7 +94,6 @@ public class RendezVousService {
 			Assert.isTrue(this.rendezVousRepository.findOne(rendezVous.getId()).getIsFinal() == false);
 
 		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
-
 		final RendezVous result = this.rendezVousRepository.save(rendezVous);
 
 		if (rendezVous.getId() == 0) {
@@ -171,7 +173,7 @@ public class RendezVousService {
 		Assert.isTrue(!rendezVous.getIsDeleted());
 		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
 		Assert.isTrue(!rendezVous.getAttendants().contains(user));
-        if (rendezVous.getIsForAdults())
+		if (rendezVous.getIsForAdults())
 			Assert.isTrue(user.getAge() >= 18);
 
 		rendezVous.getAttendants().add(user);

@@ -127,9 +127,7 @@
 	<a href="rendezVous/administrator/remove.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.remove"/></a>
 </security:authorize>
 
-<jstl:if test="${own}">
-	<a href="announcement/user/create.do?rendezVousId=${rendezVous.id}"><spring:message code="announcement.create"/></a>
-</jstl:if>
+
 
 <!-- Announcements -->
 
@@ -150,6 +148,10 @@
 		</display:column>
 	</security:authorize>
 </display:table>
+
+<jstl:if test="${own}">
+	<a href="announcement/user/create.do?rendezVousId=${rendezVous.id}"><spring:message code="announcement.create"/></a>
+</jstl:if>
 
 <!-- Comments -->
 <h2>
@@ -195,7 +197,7 @@
 <br/>
 
 <jstl:if test="${own}">
-	<h1><spring:message code="rendezVous.questions"/></h1>
+	<h2><spring:message code="rendezVous.questions"/></h2>
 	
 	<display:table name="rendezVous.questions" id="question" requestURI="rendezVous/user/display.do?rendezVousId=${rendezVous.id}" pagesize="5" style="text-align:center;" class="displaytag">
 		<display:column titleKey="question.text">

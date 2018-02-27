@@ -16,9 +16,15 @@
 
 <p><strong><spring:message code="user.name"/>:</strong> <jstl:out value="${user.name}"/></p>
 <p><strong><spring:message code="user.surnames"/>:</strong> <jstl:out value="${user.surnames}"/></p>
-<p><strong><spring:message code="user.postalAddress"/>:</strong> <jstl:out value="${user.postalAddress}"/></p>
-<p><strong><spring:message code="user.phoneNumber"/>:</strong> <jstl:out value="${user.phoneNumber}"/></p>
-<p><strong><spring:message code="user.email"/>:</strong> <jstl:out value="${user.email}"/></p>
+<jstl:if test="${user.postalAddress!=null}">
+	<p><strong><spring:message code="user.postalAddress"/>:</strong> <jstl:out value="${user.postalAddress}"/></p>
+</jstl:if>
+<jstl:if test="${user.phoneNumber!=null}">
+	<p><strong><spring:message code="user.phoneNumber"/>:</strong> <jstl:out value="${user.phoneNumber}"/></p>
+</jstl:if>
+<jstl:if test="${user.email!=null}">
+	<p><strong><spring:message code="user.email"/>:</strong> <jstl:out value="${user.email}"/></p>
+</jstl:if>
 <p><strong><spring:message code="user.dateOfBirth"/>:</strong><acme:dateFormat code="date.format2" value="${user.dateOfBirth}"/></p>
 
 <h3><spring:message code="user.attendedRendezVouses"/></h3>

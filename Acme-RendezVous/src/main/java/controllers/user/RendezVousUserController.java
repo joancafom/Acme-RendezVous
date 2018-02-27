@@ -2,6 +2,7 @@
 package controllers.user;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -197,8 +198,11 @@ public class RendezVousUserController extends AbstractController {
 	public ModelAndView create() {
 		final ModelAndView result;
 		final RendezVous rendezVous = this.rendezVousService.create();
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 
 		result = this.createEditModelAndView(rendezVous);
+		if (user.getAge() < 18)
+			result.addObject("under18", true);
 
 		result.addObject("toEdit", true);
 
@@ -212,8 +216,15 @@ public class RendezVousUserController extends AbstractController {
 
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 		Assert.isTrue(user.getCreatedRendezVouses().contains(rendezVous));
+		Assert.isTrue(rendezVous.getIsFinal() == false);
+		Assert.isTrue(rendezVous.getIsDeleted() == false);
+		Assert.isTrue(rendezVous.getOrgDate().before(new Date()));
 
 		result = this.createEditModelAndView(rendezVous);
+
+		if (user.getAge() < 18)
+			result.addObject("under18", true);
+
 		result.addObject("toEdit", true);
 
 		return result;
@@ -382,6 +393,7 @@ public class RendezVousUserController extends AbstractController {
 
 	private ModelAndView createEditModelAndView(final SimilarRendezVousForm rendezVous, final String message) {
 		final ModelAndView result;
+		final RendezVous parentRendezVous = this.rendezVousService.findOne(rendezVous.getId());
 		result = new ModelAndView("rendezVous/edit");
 		result.addObject("rendezVousForm", rendezVous);
 		result.addObject("message", message);
@@ -389,9 +401,13 @@ public class RendezVousUserController extends AbstractController {
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 		Collection<RendezVous> rendezVouses;
 		if (user.getAge() >= 18)
-			rendezVouses = this.rendezVousService.findAllExceptCreatedByUser(user);
+			rendezVouses = this.rendezVousService.findAll();
 		else
-			rendezVouses = this.rendezVousService.findAllNotAdultExceptCreatedByUser(user);
+			rendezVouses = this.rendezVousService.findAllNotAdult();
+
+		for (final RendezVous rv : parentRendezVous.getSimilarRendezVouses())
+			rendezVouses.remove(rv);
+		rendezVouses.remove(parentRendezVous);
 
 		result.addObject("rendezVouses", rendezVouses);
 

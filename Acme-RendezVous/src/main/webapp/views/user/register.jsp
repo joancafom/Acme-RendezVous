@@ -54,7 +54,7 @@
 	<acme:textbox code="user.name" path="name"/><br>
 	<acme:textbox code="user.surnames" path="surnames"/><br>
 	<acme:textbox code="user.postalAddress" path="postalAddress"/><br>
-	<acme:textbox code="user.phoneNumber" path="phoneNumber"/><br>
+	<acme:textbox code="user.phoneNumber" path="phoneNumber" placeholder="+34555555555"/><br>
 	<acme:textbox code="user.email" path="email"/><br>
 	<acme:date code="user.dateOfBirth" path="dateOfBirth"/>
 	

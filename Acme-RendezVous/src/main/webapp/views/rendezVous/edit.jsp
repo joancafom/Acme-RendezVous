@@ -41,11 +41,17 @@
 	<form:radiobutton path="isFinal" value="true"/><spring:message code="rendezVous.no"/>
 	<form:errors path="isFinal" cssClass="error"/>
 	<br><br>
-	<form:label path="isForAdults"><strong><spring:message code="rendezVous.isForAdults"/>:</strong></form:label>
-	<form:radiobutton path="isForAdults" value="true"/><spring:message code="rendezVous.yes"/>
-	<form:errors path="isForAdults" cssClass="error"/>
-	<form:radiobutton path="isForAdults" value="false" checked="checked"/><spring:message code="rendezVous.no"/>
-	<form:errors path="isForAdults" cssClass="error"/>
+	<jstl:if test="${under18==null}">
+		<form:label path="isForAdults"><strong><spring:message code="rendezVous.isForAdults"/>:</strong></form:label>
+		<form:radiobutton path="isForAdults" value="true"/><spring:message code="rendezVous.yes"/>
+		<form:errors path="isForAdults" cssClass="error"/>
+		<form:radiobutton path="isForAdults" value="false" checked="checked"/><spring:message code="rendezVous.no"/>
+		<form:errors path="isForAdults" cssClass="error"/>
+	</jstl:if>
+	<jstl:if test="${under18==true}">
+		<form:hidden path="isForAdults"/>
+	</jstl:if>
+	
 	<br><br>
 	<acme:submit name="save" code="rendezVous.save"/>
 	<acme:cancel url="rendezVous/user/list.do?show=mine" code="rendezVous.cancel"/>
