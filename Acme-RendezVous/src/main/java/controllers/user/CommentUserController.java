@@ -1,6 +1,8 @@
 
 package controllers.user;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -35,22 +37,43 @@ public class CommentUserController extends AbstractController {
 
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public ModelAndView create(@RequestParam final int rendezVousId) {
+	public ModelAndView create(@RequestParam final int rendezVousId, @RequestParam(required = false) final Integer commentId) {
 
 		ModelAndView res;
 		final User writter = this.userService.findByUserAccount(LoginService.getPrincipal());
 		final RendezVous rv;
+		Comment replied = null;
 
 		rv = this.rendezVousService.findOne(rendezVousId);
+		if (commentId != null)
+			replied = this.commentService.findOne(commentId);
 
 		Assert.notNull(writter);
 		Assert.notNull(rv);
 		Assert.isTrue(rv.getAttendants().contains(writter));
+		if (replied != null)
+			Assert.isTrue(replied.getRendezVous().equals(rv));
 
-		final Comment comment = this.commentService.create(rv);
+		final Comment comment = this.commentService.create(rv, replied);
 		res = this.createEditModelAndView(comment);
 
 		res.addObject("rendezVousId", rendezVousId);
+
+		return res;
+
+	}
+
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public ModelAndView list(@RequestParam final int commentId) {
+		ModelAndView res;
+		final Comment comment = this.commentService.findOne(commentId);
+		Assert.notNull(comment);
+
+		final Collection<Comment> comments = comment.getReplies();
+
+		res = new ModelAndView("comment/list");
+		res.addObject("actorWS", "user/");
+		res.addObject("comments", comments);
 
 		return res;
 

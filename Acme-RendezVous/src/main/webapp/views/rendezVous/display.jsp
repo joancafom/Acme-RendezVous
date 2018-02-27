@@ -18,10 +18,10 @@
 	</p>
 </jstl:if>
 <p>
-	<spring:message code="rendezVous.name" />: <jstl:out value="${rendezVous.name}" />
+	<strong><spring:message code="rendezVous.name" />:</strong> <jstl:out value="${rendezVous.name}" />
 </p>
 <p>
-	<spring:message code="rendezVous.creator" />: <a href="user/${actorWS}display.do?userId=<jstl:out value="${rendezVous.creator.id}" />"><jstl:out value="${rendezVous.creator.name}" /></a>
+	<strong><spring:message code="rendezVous.creator" />:</strong> <a href="user/${actorWS}display.do?userId=<jstl:out value="${rendezVous.creator.id}" />"><jstl:out value="${rendezVous.creator.name}" /></a>
 </p>
 <jstl:if test="${rendezVous.isDeleted==true}">
 	<p style="color:red;"><strong><spring:message code="rendezVous.deleted"/></strong></p>
@@ -45,7 +45,7 @@
 	
 </p>
 <p>
-	<spring:message code="rendezVous.orgDate" />:
+	<strong><spring:message code="rendezVous.orgDate" />:</strong>
 	<acme:dateFormat code="date.format2" value="${rendezVous.orgDate}"/>
 </p>
 
@@ -55,9 +55,9 @@
 	</p>
 </jstl:if>
 <p>
-	<spring:message code="rendezVous.description" />: <jstl:out value="${rendezVous.description}" />
+	<strong><spring:message code="rendezVous.description" />:</strong> <jstl:out value="${rendezVous.description}" />
 </p>
-
+<br>
 <!-- Similar RendezVouses -->
 <h2><spring:message code="rendezVous.similarRendezVouses"/></h2>
 <display:table name="rendezVous.similarRendezVouses" id="similarRendezVous" requestURI="" class="displaytag" style="width:50%;">
@@ -95,6 +95,7 @@
 <jstl:if test="${own && isDeleted==false}">
 	<a href="rendezVous/user/createLink.do?rendezVousId=${rvid}"><spring:message code="rendezVous.createLink"/></a>
 </jstl:if>
+<br>
 
 <!-- Attendants -->
 <h2><spring:message code="rendezVous.attendants"/></h2>
@@ -132,9 +133,9 @@
 
 <!-- Announcements -->
 
-<h1>
+<h2>
 	<spring:message code="rendezVous.announcements" />: 
-</h1>
+</h2>
 
 <display:table name="rendezVous.announcements" id="announcement" requestURI="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}" pagesize="3" style="text-align:center;" class="displaytag">
 	<display:column titleKey="announcement.title" property="title" />
@@ -151,10 +152,10 @@
 </display:table>
 
 <!-- Comments -->
-<h1>
+<h2>
 	<spring:message code="rendezVous.comments" />: 
-</h1>
-<display:table name="rendezVous.comments" id="comment" requestURI="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}" pagesize="5" style="text-align:center;" class="displaytag">
+</h2>
+<display:table name="rootComments" id="comment" requestURI="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}" pagesize="5" style="text-align:center;" class="displaytag">
 	<display:column titleKey="comment.user">
 		<a href="user/${actorWS}display.do?userId=<jstl:out value="${comment.user.id}" />"><jstl:out value="${comment.user.name}" /></a>
 	</display:column>
@@ -167,6 +168,15 @@
 		<jstl:if test="${comment.picture ne null}">
 			<img src="<jstl:out value="${comment.picture}" />" style="max-width: 200px;" />
 		</jstl:if>
+	</display:column>
+	<security:authorize access="hasRole('USER')">
+	<display:column>
+		<a href="comment/user/create.do?rendezVousId=<jstl:out value="${comment.rendezVous.id}"/>&commentId=<jstl:out value="${comment.id}"/>"><spring:message code="comment.reply"/></a>
+	</display:column>
+	</security:authorize>
+	
+	<display:column titleKey="comment.replies">
+		<a href="comment/${actorWS}list.do?commentId=<jstl:out value="${comment.id}"/>"><spring:message code="comment.listReplies"/></a>
 	</display:column>
 	
 	<security:authorize access="hasRole('ADMINISTRATOR')">

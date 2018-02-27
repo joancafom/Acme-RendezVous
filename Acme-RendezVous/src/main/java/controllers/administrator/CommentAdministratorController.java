@@ -1,6 +1,8 @@
 
 package controllers.administrator;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -39,5 +41,21 @@ public class CommentAdministratorController extends AbstractController {
 		}
 
 		return res;
+	}
+
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public ModelAndView list(@RequestParam final int commentId) {
+		ModelAndView res;
+		final Comment comment = this.commentService.findOne(commentId);
+		Assert.notNull(comment);
+
+		final Collection<Comment> comments = comment.getReplies();
+
+		res = new ModelAndView("comment/list");
+		res.addObject("actorWS", "administrator/");
+		res.addObject("comments", comments);
+
+		return res;
+
 	}
 }

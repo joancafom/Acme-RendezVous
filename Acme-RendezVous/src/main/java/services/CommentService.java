@@ -38,7 +38,7 @@ public class CommentService {
 
 	/* CRUD Methods */
 
-	public Comment create(final RendezVous rv) {
+	public Comment create(final RendezVous rv, final Comment replied) {
 
 		final Comment res = new Comment();
 
@@ -48,6 +48,8 @@ public class CommentService {
 		Assert.isTrue(writter.getAttendedRendezVouses().contains(rv));
 
 		res.setRendezVous(rv);
+		if (replied != null)
+			res.setParentComment(replied);
 		res.setReplies(new ArrayList<Comment>());
 		res.setUser(writter);
 
@@ -76,10 +78,14 @@ public class CommentService {
 		Assert.isTrue(comment.getUser().equals(writter));
 		Assert.isTrue(writter.getAttendedRendezVouses().contains(comment.getRendezVous()));
 
-		return this.commentRepository.save(comment);
+		final Comment res = this.commentRepository.save(comment);
+
+		if (res.getParentComment() != null)
+			res.getParentComment().getReplies().add(res);
+
+		return res;
 
 	}
-
 	public void delete(final Comment comment) {
 
 		Assert.notNull(comment);
@@ -115,5 +121,9 @@ public class CommentService {
 		this.validator.validate(res, binding);
 
 		return res;
+	}
+
+	public Collection<Comment> findRootCommentsByRendezVous(final RendezVous rendezVous) {
+		return this.commentRepository.findRootCommentsByRendezVous(rendezVous.getId());
 	}
 }

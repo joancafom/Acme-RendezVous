@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.CommentService;
 import services.RendezVousService;
 import domain.RendezVous;
 
@@ -21,6 +22,9 @@ public class RendezVousController extends AbstractController {
 	/* Services */
 	@Autowired
 	private RendezVousService	rendezVousService;
+
+	@Autowired
+	private CommentService		commentService;
 
 
 	@RequestMapping(value = "/display", method = RequestMethod.GET)
@@ -35,6 +39,7 @@ public class RendezVousController extends AbstractController {
 		result = new ModelAndView("rendezVous/display");
 
 		result.addObject("rendezVous", rendezVous);
+		result.addObject("rootComments", this.commentService.findRootCommentsByRendezVous(rendezVous));
 
 		return result;
 	}

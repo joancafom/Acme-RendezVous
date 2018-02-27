@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import security.LoginService;
 import services.AnswerService;
+import services.CommentService;
 import services.QuestionService;
 import services.RendezVousService;
 import services.UserService;
@@ -45,6 +46,9 @@ public class RendezVousUserController extends AbstractController {
 
 	@Autowired
 	private QuestionService		questionService;
+
+	@Autowired
+	private CommentService		commentService;
 
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -95,6 +99,7 @@ public class RendezVousUserController extends AbstractController {
 		result = new ModelAndView("rendezVous/display");
 
 		result.addObject("rendezVous", rendezVous);
+		result.addObject("rootComments", this.commentService.findRootCommentsByRendezVous(rendezVous));
 		result.addObject("hasRSVP", hasRSVP);
 		result.addObject("own", own);
 		result.addObject("actorWS", "user/");
