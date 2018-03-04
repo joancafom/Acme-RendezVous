@@ -106,6 +106,30 @@
 		</property>
 	</bean>
 	
+	<bean id="userAccount8" class="security.UserAccount">
+		<property name="username" value="manager1"/>
+		<property name="password" value="c240642ddef994358c96da82c0361a58"/>
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="MANAGER"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="userAccount9" class="security.UserAccount">
+		<property name="username" value="manager2"/>
+		<property name="password" value="8df5127cd164b5bc2d2b78410a7eea0c"/>
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="MANAGER"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
 	<!-- Other domain beans come here -->	
 	
 	<!-- Administrator -->
@@ -188,6 +212,36 @@
 	<bean id="gpsCoordinates4" class="domain.GPSCoordinates">
 		<property name="latitude" value="39.466423"/>
 		<property name="longitude" value="-0.381110"/>
+	</bean>
+	
+	<!-- Manager -->
+	
+	<bean id="manager1" class="domain.Manager">
+		<property name="name" value="Stefani Joanne"/>
+		<property name="surnames" value="Angelina Germanotta"/>
+		<property name="postalAddress" value="Haus of Gaga, Bilbao, España"/>
+		<property name="phoneNumber" value="+34789875643"/>
+		<property name="email" value="gaga@gmail.com"/>
+		<property name="userAccount" ref="userAccount8"/>
+		<property name="vat" value="ES-93959697-R" />
+		<property name="services">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="manager2" class="domain.Manager">
+		<property name="name" value="Sia Kate"/>
+		<property name="surnames" value="Furler"/>
+		<property name="postalAddress" value="Santa Klaus Land, Munchen, Deutschland"/>
+		<property name="phoneNumber" value="+34684758473"/>
+		<property name="email" value="sia@gmail.com"/>
+		<property name="userAccount" ref="userAccount9"/>
+		<property name="vat" value="DE-47154698-M" />
+		<property name="services">
+			<list>
+			</list>
+		</property>
 	</bean>
 	
 	<!-- Question -->
