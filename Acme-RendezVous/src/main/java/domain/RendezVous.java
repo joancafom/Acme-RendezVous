@@ -124,6 +124,7 @@ public class RendezVous extends DomainEntity {
 	private Collection<RendezVous>		similarRendezVouses;
 	private Collection<Announcement>	announcements;
 	private Collection<Question>		questions;
+	private Collection<ServiceRequest>	serviceRequests;
 
 
 	@NotNull
@@ -168,6 +169,13 @@ public class RendezVous extends DomainEntity {
 		return this.questions;
 	}
 
+	@NotNull
+	@Valid
+	@OneToMany(mappedBy = "rendezVous")
+	public Collection<ServiceRequest> getServiceRequests() {
+		return this.serviceRequests;
+	}
+
 	public void setCreator(final User creator) {
 		this.creator = creator;
 	}
@@ -190,6 +198,10 @@ public class RendezVous extends DomainEntity {
 
 	public void setQuestions(final Collection<Question> questions) {
 		this.questions = questions;
+	}
+
+	public void setServiceRequests(final Collection<ServiceRequest> serviceRequests) {
+		this.serviceRequests = serviceRequests;
 	}
 
 }

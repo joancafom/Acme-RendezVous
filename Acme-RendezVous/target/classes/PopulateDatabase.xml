@@ -130,6 +130,18 @@
 		</property>
 	</bean>
 	
+	<bean id="userAccount10" class="security.UserAccount">
+		<property name="username" value="manager3"/>
+		<property name="password" value="2d3a5db4a2a9717b43698520a8de57d0"/>
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="MANAGER"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
 	<!-- Other domain beans come here -->	
 	
 	<!-- Administrator -->
@@ -240,6 +252,25 @@
 		<property name="vat" value="DE-47154698-M" />
 		<property name="services">
 			<list>
+				<ref bean="service3"/>
+				<ref bean="service4"/>
+				<ref bean="service5"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="manager3" class="domain.Manager">
+		<property name="name" value="Marina Lambrini"/>
+		<property name="surnames" value="Diamandis"/>
+		<property name="postalAddress" value="Calle de la Sopa 34, Madrid, España"/>
+		<property name="phoneNumber" value="675869485"/>
+		<property name="email" value="marina_diamandis@gmail.com"/>
+		<property name="userAccount" ref="userAccount10"/>
+		<property name="vat" value="GR-74368212-D" />
+		<property name="services">
+			<list>
+				<ref bean="service1"/>
+				<ref bean="service2"/>
 			</list>
 		</property>
 	</bean>
@@ -323,6 +354,11 @@
 				<ref bean="comment2"/>
 			</list>
 		</property>
+		<property name="serviceRequests">
+			<list>
+				<ref bean="serviceRequest6"/>
+			</list>
+		</property>
 	</bean>
 	
 	<bean id="rendezVous2" class="domain.RendezVous">
@@ -361,6 +397,11 @@
 		<property name="comments">
 			<list>
 				<ref bean="comment3"/>
+			</list>
+		</property>
+		<property name="serviceRequests">
+			<list>
+				<ref bean="serviceRequest4"/>
 			</list>
 		</property>
 	</bean>
@@ -410,6 +451,12 @@
 				<ref bean="comment8"/>
 			</list>
 		</property>
+		<property name="serviceRequests">
+			<list>
+				<ref bean="serviceRequest1"/>
+				<ref bean="serviceRequest5"/>
+			</list>
+		</property>
 	</bean>
 	
 	<bean id="rendezVous4" class="domain.RendezVous">
@@ -441,6 +488,10 @@
 			</list>
 		</property>
 		<property name="comments">
+			<list>
+			</list>
+		</property>
+		<property name="serviceRequests">
 			<list>
 			</list>
 		</property>
@@ -485,6 +536,134 @@
 				<ref bean="comment9"/>
 			</list>
 		</property>
+		<property name="serviceRequests">
+			<list>
+				<ref bean="serviceRequest2"/>
+				<ref bean="serviceRequest3"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Service -->
+	
+	<bean id="service1" class="domain.Service">
+		<property name="name" value="Cooking Service"/>
+		<property name="description" value="Enjoy a good meal with this service in your meet-ups! From soups to some froot!"/>
+		<property name="manager" ref="manager3"/>
+		<property name="serviceRequests">
+			<list>
+				<ref bean="serviceRequest1"/>
+				<ref bean="serviceRequest2"/>
+				<ref bean="serviceRequest6"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="service2" class="domain.Service">
+		<property name="name" value="Gun Renting"/>
+		<property name="description" value="Want to fire some bullets but you haven't got any guns? I'll lend you mine"/>
+		<property name="picture" value="https://i.pinimg.com/236x/f1/ae/d5/f1aed5566b9a1e3a135d1e5313b7a2c9--marina-and-the-diamonds-music-bands.jpg"/>
+		<property name="manager" ref="manager3"/>
+		<property name="serviceRequests">
+			<list>
+				<ref bean="serviceRequest4"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="service3" class="domain.Service">
+		<property name="name" value="Excellent Music"/>
+		<property name="description" value="Amaze your attendats with the best vocals!"/>
+		<property name="picture" value="http://los40es00.epimg.net/los40/imagenes/2017/05/31/album/1496249679_535466_1496310058_album_normal.jpg"/>
+		<property name="manager" ref="manager2"/>
+		<property name="serviceRequests">
+			<list>
+				<ref bean="serviceRequest3"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="service4" class="domain.Service">
+		<property name="name" value="Car Hiring"/>
+		<property name="description" value="Planning to get your attendants to the right place? A nice car is always the best idea!"/>
+		<property name="manager" ref="manager2"/>
+		<property name="serviceRequests">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="service5" class="domain.Service">
+		<property name="name" value="Projector Renting"/>
+		<property name="description" value="A movie? A music video? Maybe some photos? Dazzle them up with an up to 5000lx projector!"/>
+		<property name="manager" ref="manager2"/>
+		<property name="serviceRequests">
+			<list>
+				<ref bean="serviceRequest5"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- CreditCard -->
+	
+	<bean id="creditCard1" class="domain.CreditCard">
+		<property name="holderName" value="DANIEL YOUMANS"></property>
+		<property name="brandName" value="Visa"></property>
+		<property name="number" value="4532510079649114"></property>
+		<property name="CVV" value="819"></property>
+		<property name="month" value="02"></property>
+		<property name="year" value="2018"></property>
+	</bean>
+
+	<bean id="creditCard2" class="domain.CreditCard">
+		<property name="holderName" value="GABRIELLA HIGGINS"></property>
+		<property name="brandName" value="American Express"></property>
+		<property name="number" value="340289857592438"></property>
+		<property name="CVV" value="811"></property>
+		<property name="month" value="06"></property>
+		<property name="year" value="2018"></property>
+	</bean>
+	
+	<!-- ServiceRequest -->
+	
+	<bean id="serviceRequest1" class="domain.ServiceRequest">
+		<property name="creditCard" ref="creditCard1"/>
+		<property name="comments" value="Would be nice to get some apples"/>
+		<property name="service" ref="service1"/>
+		<property name="rendezVous" ref="rendezVous3" />
+	</bean>
+	
+	<bean id="serviceRequest2" class="domain.ServiceRequest">
+		<property name="creditCard" ref="creditCard2"/>
+		<property name="comments" value="We want chocolate. Some popcorns would be a nice idea too"/>
+		<property name="service" ref="service1"/>
+		<property name="rendezVous" ref="rendezVous5" />
+	</bean>
+	
+	<bean id="serviceRequest3" class="domain.ServiceRequest">
+		<property name="creditCard" ref="creditCard2"/>
+		<property name="comments" value="Chandelier is a must-have!"/>
+		<property name="service" ref="service3"/>
+		<property name="rendezVous" ref="rendezVous5" />
+	</bean>
+	
+	<bean id="serviceRequest4" class="domain.ServiceRequest">
+		<property name="creditCard" ref="creditCard1"/>
+		<property name="service" ref="service2"/>
+		<property name="rendezVous" ref="rendezVous2" />
+	</bean>
+	
+	<bean id="serviceRequest5" class="domain.ServiceRequest">
+		<property name="creditCard" ref="creditCard1"/>
+		<property name="service" ref="service5"/>
+		<property name="rendezVous" ref="rendezVous3" />
+	</bean>
+	
+	<bean id="serviceRequest6" class="domain.ServiceRequest">
+		<property name="creditCard" ref="creditCard2"/>
+		<property name="comments" value="Expecting hangover so, some sandwiches will be OK"/>
+		<property name="service" ref="service1"/>
+		<property name="rendezVous" ref="rendezVous1" />
 	</bean>
 	
 	<!-- Comment -->
