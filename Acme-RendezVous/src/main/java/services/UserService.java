@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import repositories.UserRepository;
 import security.Authority;
@@ -30,6 +34,9 @@ public class UserService {
 	/* Services */
 	@Autowired
 	private UserAccountService	userAccountService;
+
+	@Autowired
+	private Validator			validator;
 
 
 	public User create() {
@@ -64,6 +71,11 @@ public class UserService {
 	}
 
 	public User save(final User user) {
+		/* Hash the password */
+		final Md5PasswordEncoder encoder = new Md5PasswordEncoder();
+		final String hashedPassword = encoder.encodePassword(user.getUserAccount().getPassword(), null);
+		user.getUserAccount().setPassword(hashedPassword);
+
 		return this.userRepository.save(user);
 	}
 
@@ -71,14 +83,10 @@ public class UserService {
 		return this.userRepository.findByUserAccount(userAccount.getId());
 	}
 
-	public void save(final UserRegisterForm userRegisterForm) {
+	public User reconstruct(final UserRegisterForm userRegisterForm, final BindingResult binding) {
 
-		/* 1. Creamos el User */
 		final User user = this.create();
 
-		/* 2. Al user le añadimos los parametros del form */
-		user.getUserAccount().setUsername(userRegisterForm.getUsername());
-		user.getUserAccount().setPassword(userRegisterForm.getPassword());
 		user.setName(userRegisterForm.getName());
 		user.setSurnames(userRegisterForm.getSurnames());
 		user.setPostalAddress(userRegisterForm.getPostalAddress());
@@ -86,20 +94,17 @@ public class UserService {
 		user.setEmail(userRegisterForm.getEmail());
 		user.setDateOfBirth(userRegisterForm.getDateOfBirth());
 
-		/* 3. Le añadimos los parametros que eran hidden en el form */
-		user.setAnswers(new HashSet<Answer>());
-		user.setAttendedRendezVouses(new HashSet<RendezVous>());
-		user.setComments(new HashSet<Comment>());
-		user.setCreatedRendezVouses(new HashSet<RendezVous>());
+		this.validator.validate(user, binding);
 
-		/* 4. Hasheamos la contraseña */
-		final Md5PasswordEncoder encoder = new Md5PasswordEncoder();
-		final String hashedPassword = encoder.encodePassword(user.getUserAccount().getPassword(), null);
-		user.getUserAccount().setPassword(hashedPassword);
+		user.getUserAccount().setUsername(userRegisterForm.getUsername());
+		user.getUserAccount().setPassword(userRegisterForm.getPassword());
 
-		/* 5. Guardamos el usuario en la BD */
-		this.userRepository.save(user);
+		final Errors userAccountErrors = new BeanPropertyBindingResult(user.getUserAccount(), binding.getObjectName());
 
+		this.validator.validate(user.getUserAccount(), userAccountErrors);
+
+		binding.addAllErrors(userAccountErrors);
+
+		return user;
 	}
-
 }

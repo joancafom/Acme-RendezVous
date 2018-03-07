@@ -3,8 +3,6 @@ package controllers;
 
 import java.util.Collection;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -68,16 +66,17 @@ public class UserController extends AbstractController {
 		return result;
 	}
 	@RequestMapping(value = "/register", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@Valid final UserRegisterForm userRegisterForm, final BindingResult binding) {
+	public ModelAndView save(final UserRegisterForm userRegisterForm, final BindingResult binding) {
 		ModelAndView result;
 
+		final User user = this.userService.reconstruct(userRegisterForm, binding);
 		if (binding.hasErrors())
 			result = this.createEditModelAndView(userRegisterForm);
 		else
 			try {
 				Assert.isTrue(userRegisterForm.getTermsAndConditions() == true);
 				Assert.isTrue(userRegisterForm.getPassword().equals(userRegisterForm.getRepeatedPassword()));
-				this.userService.save(userRegisterForm);
+				this.userService.save(user);
 
 				result = new ModelAndView("welcome/index");
 
@@ -92,6 +91,7 @@ public class UserController extends AbstractController {
 		return result;
 
 	}
+
 	protected ModelAndView createEditModelAndView(final UserRegisterForm userRegisterForm) {
 		ModelAndView result;
 		result = this.createEditModelAndView(userRegisterForm, null);

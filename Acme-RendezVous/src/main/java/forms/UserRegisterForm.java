@@ -3,18 +3,6 @@ package forms;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
-
 public class UserRegisterForm {
 
 	private String	username;
@@ -33,13 +21,10 @@ public class UserRegisterForm {
 		return this.termsAndConditions;
 	}
 
-	@Size(min = 5, max = 32)
-	@Column(unique = true)
 	public String getUsername() {
 		return this.username;
 	}
 
-	@Size(min = 5, max = 32)
 	public String getPassword() {
 		return this.password;
 	}
@@ -48,12 +33,10 @@ public class UserRegisterForm {
 		return this.repeatedPassword;
 	}
 
-	@NotBlank
 	public String getName() {
 		return this.name;
 	}
 
-	@NotBlank
 	public String getSurnames() {
 		return this.surnames;
 	}
@@ -62,21 +45,14 @@ public class UserRegisterForm {
 		return this.postalAddress;
 	}
 
-	@Pattern(regexp = "(^(\\+?[0-9]{9,})|$)")
 	public String getPhoneNumber() {
 		return this.phoneNumber;
 	}
 
-	@NotNull
-	@Email
 	public String getEmail() {
 		return this.email;
 	}
 
-	@NotNull
-	@Past
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	public Date getDateOfBirth() {
 		return this.dateOfBirth;
 	}
