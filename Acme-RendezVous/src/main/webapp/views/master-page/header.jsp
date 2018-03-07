@@ -46,6 +46,7 @@ window.onload = function(){
 			<li><a href="user/user/list.do"><spring:message code="master.page.user.users" /></a></li>
 			<li><a href="rendezVous/user/list.do?show=all"><spring:message code="master.page.user.allRendezVouses" /></a></li>
 			<li><a href="announcement/user/list.do"><spring:message code="master.page.user.announcements" /></a></li>
+			<li><a href="service/user/list.do"><spring:message code="master.page.actor.service" /></a></li>
 			<li><a href="user/user/display.do"><spring:message code="master.page.profile" /> (<security:authentication property="principal.username" />)</a></li>
 		</security:authorize>
 		

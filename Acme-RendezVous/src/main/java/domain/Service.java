@@ -23,6 +23,7 @@ public class Service extends DomainEntity {
 	private String	name;
 	private String	description;
 	private String	picture;
+	private boolean	isInappropiate;
 
 
 	@NotBlank
@@ -40,6 +41,10 @@ public class Service extends DomainEntity {
 		return this.picture;
 	}
 
+	public boolean getIsInappropiate() {
+		return this.isInappropiate;
+	}
+
 	public void setName(final String name) {
 		this.name = name;
 	}
@@ -50,6 +55,10 @@ public class Service extends DomainEntity {
 
 	public void setPicture(final String picture) {
 		this.picture = picture;
+	}
+
+	public void setIsInappropiate(final boolean isInappropiate) {
+		this.isInappropiate = isInappropiate;
 	}
 
 
