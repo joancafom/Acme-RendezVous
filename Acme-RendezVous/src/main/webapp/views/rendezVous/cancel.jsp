@@ -17,6 +17,6 @@
 	<form:hidden path="id"/>
 	<form:hidden path="version"/>
 
-	<input type="submit" id="submitButton" value="<spring:message code="rendezVous.rsvp.cancel"/>">
-	<input type="button" name="back" value="<spring:message code="rendezVous.back"/>" onclick="javascript: relativeRedir('rendezVous/user/list.do?show=all');" />
+	<acme:submit name="submitButton" code="rendezVous.rsvp.cancel"/>
+	<acme:cancel url="rendezVous/user/list.do?show=all" code="rendezVous.back"/>
 </form:form>	

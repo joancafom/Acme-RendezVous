@@ -21,9 +21,7 @@
 	<acme:textbox code="rendezVous.name" path="name"/><br>
 	<acme:textarea code="rendezVous.description" path="description"/><br>
 	
-	<form:label path="orgDate"><strong><spring:message code="rendezVous.orgDate"/>:</strong></form:label>
-	<form:input path="orgDate" placeholder="dd/MM/aaaa HH:mm"/>
-	<form:errors cssClass="error" path="orgDate"/><br><br>
+	<acme:date path="orgDate" code="rendezVous.orgDate"/><br/><br/>
 	
 	<acme:textbox code="rendezVous.picture" path="picture"/><br>
 	<acme:textbox code="rendezVous.coordinates.latitude" path="coordinates.latitude"/><br>

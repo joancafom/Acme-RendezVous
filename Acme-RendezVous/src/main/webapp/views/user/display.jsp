@@ -25,7 +25,7 @@
 <jstl:if test="${user.email!=null}">
 	<p><strong><spring:message code="user.email"/>:</strong> <jstl:out value="${user.email}"/></p>
 </jstl:if>
-<p><strong><spring:message code="user.dateOfBirth"/>:</strong><acme:dateFormat code="date.format2" value="${user.dateOfBirth}"/></p>
+<p><strong><spring:message code="user.dateOfBirth"/>:</strong><acme:dateFormat code="date.format3" value="${user.dateOfBirth}"/></p>
 
 <h3><spring:message code="user.attendedRendezVouses"/></h3>
 <display:table name="attendedRendezVouses" id="rendezVous" requestURI="rendezVous${actorWS}/list.do" class="displaytag">
@@ -46,10 +46,11 @@
 		<display:column titleKey="user.rendezVous.description">
 			<p><jstl:out value="${rendezVous.description}"/></p>
 		</display:column>
+		
 		<display:column titleKey="user.rendezVous.orgDate" class="tableRendezVous">
-			<spring:message code="date.format3" var="dateFormat"></spring:message>
-			<p><fmt:formatDate value="${rendezVous.orgDate}" pattern="${dateFormat}" type="both"/></p>
+			<acme:dateFormat code="date.format2" value="${rendezVous.orgDate}" type="both"/>
 		</display:column>
+		
 		<display:column class="tableRendezVous">
 			<p><a href="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}"><spring:message code="user.rendezVous.display"/></a></p>
 		</display:column>

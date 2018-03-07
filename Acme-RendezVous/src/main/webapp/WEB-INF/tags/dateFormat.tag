@@ -20,8 +20,14 @@
 <%@ attribute name="code" required="true" %>
 <%@ attribute name="value" required="true" type="java.util.Date"%>
 
+<%@ attribute name="type" required="false" %>
+
+<jstl:if test="${type == null}">
+	<jstl:set var="type" value="date" />
+</jstl:if>
+
 <%-- Definition --%>
 
 	<spring:message code="${code}" var="acmeDateFormat"></spring:message>
-	<fmt:formatDate value="${value}" pattern="${acmeDateFormat}" type="date"/>
+	<fmt:formatDate value="${value}" pattern="${acmeDateFormat}" type="${type}"/>
 

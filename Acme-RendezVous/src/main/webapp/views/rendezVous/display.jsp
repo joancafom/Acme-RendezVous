@@ -78,10 +78,11 @@
 	<display:column titleKey="rendezVous.description">
 		<p><jstl:out value="${similarRendezVous.description}"/></p>
 	</display:column>
+	
 	<display:column titleKey="rendezVous.orgDate" class="tableRendezVous">
-		<spring:message code="date.format2" var="dateFormat"></spring:message>
-		<p><fmt:formatDate value="${similarRendezVous.orgDate}" pattern="${dateFormat}" type="both"/></p>
+		<acme:dateFormat code="date.format2" value="${similarRendezVous.orgDate}" type="both"/>
 	</display:column>
+	
 	<display:column class="tableRendezVous">
 		<p><a href="rendezVous/${actorWS}display.do?rendezVousId=${similarRendezVous.id}"><spring:message code="rendezVous.display"/></a></p>
 	</display:column>

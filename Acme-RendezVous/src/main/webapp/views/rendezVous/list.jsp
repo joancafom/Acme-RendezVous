@@ -34,10 +34,11 @@
 		<display:column titleKey="rendezVous.description">
 			<p><jstl:out value="${rendezVous.description}"/></p>
 		</display:column>
+		
 		<display:column titleKey="rendezVous.orgDate" class="tableRendezVous">
-			<spring:message code="date.format2" var="dateFormat"></spring:message>
-			<p><fmt:formatDate value="${rendezVous.orgDate}" pattern="${dateFormat}" type="both"/></p>
+			<acme:dateFormat code="date.format2" value="${rendezVous.orgDate}" type="both"/>
 		</display:column>
+		
 		<display:column class="tableRendezVous">
 			<p><a href="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.display"/></a></p>
 		</display:column>
@@ -91,10 +92,11 @@
 		<display:column titleKey="rendezVous.description" style="width: 20%;">
 			<p><jstl:out value="${rendezVous.description}"/></p>
 		</display:column>
+		
 		<display:column titleKey="rendezVous.orgDate" class="tableRendezVous">
-			<spring:message code="date.format2" var="dateFormat"></spring:message>
-			<p><fmt:formatDate value="${rendezVous.orgDate}" pattern="${dateFormat}" type="both"/></p>
+			<acme:dateFormat code="date.format2" value="${rendezVous.orgDate}" type="both"/>
 		</display:column>
+		
 		<display:column titleKey="rendezVous.coordinates" class="tableRendezVous">
 			<jstl:if test="${rendezVous.coordinates.latitude!=null || rendezVous.coordinates.longitude!=null}">
 				<p>(Lat: <jstl:out value="${rendezVous.coordinates.latitude}"/>, Long: <jstl:out value="${rendezVous.coordinates.longitude}"/>)</p>
