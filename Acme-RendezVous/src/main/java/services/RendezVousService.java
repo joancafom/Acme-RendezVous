@@ -20,6 +20,7 @@ import domain.Comment;
 import domain.GPSCoordinates;
 import domain.Question;
 import domain.RendezVous;
+import domain.ServiceRequest;
 import domain.User;
 import forms.RSVPForm;
 import forms.SimilarRendezVousForm;
@@ -257,12 +258,14 @@ public class RendezVousService {
 			final Collection<Question> questions = new HashSet<Question>();
 			final Collection<Announcement> announcements = new HashSet<Announcement>();
 			final Collection<RendezVous> similarRendezVouses = new HashSet<RendezVous>();
+			final Collection<ServiceRequest> serviceRequests = new HashSet<ServiceRequest>();
 
 			result.setCreator(user);
 			result.setComments(comments);
 			result.setSimilarRendezVouses(similarRendezVouses);
 			result.setAnnouncements(announcements);
 			result.setQuestions(questions);
+			result.setServiceRequests(serviceRequests);
 			attendants.add(user);
 			result.setAttendants(attendants);
 

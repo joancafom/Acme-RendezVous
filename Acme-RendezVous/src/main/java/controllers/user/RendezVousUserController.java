@@ -329,7 +329,9 @@ public class RendezVousUserController extends AbstractController {
 		} else
 			try {
 				final RendezVous sRV = this.rendezVousService.getSimilarRendezVousByForm(rendezVous);
+				Assert.notNull(sRV);
 				final RendezVous pRV = this.rendezVousService.getParentRendezVousByForm(rendezVous);
+				Assert.notNull(pRV);
 				this.rendezVousService.addSimilarRendezVous(pRV, sRV);
 				result = new ModelAndView("redirect:display.do?rendezVousId=" + pRV.getId());
 			} catch (final Throwable oops) {

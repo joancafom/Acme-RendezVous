@@ -1,7 +1,6 @@
 
 package forms;
 
-import javax.validation.constraints.NotNull;
 
 public class SimilarRendezVousForm {
 
@@ -9,7 +8,6 @@ public class SimilarRendezVousForm {
 	private int	id;
 
 
-	@NotNull
 	public int getRendezVous() {
 		return this.rendezVous;
 	}
@@ -18,7 +16,6 @@ public class SimilarRendezVousForm {
 		this.rendezVous = rendezVous;
 	}
 
-	@NotNull
 	public int getId() {
 		return this.id;
 	}
