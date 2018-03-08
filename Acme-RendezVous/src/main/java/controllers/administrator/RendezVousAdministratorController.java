@@ -16,6 +16,7 @@ import security.LoginService;
 import services.AdministratorService;
 import services.CommentService;
 import services.RendezVousService;
+import services.ServiceService;
 import controllers.AbstractController;
 import domain.Administrator;
 import domain.RendezVous;
@@ -33,6 +34,9 @@ public class RendezVousAdministratorController extends AbstractController {
 
 	@Autowired
 	private CommentService			commentService;
+
+	@Autowired
+	private ServiceService			serviceService;
 
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -61,11 +65,14 @@ public class RendezVousAdministratorController extends AbstractController {
 
 		Assert.notNull(rendezVous);
 
+		final Collection<domain.Service> services = this.serviceService.getServicesUsedByRendezVous(rendezVous);
+
 		result = new ModelAndView("rendezVous/display");
 
 		result.addObject("actorWS", "administrator/");
 		result.addObject("rootComments", this.commentService.findRootCommentsByRendezVous(rendezVous));
 		result.addObject("rendezVous", rendezVous);
+		result.addObject("services", services);
 
 		return result;
 	}

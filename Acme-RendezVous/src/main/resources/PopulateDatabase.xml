@@ -549,7 +549,7 @@
 	<bean id="service1" class="domain.Service">
 		<property name="name" value="Cooking Service"/>
 		<property name="description" value="Enjoy a good meal with this service in your meet-ups! From soups to some froot!"/>
-		<property name="isInappropiate" value="false"/>
+		<property name="isCanceled" value="false"/>
 		<property name="manager" ref="manager3"/>
 		<property name="serviceRequests">
 			<list>
@@ -564,7 +564,7 @@
 		<property name="name" value="Gun Renting"/>
 		<property name="description" value="Want to practice some clay pigeon shooting but you haven't got any guns? I'll lend you mine"/>
 		<property name="picture" value="https://i.pinimg.com/236x/f1/ae/d5/f1aed5566b9a1e3a135d1e5313b7a2c9--marina-and-the-diamonds-music-bands.jpg"/>
-		<property name="isInappropiate" value="false"/>
+		<property name="isCanceled" value="false"/>
 		<property name="manager" ref="manager3"/>
 		<property name="serviceRequests">
 			<list>
@@ -577,7 +577,7 @@
 		<property name="name" value="Excellent Music"/>
 		<property name="description" value="Amaze your attendats with the best vocals!"/>
 		<property name="picture" value="https://ep01.epimg.net/elpais/imagenes/2016/12/13/estilo/1481646175_804345_1481646424_noticia_normal.jpg"/>
-		<property name="isInappropiate" value="false"/>
+		<property name="isCanceled" value="false"/>
 		<property name="manager" ref="manager2"/>
 		<property name="serviceRequests">
 			<list>
@@ -589,7 +589,7 @@
 	<bean id="service4" class="domain.Service">
 		<property name="name" value="Car Hiring"/>
 		<property name="description" value="Planning to get your attendants to the right place? A nice car is always the best idea!"/>
-		<property name="isInappropiate" value="true"/>
+		<property name="isCanceled" value="true"/>
 		<property name="manager" ref="manager2"/>
 		<property name="serviceRequests">
 			<list>
@@ -600,7 +600,7 @@
 	<bean id="service5" class="domain.Service">
 		<property name="name" value="Projector Renting"/>
 		<property name="description" value="A movie? A music video? Maybe some photos? Dazzle them up with an up to 5000lx projector!"/>
-		<property name="isInappropiate" value="true"/>
+		<property name="isCanceled" value="true"/>
 		<property name="manager" ref="manager2"/>
 		<property name="serviceRequests">
 			<list>

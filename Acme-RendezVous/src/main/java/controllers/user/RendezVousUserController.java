@@ -22,6 +22,7 @@ import services.AnswerService;
 import services.CommentService;
 import services.QuestionService;
 import services.RendezVousService;
+import services.ServiceService;
 import services.UserService;
 import controllers.AbstractController;
 import domain.Answer;
@@ -50,6 +51,9 @@ public class RendezVousUserController extends AbstractController {
 
 	@Autowired
 	private CommentService		commentService;
+
+	@Autowired
+	private ServiceService		serviceService;
 
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -89,10 +93,12 @@ public class RendezVousUserController extends AbstractController {
 		ModelAndView result;
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
-		final boolean hasRSVP = user.getAttendedRendezVouses().contains(rendezVous);
-		final boolean own = rendezVous.getCreator().equals(user);
 
 		Assert.notNull(rendezVous);
+
+		final boolean hasRSVP = user.getAttendedRendezVouses().contains(rendezVous);
+		final boolean own = rendezVous.getCreator().equals(user);
+		final Collection<domain.Service> services = this.serviceService.getServicesUsedByRendezVous(rendezVous);
 
 		if (user.getAge() < 18)
 			Assert.isTrue(!rendezVous.getIsForAdults());
@@ -103,6 +109,7 @@ public class RendezVousUserController extends AbstractController {
 		result.addObject("rootComments", this.commentService.findRootCommentsByRendezVous(rendezVous));
 		result.addObject("hasRSVP", hasRSVP);
 		result.addObject("own", own);
+		result.addObject("services", services);
 		result.addObject("actorWS", "user/");
 
 		return result;

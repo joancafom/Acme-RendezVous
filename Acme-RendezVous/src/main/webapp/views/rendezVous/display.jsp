@@ -212,3 +212,23 @@
 	
 	<a href="question/user/create.do?rendezVousId=${rendezVous.id}"><spring:message code="question.create"/></a>
 </jstl:if>
+
+<h2><spring:message code="rendezVous.services"/></h2>
+
+<display:table name="services" id="service" requestURI="rendezVous/user/display.do?rendezVousId=${rendezVous.id}" style="text-align:center;" class="displaytag">
+	
+	<display:column titleKey="service.name" property="name" />
+	<display:column titleKey="service.description" property="description" />
+	<display:column>
+		<jstl:if test="${service.picture ne null}">
+			<img src="<jstl:out value="${service.picture}" />" alt="<spring:message code="img.alt.service.picture" />" style="max-width: 200px;" />
+		</jstl:if>
+	</display:column>
+	
+	<jstl:if test="${own}">
+		<display:column>
+			<a href="serviceRequest/user/delete.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="rendezVous.service.serviceRequest.delete" /></a>
+		</display:column>
+	</jstl:if>
+	
+</display:table>

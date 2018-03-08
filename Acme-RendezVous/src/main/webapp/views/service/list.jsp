@@ -8,23 +8,17 @@
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
-<style>
-	.tableService{
-		text-align:center;
-	}
-</style>
-
-<display:table name="services" id="service" requestURI="rendezVous/${actor}list.do" class="displaytag">
+<display:table name="services" id="service" requestURI="rendezVous/${actor}list.do" style="text-align:center;" class="displaytag">
 	
-	<display:column titleKey="service.name" property="name" class="tableService" />
-	<display:column titleKey="service.description" property="description" class="tableService" />
-	<display:column class="tableService">
+	<display:column titleKey="service.name" property="name" />
+	<display:column titleKey="service.description" property="description" />
+	<display:column>
 		<jstl:if test="${service.picture ne null}">
-			<img src="<jstl:out value="${service.picture}" />" alt="<spring:message code="img.alt.service.picture" />" width="200px" />
+			<img src="<jstl:out value="${service.picture}" />" alt="<spring:message code="img.alt.service.picture" />" style="max-width: 200px;" />
 		</jstl:if>
 	</display:column>
 	
-	<display:column class="tableService">
+	<display:column>
 		<a href="serviceRequest/user/create.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="service.serviceRequest.new" /></a>
 	</display:column>
 	

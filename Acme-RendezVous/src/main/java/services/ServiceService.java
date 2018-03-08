@@ -98,6 +98,21 @@ public class ServiceService {
 
 	}
 
+	public Collection<domain.Service> getServicesUsedByRendezVous(final RendezVous rendezVous) {
+
+		// v1.0 - Implemented by JA
+
+		final Collection<domain.Service> res;
+
+		Assert.notNull(rendezVous);
+
+		res = this.serviceRepository.servicesByRendezVousId(rendezVous.getId());
+
+		Assert.notNull(res);
+
+		return res;
+
+	}
 	public boolean checkRendezVousUsingService(final RendezVous rendezVous, final domain.Service service) {
 
 		// v1.0 - Implemented by JA
