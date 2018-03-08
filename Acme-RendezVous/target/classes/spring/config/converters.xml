@@ -38,6 +38,9 @@
 		<bean class="converters.CommentToStringConverter"/>
 		<bean class="converters.StringToCommentConverter"/>
 		
+		<bean class="converters.CreditCardToStringConverter"/>
+		<bean class="converters.StringToCreditCardConverter"/>
+		
 		<bean class="converters.GPSCoordinatesToStringConverter"/>
 		<bean class="converters.StringToGPSCoordinatesConverter"/>
 		
@@ -46,6 +49,12 @@
 		
 		<bean class="converters.RendezVousToStringConverter"/>
 		<bean class="converters.StringToRendezVousConverter"/>
+		
+		<bean class="converters.ServiceToStringConverter"/>
+		<bean class="converters.StringToServiceConverter"/>
+		
+		<bean class="converters.ServiceRequestToStringConverter"/>
+		<bean class="converters.StringToServiceRequestConverter"/>
 		
 		<bean class="converters.UserAccountToStringConverter"/>
 		<bean class="converters.StringToUserAccountConverter"/>
