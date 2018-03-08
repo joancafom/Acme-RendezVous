@@ -10,6 +10,14 @@
 
 <display:table name="services" id="service" requestURI="rendezVous/${actor}list.do" style="text-align:center;" class="displaytag">
 	
+	<display:column titleKey="service.state">
+		<jstl:if test="${service.isCanceled}">
+			<p style="color:red;"><strong><spring:message code="service.canceled"/></strong></p>
+		</jstl:if>
+		<jstl:if test="${!service.isCanceled}">
+			<p style="color:green;"><strong><spring:message code="service.available"/></strong></p>
+		</jstl:if>
+	</display:column>
 	<display:column titleKey="service.name" property="name" />
 	<display:column titleKey="service.description" property="description" />
 	<display:column>
