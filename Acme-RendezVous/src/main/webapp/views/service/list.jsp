@@ -28,7 +28,9 @@
 	
 	<display:column>
 		<security:authorize access="hasRole('USER')">
-			<a href="serviceRequest/user/create.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="service.serviceRequest.new" /></a>
+			<jstl:if test="${!service.isCanceled}">
+				<a href="serviceRequest/user/create.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="service.serviceRequest.new" /></a>
+			</jstl:if>
 		</security:authorize>
 		
 		<security:authorize access="hasRole('ADMINISTRATOR')">
