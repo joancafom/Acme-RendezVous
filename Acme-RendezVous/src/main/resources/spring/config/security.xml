@@ -80,12 +80,14 @@
 		<security:intercept-url pattern="/rendezVous/administrator/display.do" access="hasRole('ADMINISTRATOR')" />
 		<security:intercept-url pattern="/rendezVous/administrator/remove.do" access="hasRole('ADMINISTRATOR')" />
 
+		<security:intercept-url pattern="/service/administrator/cancel.do" access="hasRole('ADMINISTRATOR')" />
+		<security:intercept-url pattern="/service/administrator/list.do" access="hasRole('ADMINISTRATOR')" />
 		<security:intercept-url pattern="/service/user/list.do" access="hasRole('USER')" />
 		 
 		<security:intercept-url pattern="/serviceRequest/user/create.do" access="hasRole('USER')" /> 
 		<security:intercept-url pattern="/serviceRequest/user/edit.do" access="hasRole('USER')" /> 
-		<security:intercept-url pattern="/serviceRequest/user/delete.do" access="hasRole('USER')" /> 
-
+		<security:intercept-url pattern="/serviceRequest/user/delete.do" access="hasRole('USER')" />
+		
 		<security:intercept-url pattern="/user/register.do" access="isAnonymous()" /> 
 		<security:intercept-url pattern="/user/list.do" access="isAnonymous()" /> 
 		<security:intercept-url pattern="/user/display.do" access="isAnonymous()" /> 

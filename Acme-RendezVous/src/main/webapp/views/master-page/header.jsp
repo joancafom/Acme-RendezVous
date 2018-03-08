@@ -38,6 +38,7 @@ window.onload = function(){
 		<security:authorize access="hasRole('ADMINISTRATOR')">
 			<li><a href="administrator/display-dashboard.do"><spring:message code="master.page.administrator.dashboard"/></a></li>
 			<li><a href="rendezVous/administrator/list.do"><spring:message code="master.page.administrator.rendezVouses"/></a></li>
+			<li><a href="service/administrator/list.do"><spring:message code="master.page.actor.service" /></a></li>
 		</security:authorize>
 		
 		<security:authorize access="hasRole('USER')">

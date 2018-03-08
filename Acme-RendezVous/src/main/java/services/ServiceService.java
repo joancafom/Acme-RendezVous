@@ -113,4 +113,16 @@ public class ServiceService {
 		return res;
 
 	}
+
+	public void cancel(final domain.Service service) {
+
+		// v1.0 - Implemented by Alicia
+
+		Assert.isTrue(!service.getIsCanceled());
+
+		service.setIsCanceled(true);
+
+		this.save(service);
+
+	}
 }

@@ -19,7 +19,15 @@
 	</display:column>
 	
 	<display:column>
-		<a href="serviceRequest/user/create.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="service.serviceRequest.new" /></a>
+		<security:authorize access="hasRole('USER')">
+			<a href="serviceRequest/user/create.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="service.serviceRequest.new" /></a>
+		</security:authorize>
+		
+		<security:authorize access="hasRole('ADMINISTRATOR')">
+			<jstl:if test="${!service.isCanceled}">
+				<a href="service/administrator/cancel.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="service.cancel" /></a>
+			</jstl:if>
+		</security:authorize>
 	</display:column>
 	
 </display:table>
