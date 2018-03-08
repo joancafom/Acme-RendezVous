@@ -12,6 +12,7 @@ import org.springframework.util.Assert;
 import repositories.ServiceRepository;
 import security.LoginService;
 import domain.RendezVous;
+import domain.ServiceRequest;
 import domain.User;
 
 @Service
@@ -21,15 +22,18 @@ public class ServiceService {
 	/* Repositories */
 
 	@Autowired
-	private ServiceRepository	serviceRepository;
+	private ServiceRepository		serviceRepository;
 
 	/* Supporting Services */
 
 	@Autowired
-	private UserService			userService;
+	private UserService				userService;
 
 	@Autowired
-	private RendezVousService	rendezVousService;
+	private RendezVousService		rendezVousService;
+
+	@Autowired
+	private ServiceRequestService	serviceRequestService;
 
 
 	/* Business Methods */
@@ -116,9 +120,12 @@ public class ServiceService {
 
 	public void cancel(final domain.Service service) {
 
-		// v1.0 - Implemented by Alicia
+		// v2.0 - Implemented by Alicia
 
 		Assert.isTrue(!service.getIsCanceled());
+
+		for (final ServiceRequest sr : service.getServiceRequests())
+			this.serviceRequestService.delete(sr);
 
 		service.setIsCanceled(true);
 

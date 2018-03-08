@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 
 import repositories.ServiceRequestRepository;
 import security.LoginService;
+import domain.Administrator;
 import domain.ServiceRequest;
 import domain.User;
 
@@ -30,6 +31,9 @@ public class ServiceRequestService {
 
 	@Autowired
 	private ServiceService				serviceService;
+
+	@Autowired
+	private AdministratorService		administratorService;
 
 
 	/* Business Methods */
@@ -91,17 +95,17 @@ public class ServiceRequestService {
 
 	public void delete(final ServiceRequest serviceRequest) {
 
-		//v1.0 - Implemented by JA
+		// v1.0 - Implemented by JA
+		// v2.0 - Changes by Alicia
 
 		Assert.notNull(serviceRequest);
 
-		final User currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
-
-		Assert.notNull(currentUser);
-		Assert.isTrue(currentUser.equals(serviceRequest.getRendezVous().getCreator()));
+		if (LoginService.getPrincipal().getId() != serviceRequest.getRendezVous().getCreator().getUserAccount().getId()) {
+			final Administrator administrator = this.administratorService.findByUserAccount(LoginService.getPrincipal());
+			Assert.notNull(administrator);
+		}
 
 		this.serviceRequestRepository.delete(serviceRequest);
 
 	}
-
 }
