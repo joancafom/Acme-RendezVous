@@ -73,6 +73,28 @@ public class ServiceRequestUserController extends AbstractController {
 
 	}
 
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	public ModelAndView delete(@RequestParam final int serviceRequestId) {
+
+		//v1.0 - Implemented by JA
+		ModelAndView res;
+
+		final ServiceRequest serviceRequest = this.serviceRequestService.findOne(serviceRequestId);
+
+		Assert.notNull(serviceRequest);
+
+		try {
+
+			res = new ModelAndView("redirect:/rendezVous/user/display.do?rendezVousId=" + serviceRequest.getRendezVous().getId());
+			this.serviceRequestService.delete(serviceRequest);
+
+		} catch (final Throwable oops) {
+			res = new ModelAndView("redirect:/rendezVous/user/display.do?rendezVousId=" + serviceRequest.getRendezVous().getId());
+		}
+
+		return res;
+
+	}
 	//Ancillary Methods
 
 	protected ModelAndView createEditModelAndView(final ServiceRequest serviceRequest) {

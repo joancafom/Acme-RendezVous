@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import services.CommentService;
 import services.RendezVousService;
-import services.ServiceService;
 import domain.RendezVous;
 
 @Controller
@@ -27,9 +26,6 @@ public class RendezVousController extends AbstractController {
 	@Autowired
 	private CommentService		commentService;
 
-	@Autowired
-	private ServiceService		serviceService;
-
 
 	@RequestMapping(value = "/display", method = RequestMethod.GET)
 	public ModelAndView display(@RequestParam final int rendezVousId) {
@@ -40,13 +36,10 @@ public class RendezVousController extends AbstractController {
 		Assert.notNull(rendezVous);
 		Assert.isTrue(!rendezVous.getIsForAdults());
 
-		final Collection<domain.Service> services = this.serviceService.getServicesUsedByRendezVous(rendezVous);
-
 		result = new ModelAndView("rendezVous/display");
 
 		result.addObject("rendezVous", rendezVous);
 		result.addObject("rootComments", this.commentService.findRootCommentsByRendezVous(rendezVous));
-		result.addObject("services", services);
 
 		return result;
 	}

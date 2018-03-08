@@ -3,6 +3,7 @@ package services;
 
 import java.util.Collection;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,6 +69,7 @@ public class ServiceRequestService {
 		// v1.0 - Implemented by JA
 
 		final User currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
+		final LocalDate now = new LocalDate();
 
 		Assert.notNull(newServiceRequest);
 		Assert.notNull(currentUser);
@@ -76,10 +78,29 @@ public class ServiceRequestService {
 		Assert.isTrue(newServiceRequest.getId() == 0);
 		Assert.isTrue(currentUser.equals(newServiceRequest.getRendezVous().getCreator()));
 
+		//Ensure the creditCard's not expired
+		Assert.isTrue((now.getYear() == newServiceRequest.getCreditCard().getYear() && now.getMonthOfYear() == newServiceRequest.getCreditCard().getMonth()) || (now.getYear() < newServiceRequest.getCreditCard().getYear())
+			|| (now.getYear() == newServiceRequest.getCreditCard().getYear() && now.getMonthOfYear() < newServiceRequest.getCreditCard().getMonth()));
+
 		//We must make sure that the RendezVous does not have that Service already
 		Assert.isTrue(!this.serviceService.checkRendezVousUsingService(newServiceRequest.getRendezVous(), newServiceRequest.getService()));
 
 		return this.serviceRequestRepository.save(newServiceRequest);
+
+	}
+
+	public void delete(final ServiceRequest serviceRequest) {
+
+		//v1.0 - Implemented by JA
+
+		Assert.notNull(serviceRequest);
+
+		final User currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(currentUser);
+		Assert.isTrue(currentUser.equals(serviceRequest.getRendezVous().getCreator()));
+
+		this.serviceRequestRepository.delete(serviceRequest);
 
 	}
 
