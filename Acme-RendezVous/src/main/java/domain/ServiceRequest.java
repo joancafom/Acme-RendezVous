@@ -8,6 +8,9 @@ import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
+
 @Entity
 @Access(AccessType.PROPERTY)
 public class ServiceRequest extends DomainEntity {
@@ -24,6 +27,7 @@ public class ServiceRequest extends DomainEntity {
 		return this.creditCard;
 	}
 
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getComments() {
 		return this.comments;
 	}
