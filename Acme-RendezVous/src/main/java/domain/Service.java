@@ -25,7 +25,7 @@ public class Service extends DomainEntity {
 	private String	name;
 	private String	description;
 	private String	picture;
-	private boolean	isInappropiate;
+	private boolean	isCanceled;
 
 
 	@NotBlank
@@ -45,8 +45,8 @@ public class Service extends DomainEntity {
 		return this.picture;
 	}
 
-	public boolean getIsInappropiate() {
-		return this.isInappropiate;
+	public boolean getIsCanceled() {
+		return this.isCanceled;
 	}
 
 	public void setName(final String name) {
@@ -61,8 +61,8 @@ public class Service extends DomainEntity {
 		this.picture = picture;
 	}
 
-	public void setIsInappropiate(final boolean isInappropiate) {
-		this.isInappropiate = isInappropiate;
+	public void setIsCanceled(final boolean isCanceled) {
+		this.isCanceled = isCanceled;
 	}
 
 
