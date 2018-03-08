@@ -101,3 +101,56 @@
 		</jstl:if>
 	</display:column>
 </display:table>
+
+<h4><spring:message code="bestSellingServices"/>:</h4>
+<display:table name="bestSellingServices" id="service" requestURI="administrator/display-dashboard.do" style="text-align:center;" class="displaytag" pagesize="5">
+	
+	<display:column titleKey="service.state">
+		<jstl:if test="${service.isCanceled}">
+			<p style="color:red;"><strong><spring:message code="service.canceled"/></strong></p>
+		</jstl:if>
+		<jstl:if test="${!service.isCanceled}">
+			<p style="color:green;"><strong><spring:message code="service.available"/></strong></p>
+		</jstl:if>
+	</display:column>
+	
+	<display:column titleKey="service.name" property="name" />
+	<display:column titleKey="service.description" property="description" />
+	
+	<display:column>
+		<jstl:if test="${service.picture ne null}">
+			<img src="<jstl:out value="${service.picture}" />" alt="<spring:message code="img.alt.service.picture" />" style="max-width: 200px;" />
+		</jstl:if>
+	</display:column>
+	
+	<display:column>
+		<jstl:if test="${!service.isCanceled}">
+			<a href="service/administrator/cancel.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="service.cancel" /></a>
+		</jstl:if>
+	</display:column>
+	
+</display:table>
+
+<h4><spring:message code="managersMoreServicesThanAverage"/>:</h4>
+<display:table name="managersMoreServicesThanAverage" id="manager" requestURI="administrator/display-dashboard.do" style="text-align:center;" class="displaytag" pagesize="5">
+
+	<display:column titleKey="manager.vat" property="vat"/>
+	<display:column titleKey="manager.name" property="name"/>
+	<display:column titleKey="manager.surnames" property="surnames"/>
+	<display:column titleKey="manager.postalAddress" property="postalAddress"/>
+	<display:column titleKey="manager.phoneNumber" property="phoneNumber"/>
+	<display:column titleKey="manager.email" property="email"/>
+
+</display:table>
+
+<h4><spring:message code="managersWithMoreServicesCancelled"/>:</h4>
+<display:table name="managersWithMoreServicesCancelled" id="manager" requestURI="administrator/display-dashboard.do" style="text-align:center;" class="displaytag" pagesize="5">
+
+	<display:column titleKey="manager.vat" property="vat"/>
+	<display:column titleKey="manager.name" property="name"/>
+	<display:column titleKey="manager.surnames" property="surnames"/>
+	<display:column titleKey="manager.postalAddress" property="postalAddress"/>
+	<display:column titleKey="manager.phoneNumber" property="phoneNumber"/>
+	<display:column titleKey="manager.email" property="email"/>
+
+</display:table>

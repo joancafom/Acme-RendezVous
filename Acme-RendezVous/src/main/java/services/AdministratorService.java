@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import repositories.AdministratorRepository;
 import security.UserAccount;
 import domain.Administrator;
+import domain.Manager;
 import domain.RendezVous;
 
 @Service
@@ -133,4 +134,20 @@ public class AdministratorService {
 	public Administrator findByUserAccount(final UserAccount userAccount) {
 		return this.administratorRepository.findByUserAccount(userAccount.getId());
 	}
+
+	// v1.0 - Implemented by Alicia
+	public Collection<domain.Service> bestSellingServices() {
+		return this.administratorRepository.bestSellingServices();
+	}
+
+	// v1.0 - Implemented by Alicia
+	public Collection<Manager> managersMoreServicesThanAverage() {
+		return this.administratorRepository.managersMoreServicesThanAverage();
+	}
+
+	// v1.0 - Implemented by Alicia
+	public Collection<Manager> managersWithMoreServicesCancelled() {
+		return this.administratorRepository.managersWithMoreServicesCancelled();
+	}
+
 }
