@@ -34,7 +34,7 @@ public class Manager extends Actor {
 
 	//Relationships
 
-	Collection<Service>	services;
+	private Collection<Service>	services;
 
 
 	@NotNull

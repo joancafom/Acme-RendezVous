@@ -44,6 +44,9 @@
 		<bean class="converters.GPSCoordinatesToStringConverter"/>
 		<bean class="converters.StringToGPSCoordinatesConverter"/>
 		
+		<bean class="converters.ManagerToStringConverter"/>
+		<bean class="converters.StringToManagerConverter"/>
+		
 		<bean class="converters.QuestionToStringConverter"/>
 		<bean class="converters.StringToQuestionConverter"/>
 		

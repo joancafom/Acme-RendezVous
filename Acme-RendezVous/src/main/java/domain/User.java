@@ -79,7 +79,7 @@ public class User extends Actor {
 
 	@NotNull
 	@Valid
-	@ManyToMany()
+	@ManyToMany
 	public Collection<RendezVous> getAttendedRendezVouses() {
 		return this.attendedRendezVouses;
 	}

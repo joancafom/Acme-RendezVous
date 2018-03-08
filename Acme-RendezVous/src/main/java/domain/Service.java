@@ -41,7 +41,6 @@ public class Service extends DomainEntity {
 	}
 
 	@URL
-	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getPicture() {
 		return this.picture;
 	}
@@ -80,15 +79,15 @@ public class Service extends DomainEntity {
 		return this.manager;
 	}
 
-	public void setManager(final Manager manager) {
-		this.manager = manager;
-	}
-
 	@NotNull
 	@Valid
 	@OneToMany(mappedBy = "service")
 	public Collection<ServiceRequest> getServiceRequests() {
 		return this.serviceRequests;
+	}
+
+	public void setManager(final Manager manager) {
+		this.manager = manager;
 	}
 
 	public void setServiceRequests(final Collection<ServiceRequest> serviceRequests) {

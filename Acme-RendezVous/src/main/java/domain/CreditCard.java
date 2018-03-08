@@ -9,7 +9,6 @@ import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 
@@ -37,7 +36,7 @@ public class CreditCard {
 		return this.brandName;
 	}
 
-	@NotEmpty
+	@NotBlank
 	@CreditCardNumber
 	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getNumber() {
@@ -46,18 +45,18 @@ public class CreditCard {
 
 	@Min(100)
 	@Max(999)
-	public Integer getCVV() {
+	public int getCVV() {
 		return this.CVV;
 	}
 
 	@Min(1)
 	@Max(12)
-	public Integer getMonth() {
+	public int getMonth() {
 		return this.month;
 	}
 
 	@Min(2018)
-	public Integer getYear() {
+	public int getYear() {
 		return this.year;
 	}
 
@@ -73,15 +72,15 @@ public class CreditCard {
 		this.number = number;
 	}
 
-	public void setCVV(final Integer CVV) {
+	public void setCVV(final int CVV) {
 		this.CVV = CVV;
 	}
 
-	public void setMonth(final Integer month) {
+	public void setMonth(final int month) {
 		this.month = month;
 	}
 
-	public void setYear(final Integer year) {
+	public void setYear(final int year) {
 		this.year = year;
 	}
 
