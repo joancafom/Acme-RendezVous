@@ -24,4 +24,8 @@
 		</jstl:if>
 	</display:column>
 	
+	<display:column class="tableService">
+		<a href="serviceRequest/user/create.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="service.serviceRequest.new" /></a>
+	</display:column>
+	
 </display:table>

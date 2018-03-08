@@ -268,6 +268,7 @@ public class RendezVousService {
 			result.setServiceRequests(serviceRequests);
 			attendants.add(user);
 			result.setAttendants(attendants);
+			result.setServiceRequests(serviceRequests);
 
 			if (user.getAge() < 18)
 				result.setIsForAdults(false);
@@ -283,10 +284,27 @@ public class RendezVousService {
 			result.setAnnouncements(savedRendezVous.getAnnouncements());
 			result.setQuestions(savedRendezVous.getQuestions());
 			result.setAttendants(savedRendezVous.getAttendants());
+			result.setServiceRequests(savedRendezVous.getServiceRequests());
 
 			this.validator.validate(result, binding);
 		}
 
 		return result;
+	}
+
+	public Collection<RendezVous> findAllByUser(final User user) {
+
+		//v1.0 - Implemented by JA
+
+		Collection<RendezVous> res;
+
+		Assert.notNull(user);
+
+		res = this.rendezVousRepository.findAllByUserId(user.getId());
+
+		Assert.notNull(res);
+
+		return res;
+
 	}
 }

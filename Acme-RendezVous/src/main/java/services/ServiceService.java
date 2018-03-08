@@ -2,12 +2,17 @@
 package services;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import repositories.ServiceRepository;
+import security.LoginService;
+import domain.RendezVous;
+import domain.User;
 
 @Service
 @Transactional
@@ -17,6 +22,14 @@ public class ServiceService {
 
 	@Autowired
 	private ServiceRepository	serviceRepository;
+
+	/* Supporting Services */
+
+	@Autowired
+	private UserService			userService;
+
+	@Autowired
+	private RendezVousService	rendezVousService;
 
 
 	/* Business Methods */
@@ -64,4 +77,40 @@ public class ServiceService {
 
 	/* Other Business methods */
 
+	public Collection<RendezVous> getRendezVousesCreatedNotUsingService(final domain.Service service) {
+
+		// v2.0 - Implemented by JA
+
+		final Collection<RendezVous> res;
+
+		final User creator = this.userService.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(creator);
+		Assert.notNull(service);
+
+		res = new HashSet<RendezVous>(this.rendezVousService.findAllByUser(creator));
+
+		res.removeAll(this.serviceRepository.rendezVousesCreatorIdUsingServiceId(creator.getId(), service.getId()));
+
+		Assert.notNull(res);
+
+		return res;
+
+	}
+
+	public boolean checkRendezVousUsingService(final RendezVous rendezVous, final domain.Service service) {
+
+		// v1.0 - Implemented by JA
+
+		boolean res = true;
+
+		Assert.notNull(rendezVous);
+		Assert.notNull(service);
+
+		//If we obtain a rendezVous is because we are using that service!
+		res = this.serviceRepository.checkRendezVousIdUsingServiceId(rendezVous.getId(), service.getId()) != null;
+
+		return res;
+
+	}
 }

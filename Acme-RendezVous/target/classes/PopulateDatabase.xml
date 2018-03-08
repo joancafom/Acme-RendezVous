@@ -562,7 +562,7 @@
 	
 	<bean id="service2" class="domain.Service">
 		<property name="name" value="Gun Renting"/>
-		<property name="description" value="Want to fire some bullets but you haven't got any guns? I'll lend you mine"/>
+		<property name="description" value="Want to practice some clay pigeon shooting but you haven't got any guns? I'll lend you mine"/>
 		<property name="picture" value="https://i.pinimg.com/236x/f1/ae/d5/f1aed5566b9a1e3a135d1e5313b7a2c9--marina-and-the-diamonds-music-bands.jpg"/>
 		<property name="isInappropiate" value="false"/>
 		<property name="manager" ref="manager3"/>
