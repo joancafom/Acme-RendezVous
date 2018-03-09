@@ -26,6 +26,7 @@
 <%@ attribute name="code" required="true" %>
 <%@ attribute name="placeholder" required="false" %>
 <%@ attribute name="id" required="false" %>
+<%@ attribute name="onkeyup" required="false" %>
 
 <%@ attribute name="readonly" required="false" %>
 
@@ -39,6 +40,6 @@
 	<form:label path="${path}">
 		<strong><spring:message code="${code}" />:</strong>
 	</form:label>	
-	<form:input path="${path}" readonly="${readonly}" placeholder="${placeholder}" id="${id}"/>	
+	<form:input path="${path}" readonly="${readonly}" placeholder="${placeholder}" id="${id}" onkeyup="${onkeyup}"/>	
 	<form:errors path="${path}" cssClass="error" />
 </div>	

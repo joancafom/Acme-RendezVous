@@ -14,12 +14,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import security.LoginService;
 import services.ServiceRequestService;
 import services.ServiceService;
+import services.UserService;
 import controllers.AbstractController;
 import domain.RendezVous;
 import domain.Service;
 import domain.ServiceRequest;
+import domain.User;
 
 @Controller
 @RequestMapping("/serviceRequest/user")
@@ -32,11 +35,17 @@ public class ServiceRequestUserController extends AbstractController {
 	@Autowired
 	private ServiceService			serviceService;
 
+	@Autowired
+	private UserService				userService;
+
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create(@RequestParam final int serviceId) {
 
-		//v1.0 - Implemented by JA
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+
+		// v1.0 - Implemented by JA
+		// V2.0 - Changes by Alicia
 
 		final ModelAndView res;
 		final Service service;
@@ -50,9 +59,10 @@ public class ServiceRequestUserController extends AbstractController {
 
 		res = this.createEditModelAndView(serviceRequest);
 
+		res.addObject("userId", user.getId());
+
 		return res;
 	}
-
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(@Valid final ServiceRequest serviceRequest, final BindingResult binding) {
 
