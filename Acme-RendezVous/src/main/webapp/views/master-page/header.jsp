@@ -54,6 +54,8 @@ window.onload = function(){
 		<security:authorize access="isAnonymous()">
 			<li><a href="rendezVous/list.do"><spring:message code="master.page.user.allRendezVouses" /></a></li>
 			<li><a href="user/list.do"><spring:message code="master.page.user.allUsers" /></a></li>
+			<li><a href="user/register.do"><spring:message code="master.page.user.register" /></a></li>
+			<li><a href="manager/register.do"><spring:message code="master.page.manager.register" /></a></li>
 			<li id="login" style="width:50%"><a class="fNiv" href="security/login.do"><spring:message code="master.page.login" /></a></li>
 		</security:authorize>
 		

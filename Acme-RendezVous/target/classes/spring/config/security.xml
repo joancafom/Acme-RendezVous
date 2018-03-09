@@ -65,6 +65,8 @@
 		<security:intercept-url pattern="/comment/administrator/list.do" access="hasRole('ADMINISTRATOR')" />
 		<security:intercept-url pattern="/comment/list.do" access="isAnonymous()" />
 		
+		<security:intercept-url pattern="/manager/register.do" access="isAnonymous()" /> 
+		
 		<security:intercept-url pattern="/question/user/create.do" access="hasRole('USER')"/>
 		<security:intercept-url pattern="/question/user/delete.do" access="hasRole('USER')"/>
 		<security:intercept-url pattern="/question/user/display.do" access="hasRole('USER')"/>
