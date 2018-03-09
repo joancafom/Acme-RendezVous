@@ -71,12 +71,16 @@ public class ServiceRequestService {
 	public ServiceRequest save(final ServiceRequest newServiceRequest) {
 
 		// v1.0 - Implemented by JA
+		// v2.0 - Changes by Alicia
 
 		final User currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
 		final LocalDate now = new LocalDate();
 
 		Assert.notNull(newServiceRequest);
 		Assert.notNull(currentUser);
+
+		// Make sure that the requested service isn't canceled
+		Assert.isTrue(!newServiceRequest.getService().getIsCanceled());
 
 		//We cannot edit ServiceRequests
 		Assert.isTrue(newServiceRequest.getId() == 0);
