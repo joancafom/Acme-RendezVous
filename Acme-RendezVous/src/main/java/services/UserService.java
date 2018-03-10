@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -71,6 +72,10 @@ public class UserService {
 	}
 
 	public User save(final User user) {
+
+		Assert.notNull(user);
+		Assert.isTrue(user.getId() == 0);
+
 		/* Hash the password */
 		final Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 		final String hashedPassword = encoder.encodePassword(user.getUserAccount().getPassword(), null);
@@ -78,6 +83,15 @@ public class UserService {
 
 		return this.userRepository.save(user);
 	}
+
+	public void flush() {
+
+		//v1.0 - Implemented by JA
+
+		this.userRepository.flush();
+	}
+
+	//Other Business Methods
 
 	public User findByUserAccount(final UserAccount userAccount) {
 		return this.userRepository.findByUserAccount(userAccount.getId());
