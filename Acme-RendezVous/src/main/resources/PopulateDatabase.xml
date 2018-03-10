@@ -544,6 +544,46 @@
 		</property>
 	</bean>
 	
+	<bean id="rendezVous6" class="domain.RendezVous">
+		<property name="name" value="Highschool meet-up"/>
+		<property name="description" value="IES Gaga Diamandis' students reunion"/>
+		<property name="orgDate">
+			<bean factory-method="parse" factory-bean="dateFormat">
+				<constructor-arg value="01/02/2018 22:15"/>
+			</bean>
+		</property>
+		<property name="picture" value=""/>
+		<property name="isFinal" value="false"/>
+		<property name="isDeleted" value="false"/>
+		<property name="isForAdults" value="false"/>
+		<property name="creator" ref="user2"/>
+		<property name="attendants">
+			<list>
+				<ref bean="user2" />
+			</list>
+		</property>
+		<property name="similarRendezVouses">
+			<list>
+			</list>
+		</property>
+		<property name="announcements">
+			<list>
+			</list>
+		</property>
+		<property name="questions">
+			<list>
+			</list>
+		</property>
+		<property name="comments">
+			<list>
+			</list>
+		</property>
+		<property name="serviceRequests">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
 	<!-- Service -->
 	
 	<bean id="service1" class="domain.Service">
@@ -926,6 +966,7 @@
 			<list>
 				<ref bean="rendezVous1"/>
 				<ref bean="rendezVous3"/>
+				<ref bean="rendezVous6"/>
 			</list>
 		</property>
 		<property name="comments">

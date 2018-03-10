@@ -121,7 +121,15 @@ public class RendezVousService {
 
 		this.rendezVousRepository.delete(rendezVous);
 	}
-	/* Functional Requirements */
+
+	public void flush() {
+
+		//v1.0 - Implemented by JA
+
+		this.rendezVousRepository.flush();
+	}
+
+	/* Other Business Methods */
 
 	public void virtualDelete(final RendezVous rendezVous) {
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
@@ -148,7 +156,7 @@ public class RendezVousService {
 		return notAdult;
 	}
 
-	public void cancelRSVP(final RendezVous rendezVous) {
+	public RendezVous cancelRSVP(final RendezVous rendezVous) {
 		Assert.notNull(rendezVous);
 
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
@@ -161,11 +169,12 @@ public class RendezVousService {
 		rendezVous.getAttendants().remove(user);
 		user.getAttendedRendezVouses().remove(rendezVous);
 
-		this.rendezVousRepository.save(rendezVous);
+		return this.rendezVousRepository.save(rendezVous);
 
 	}
 
-	public void acceptRSVP(final RendezVous rendezVous) {
+	public RendezVous acceptRSVP(final RendezVous rendezVous) {
+
 		Assert.notNull(rendezVous);
 
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
@@ -180,7 +189,7 @@ public class RendezVousService {
 		rendezVous.getAttendants().add(user);
 		user.getAttendedRendezVouses().add(rendezVous);
 
-		this.rendezVousRepository.save(rendezVous);
+		return this.rendezVousRepository.save(rendezVous);
 
 	}
 
@@ -307,4 +316,5 @@ public class RendezVousService {
 		return res;
 
 	}
+
 }
