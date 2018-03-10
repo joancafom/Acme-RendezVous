@@ -80,13 +80,22 @@ public class ServiceService {
 	}
 
 	public domain.Service save(final domain.Service newService) {
+		/* v1.0 - josembell */
+		final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(manager);
+		Assert.isTrue(manager.getServices().contains(newService));
+		Assert.isTrue(newService.getManager().equals(manager));
+
 		return this.serviceRepository.save(newService);
 	}
 
 	public void delete(final domain.Service service) {
-
-		//TODO: Implement this method correctly
-		//Responsible: Bellido (req 5.2)
+		/* v1.0 - josembell */
+		final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(manager);
+		Assert.isTrue(manager.getServices().contains(service));
+		Assert.isTrue(service.getManager().equals(manager));
+		Assert.isTrue(service.getServiceRequests().isEmpty());
 
 		this.serviceRepository.delete(service);
 	}
