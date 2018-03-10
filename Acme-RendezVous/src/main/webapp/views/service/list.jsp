@@ -21,10 +21,17 @@
 	<display:column titleKey="service.name" property="name" />
 	<display:column titleKey="service.description" property="description" />
 	<display:column>
-		<jstl:if test="${service.picture ne null}">
+		<jstl:if test="${service.picture ne null or service.picture == ''}">
 			<img src="<jstl:out value="${service.picture}" />" alt="<spring:message code="img.alt.service.picture" />" style="max-width: 200px;" />
 		</jstl:if>
 	</display:column>
+	
+	<jstl:if test="${show=='own'}">
+		<display:column>
+			<a href="service/manager/edit.do?serviceId=${service.id}"><spring:message code="service.edit"/></a>
+			<a href="service/manager/delete.do?serviceId=${service.id}"><spring:message code="service.delete"/></a>
+		</display:column>
+	</jstl:if>
 	
 	<display:column>
 		<security:authorize access="hasRole('USER')">
@@ -35,9 +42,13 @@
 		
 		<security:authorize access="hasRole('ADMINISTRATOR')">
 			<jstl:if test="${!service.isCanceled}">
-				<a href="service/administrator/cancel.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="service.cancel" /></a>
+				<a href="service/administrator/cancel.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="service.cancel.service" /></a>
 			</jstl:if>
 		</security:authorize>
 	</display:column>
 	
 </display:table>
+
+<jstl:if test="${show=='own'}">
+	<a href="service/manager/create.do"><spring:message code="service.create"/></a>
+</jstl:if>

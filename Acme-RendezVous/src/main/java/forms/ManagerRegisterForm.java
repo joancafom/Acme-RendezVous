@@ -1,8 +1,9 @@
 
 package forms;
 
-
 public class ManagerRegisterForm {
+
+	/* V1.0 - josembell */
 
 	private String	username;
 	private String	password;

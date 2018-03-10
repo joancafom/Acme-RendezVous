@@ -85,7 +85,11 @@
 		<security:intercept-url pattern="/service/administrator/cancel.do" access="hasRole('ADMINISTRATOR')" />
 		<security:intercept-url pattern="/service/administrator/list.do" access="hasRole('ADMINISTRATOR')" />
 		<security:intercept-url pattern="/service/user/list.do" access="hasRole('USER')" />
-		 
+		<security:intercept-url pattern="/service/manager/list.do" access="hasRole('MANAGER')" /> 
+		<security:intercept-url pattern="/service/manager/create.do" access="hasRole('MANAGER')" /> 
+		<security:intercept-url pattern="/service/manager/edit.do" access="hasRole('MANAGER')" /> 
+		
+		
 		<security:intercept-url pattern="/serviceRequest/user/create.do" access="hasRole('USER')" /> 
 		<security:intercept-url pattern="/serviceRequest/user/edit.do" access="hasRole('USER')" /> 
 		<security:intercept-url pattern="/serviceRequest/user/delete.do" access="hasRole('USER')" />

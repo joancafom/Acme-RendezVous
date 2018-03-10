@@ -36,6 +36,7 @@ public class ManagerService {
 	private Validator			validator;
 
 
+	/* Version 1.1 - josembell */
 	public Manager create() {
 		final Manager manager = new Manager();
 		final Collection<domain.Service> services = new HashSet<domain.Service>();
@@ -43,7 +44,7 @@ public class ManagerService {
 
 		if (userAccount.getAuthorities().isEmpty()) {
 			final Authority auth = new Authority();
-			auth.setAuthority(Authority.USER);
+			auth.setAuthority(Authority.MANAGER);
 			userAccount.getAuthorities().add(auth);
 		}
 
@@ -52,15 +53,15 @@ public class ManagerService {
 
 		return manager;
 	}
-
+	/* Version 1.0 - josembell */
 	public Manager findOne(final int managerId) {
 		return this.managerRepository.findOne(managerId);
 	}
-
+	/* Version 1.0 - josembell */
 	public Collection<Manager> findAll() {
 		return this.managerRepository.findAll();
 	}
-
+	/* Version 1.0 - josembell */
 	public Manager save(final Manager manager) {
 		/* Hash the password */
 		final Md5PasswordEncoder encoder = new Md5PasswordEncoder();
@@ -73,7 +74,7 @@ public class ManagerService {
 	public Manager findByUserAccount(final UserAccount userAccount) {
 		return this.managerRepository.findByUserAccount(userAccount.getId());
 	}
-
+	/* Version 1.0 - josembell */
 	public Manager reconstruct(final ManagerRegisterForm managerRegisterForm, final BindingResult binding) {
 
 		final Manager manager = this.create();

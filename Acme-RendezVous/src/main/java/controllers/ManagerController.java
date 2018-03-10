@@ -18,6 +18,8 @@ import forms.ManagerRegisterForm;
 @RequestMapping("/manager")
 public class ManagerController extends AbstractController {
 
+	/* V1.0 - josembell */
+
 	/* Services */
 	@Autowired
 	private ManagerService	managerService;

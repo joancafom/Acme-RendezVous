@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.ServiceRepository;
 import security.LoginService;
+import domain.Manager;
 import domain.RendezVous;
 import domain.ServiceRequest;
 import domain.User;
@@ -35,20 +38,33 @@ public class ServiceService {
 	@Autowired
 	private ServiceRequestService	serviceRequestService;
 
+	@Autowired
+	private ManagerService			managerService;
+
+	@Autowired
+	private Validator				validator;
+
 
 	/* Business Methods */
 
 	public domain.Service create() {
 
-		//TODO: Implement this method correctly
-		//Responsible: Bellido (Req 5.2)
+		/* v1.0 - josembell */
 
-		final domain.Service res = null;
+		final domain.Service res = new domain.Service();
+
+		final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(manager);
+
+		final Collection<ServiceRequest> serviceRequests = new HashSet<ServiceRequest>();
+
+		res.setManager(manager);
+		res.setServiceRequests(serviceRequests);
+		res.setIsCanceled(false);
 
 		return res;
 
 	}
-
 	public domain.Service findOne(final int serviceId) {
 
 		// v1.0 - Implemented by JA
@@ -64,11 +80,7 @@ public class ServiceService {
 	}
 
 	public domain.Service save(final domain.Service newService) {
-
-		//TODO: Implement this method correctly
-
 		return this.serviceRepository.save(newService);
-
 	}
 
 	public void delete(final domain.Service service) {
@@ -132,4 +144,32 @@ public class ServiceService {
 		this.save(service);
 
 	}
+
+	/* V1.0 - josembell */
+	public domain.Service reconstruct(final domain.Service prunedService, final BindingResult binding) {
+		final domain.Service result;
+		if (prunedService.getId() == 0) {
+			result = prunedService;
+			final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+			result.setManager(manager);
+			result.setServiceRequests(new HashSet<ServiceRequest>());
+			this.validator.validate(result, binding);
+		}
+
+		else {
+			final domain.Service savedService = this.findOne(prunedService.getId());
+			Assert.notNull(savedService);
+			result = prunedService;
+
+			result.setIsCanceled(savedService.getIsCanceled());
+			result.setServiceRequests(savedService.getServiceRequests());
+			result.setManager(savedService.getManager());
+
+			this.validator.validate(result, binding);
+		}
+
+		return result;
+
+	}
+
 }
