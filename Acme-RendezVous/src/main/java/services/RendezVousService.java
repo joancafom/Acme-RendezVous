@@ -87,6 +87,7 @@ public class RendezVousService {
 
 	public RendezVous save(final RendezVous rendezVous) {
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(rendezVous);
 
 		if (user != null)
 			Assert.isTrue(rendezVous.getCreator().equals(user));
