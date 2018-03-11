@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import repositories.AdministratorRepository;
+import security.LoginService;
 import security.UserAccount;
 import domain.Administrator;
 import domain.Manager;
@@ -32,10 +34,20 @@ public class AdministratorService {
 	// Other Business Process ---------------------------
 
 	public Double getAvgCreatedRendezVousesPerUser() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.avgCreatedRendezVousesPerUser();
 	}
 
 	public Double getStdDeviationCreatedRendezVousesPerUser() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.stdDeviationCreatedRendezVousesPerUser();
 	}
 
@@ -52,10 +64,20 @@ public class AdministratorService {
 	}
 
 	public Double getAvgRSVPPerUser() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.avgRSVPPerUser();
 	}
 
 	public Double getStdDeviationRSVPPerUser() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.stdDeviationRSVPPerUser();
 	}
 
@@ -73,6 +95,11 @@ public class AdministratorService {
 	}
 
 	public Collection<RendezVous> getRendezVousAbove75AvgAnnouncements() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.rendezVousAbove75AvgAnnouncements();
 	}
 
@@ -81,10 +108,20 @@ public class AdministratorService {
 	}
 
 	public Double getAvgQuestionsPerRendezVous() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.avgQuestionsPerRendezVous();
 	}
 
 	public Double getStdQuestionsPerRendezVous() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.stdQuestionsPerRendezVous();
 	}
 
