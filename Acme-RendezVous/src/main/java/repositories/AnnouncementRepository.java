@@ -1,7 +1,7 @@
 
 package repositories;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +13,6 @@ import domain.Announcement;
 public interface AnnouncementRepository extends JpaRepository<Announcement, Integer> {
 
 	@Query("select a from User u inner join u.attendedRendezVouses r inner join r.announcements a where u.id = ?1 order by a.creationMoment desc")
-	Collection<Announcement> findByUserIDChronological(int userId);
+	List<Announcement> findByUserIDChronological(int userId);
 
 }

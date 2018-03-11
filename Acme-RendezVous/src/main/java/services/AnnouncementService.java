@@ -1,8 +1,8 @@
 
 package services;
 
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,7 +73,7 @@ public class AnnouncementService {
 
 	//Other Business Methods
 
-	public Collection<Announcement> findByCurrentChronological() {
+	public List<Announcement> findByCurrentChronological() {
 
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 
