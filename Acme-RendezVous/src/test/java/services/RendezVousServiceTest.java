@@ -1,6 +1,8 @@
 
 package services;
 
+import java.util.Collection;
+
 import javax.transaction.Transactional;
 
 import org.joda.time.LocalDate;
@@ -179,23 +181,17 @@ public class RendezVousServiceTest extends AbstractTest {
 	 * Req to Test: 5.3
 	 * Update the rendezvouses that he or she's created
 	 * 
-	 * Test Cases; (8; +1 -7)
+	 * Test Cases; (5; +1 -4)
 	 * 
 	 * + 1) An actor updates a rendezvous created by him/herself, not-deleted and saved in draft mode.
 	 * 
-	 * - 2) An unauthenticated user tries to update a rendezvous
+	 * - 2) An user tries to update a rendezvous which is not created by him/herself
 	 * 
-	 * - 3) An user tries to update a rendezvous which is not created by him/herself
+	 * - 3) An user tries to update a rendezvous created by him/herself but is already virtually deleted
 	 * 
 	 * - 4) An user tries to update a rendezvous created by him/herself but in final mode
 	 * 
-	 * - 5) An user tries to update a rendezvous created by him/herself but is already virtually deleted
-	 * 
-	 * - 6) An user tries to update a null rendezvous
-	 * 
-	 * - 7) An administrador tries to update a rendezvous
-	 * 
-	 * - 8) A manager tries to update a rendezvous
+	 * - 5) An user tries to update a null rendezvous
 	 */
 
 	@Test
@@ -204,8 +200,6 @@ public class RendezVousServiceTest extends AbstractTest {
 			{
 				"user5", "rendezVous5", null
 			}, {
-				null, "rendezVous1", IllegalArgumentException.class
-			}, {
 				"user1", "rendezVous2", IllegalArgumentException.class
 			}, {
 				"user4", "rendezVous4", IllegalArgumentException.class
@@ -213,10 +207,6 @@ public class RendezVousServiceTest extends AbstractTest {
 				"user1", "rendezVous1", IllegalArgumentException.class
 			}, {
 				"user2", null, IllegalArgumentException.class
-			}, {
-				"admin", "rendezVous5", IllegalArgumentException.class
-			}, {
-				"manager1", "rendezVous5", IllegalArgumentException.class
 			}
 		};
 
@@ -308,28 +298,35 @@ public class RendezVousServiceTest extends AbstractTest {
 		/* v1.0 - josembell */
 		Class<?> caught = null;
 
+		/* 1. Logearte como usuario */
 		this.authenticate(username);
 
 		final User currentUser;
 
 		try {
+			/* 2. Listar mis rendezVouses */
+			currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
+			Assert.notNull(currentUser);
+			final Collection<RendezVous> myRendezVouses = currentUser.getCreatedRendezVouses();
+
+			/* 3. Seleccionar un rendezVous -> El que entra por parámetros */
+			Assert.isTrue(myRendezVouses.contains(rendezVous));
+			Assert.isTrue(currentUser.getCreatedRendezVouses().contains(rendezVous));
+			Assert.isTrue(rendezVous.getCreator().equals(currentUser));
+
+			/* editar campos */
 			if (rendezVous != null)
 				rendezVous.setName("Test");
 
+			/* 4. Cambiar datos */
 			final RendezVous updatedRendezVous = this.rendezVousService.save(rendezVous);
 
-			//Force the transaction to happen
+			//Flush
 			this.rendezVousService.flush();
 
 			Assert.notNull(updatedRendezVous);
 			Assert.isTrue(updatedRendezVous.getId() != 0);
 			Assert.isTrue(updatedRendezVous.getName().equals("Test"));
-
-			currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
-
-			Assert.notNull(currentUser);
-			Assert.isTrue(currentUser.getCreatedRendezVouses().contains(updatedRendezVous));
-			Assert.isTrue(updatedRendezVous.getCreator().equals(currentUser));
 
 		} catch (final Throwable oops) {
 			caught = oops.getClass();
