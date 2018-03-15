@@ -94,17 +94,22 @@ public class RendezVousService {
 	public RendezVous save(final RendezVous rendezVous) {
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 		Assert.notNull(user);
-
 		Assert.notNull(rendezVous);
+		final RendezVous oldRendezVous = this.rendezVousRepository.findOne(rendezVous.getId());
 
 		if (user != null)
 			Assert.isTrue(rendezVous.getCreator().equals(user));
 
-		if (rendezVous.getId() != 0)
-			Assert.isTrue(this.rendezVousRepository.findOne(rendezVous.getId()).getIsFinal() == false);
+		if (rendezVous.getId() != 0) {
+			Assert.isTrue(oldRendezVous.getIsDeleted() == false);
+			Assert.isTrue(oldRendezVous.getIsFinal() == false);
+		}
 
+		if (user.getAge() < 18)
+			Assert.isTrue(rendezVous.getIsForAdults() == false);
 		Assert.notNull(rendezVous.getOrgDate());
-		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
+		final Date now = new Date();
+		Assert.isTrue(rendezVous.getOrgDate().after(now));
 		final RendezVous result = this.rendezVousRepository.save(rendezVous);
 
 		if (rendezVous.getId() == 0) {
@@ -219,7 +224,7 @@ public class RendezVousService {
 		return this.rendezVousRepository.save(rendezVous);
 
 	}
-	
+
 	public RendezVous reconstruct(final RendezVous rendezVous, final BindingResult binding) {
 		final RendezVous result;
 

@@ -11,7 +11,6 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
-
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +21,8 @@ import org.springframework.util.Assert;
 
 import security.LoginService;
 import utilities.AbstractTest;
-import domain.GPSCoordinates;
 import domain.Answer;
+import domain.GPSCoordinates;
 import domain.Question;
 import domain.RendezVous;
 import domain.User;
@@ -50,9 +49,6 @@ public class RendezVousServiceTest extends AbstractTest {
 
 	@Autowired
 	private AnswerService		answerService;
-
-	@Autowired
-	private QuestionService		questionService;
 
 
 	// Drivers
@@ -221,35 +217,54 @@ public class RendezVousServiceTest extends AbstractTest {
 	/*
 	 * v1.0 - josembell
 	 * 
-	 * Req to Test: 5.3
-	 * Update the rendezvouses that he or she's created
+	 * [CU-003] - Listar y Editar un RendezVous
 	 * 
-	 * Test Cases; (5; +1 -4)
-	 * 
-	 * + 1) An actor updates a rendezvous created by him/herself, not-deleted and saved in draft mode.
-	 * 
-	 * - 2) An user tries to update a rendezvous which is not created by him/herself
-	 * 
-	 * - 3) An user tries to update a rendezvous created by him/herself but is already virtually deleted
-	 * 
-	 * - 4) An user tries to update a rendezvous created by him/herself but in final mode
-	 * 
-	 * - 5) An user tries to update a null rendezvous
+	 * Req to Test: 5.3, 5.2, 2
 	 */
 
 	@Test
 	public void driverUpdateRendezVous() {
+
+		final Date futureDate = LocalDate.now().plusDays(1).toDate();
+		final Date pastDate = LocalDate.now().minusDays(2).toDate();
+
 		final Object testingData[][] = {
 			{
-				"user5", "rendezVous5", null
+				/* + 1) Un actor mayor de edad edita un rendezVous validado creado por el */
+				"user2", "rendezVous6", 1, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, null
 			}, {
-				"user1", "rendezVous2", IllegalArgumentException.class
+				/* + 2) Un actor menor de edad edita un rendezVous validado creado por el */
+				"user5", "rendezVous5", 1, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, null
 			}, {
-				"user4", "rendezVous4", IllegalArgumentException.class
+				/* - 3) Un usuario no autentificado intenta editar un rendezVous */
+				null, "rendezVous4", 0, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, IllegalArgumentException.class
 			}, {
-				"user1", "rendezVous1", IllegalArgumentException.class
+				/* - 4) Un usuario identificado intenta editar un rendezVous que no es de el */
+				"user1", "rendezVous5", 2, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, IllegalArgumentException.class
 			}, {
-				"user2", null, IllegalArgumentException.class
+				/* - 5) Un usuario identificado intenta editar un rendezVous null */
+				"user2", null, 0, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, IllegalArgumentException.class
+			}, {
+				/* - 6) Un usuario identificado intenta editar un rendezVous inválido (sin nombre) */
+				"user1", "rendezVous1", 2, null, "descripciónOk", futureDate, 1.0, 1.0, false, IllegalArgumentException.class
+			}, {
+				/* - 7) Un usuario identificado intenta editar un rendezVous inválido (sin descripción */
+				"user1", "rendezVous1", 2, "nombreOk", null, futureDate, 1.0, 1.0, false, IllegalArgumentException.class
+			}, {
+				/* - 8) Un usuario identificado intenta editar un rendezVous inválido (sin fecha) */
+				"user1", "rendezVous1", 2, "nombreOk", "descripciónOk", null, 1.0, 1.0, false, IllegalArgumentException.class
+			}, {
+				/* - 9) Un usuario identificado intenta editar un rendezVous inválido (fecha en el pasado) */
+				"user1", "rendezVous1", 2, "nombreOk", "descripciónOk", pastDate, 1.0, 1.0, false, IllegalArgumentException.class
+			}, {
+				/* - 10)Un usuario que es menor de edar intenta establecer un rendezVous para mayores de edad */
+				"user5", "rendezVous5", 1, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, true, IllegalArgumentException.class
+			}, {
+				/* - 11)Un usuario intenta editar un rendezVous que está en versión final */
+				"user3", "rendezVous2", 1, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, IllegalArgumentException.class
+			}, {
+				/* - 12)Un usuario intenta editar un rendezVous que ya ha sido eliminado */
+				"user4", "rendezVous4", 1, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, IllegalArgumentException.class
 			}
 		};
 
@@ -258,13 +273,61 @@ public class RendezVousServiceTest extends AbstractTest {
 		for (int i = 0; i < testingData.length; i++) {
 			if (testingData[i][1] != null) {
 				rendezVous = this.rendezVousService.findOne(this.getEntityId((String) testingData[i][1]));
-
 				this.authenticate(rendezVous.getCreator().getUserAccount().getUsername());
 			} else
 				rendezVous = null;
-
-			this.templateUpdateRendezVous((String) testingData[i][0], rendezVous, (Class<?>) testingData[i][2]);
+			System.out.println("TEST-" + i);
+			this.templateListUpdateRendezVous((String) testingData[i][0], rendezVous, (Integer) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4], (Date) testingData[i][5], (Double) testingData[i][6], (Double) testingData[i][7],
+				(Boolean) testingData[i][8], (Class<?>) testingData[i][9]);
+			System.out.println("TEST-" + i + " - OK");
 		}
+
+	}
+
+	protected void templateListUpdateRendezVous(final String username, final RendezVous rendezVous, final Integer numOfRendezVouses, final String name, final String description, final Date date, final Double latitude, final Double longitude,
+		final Boolean isForAdults, final Class<?> expected) {
+		/* v1.0 - josembell */
+		Class<?> caught = null;
+
+		/* 1. Logearte como usuario */
+		this.authenticate(username);
+
+		User currentUser = null;
+
+		try {
+			/* 2. Listar mis rendezVouses */
+			if (username != null) {
+				currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
+				final Collection<RendezVous> myRendezVouses = currentUser.getCreatedRendezVouses();
+				Assert.isTrue(myRendezVouses.size() == numOfRendezVouses);
+
+				/* 3. Seleccionar un rendezVous -> El que entra por parámetros */
+				Assert.isTrue(myRendezVouses.contains(rendezVous));
+				Assert.isTrue(currentUser.getCreatedRendezVouses().contains(rendezVous));
+				Assert.isTrue(rendezVous.getCreator().equals(currentUser));
+			}
+			/* editar campos */
+			if (rendezVous != null) {
+				rendezVous.setName(name);
+				rendezVous.setDescription(description);
+				rendezVous.setOrgDate(date);
+				rendezVous.setIsForAdults(isForAdults);
+			}
+			/* 4. Cambiar datos */
+			this.rendezVousService.save(rendezVous);
+
+			//Flush
+			this.rendezVousService.flush();
+
+			/* 5. Asegurar que la lista sigue teniendo el mismo tamaño */
+			Assert.isTrue(currentUser.getCreatedRendezVouses().size() == numOfRendezVouses);
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
 
 	}
 	// Test Templates
@@ -427,49 +490,6 @@ public class RendezVousServiceTest extends AbstractTest {
 
 		this.checkExceptions(expected, caught);
 	}
-	protected void templateUpdateRendezVous(final String username, final RendezVous rendezVous, final Class<?> expected) {
-		/* v1.0 - josembell */
-		Class<?> caught = null;
-
-		/* 1. Logearte como usuario */
-		this.authenticate(username);
-
-		final User currentUser;
-
-		try {
-			/* 2. Listar mis rendezVouses */
-			currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
-			Assert.notNull(currentUser);
-			final Collection<RendezVous> myRendezVouses = currentUser.getCreatedRendezVouses();
-
-			/* 3. Seleccionar un rendezVous -> El que entra por parámetros */
-			Assert.isTrue(myRendezVouses.contains(rendezVous));
-			Assert.isTrue(currentUser.getCreatedRendezVouses().contains(rendezVous));
-			Assert.isTrue(rendezVous.getCreator().equals(currentUser));
-
-			/* editar campos */
-			if (rendezVous != null)
-				rendezVous.setName("Test");
-
-			/* 4. Cambiar datos */
-			final RendezVous updatedRendezVous = this.rendezVousService.save(rendezVous);
-
-			//Flush
-			this.rendezVousService.flush();
-
-			Assert.notNull(updatedRendezVous);
-			Assert.isTrue(updatedRendezVous.getId() != 0);
-			Assert.isTrue(updatedRendezVous.getName().equals("Test"));
-
-		} catch (final Throwable oops) {
-			caught = oops.getClass();
-		}
-
-		this.unauthenticate();
-		this.checkExceptions(expected, caught);
-
-	}
-
 
 	// -------------------------------------------------------------------------------
 	// [UC-002] Listar RendezVouses, crear un nuevo RendezVous y mostrar un
