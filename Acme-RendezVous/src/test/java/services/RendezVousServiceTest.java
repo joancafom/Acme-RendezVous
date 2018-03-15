@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
@@ -43,9 +41,6 @@ public class RendezVousServiceTest extends AbstractTest {
 
 	@Autowired
 	private UserService			userService;
-
-	@PersistenceContext
-	private EntityManager		entityManager;
 
 	@Autowired
 	private AnswerService		answerService;
@@ -511,67 +506,85 @@ public class RendezVousServiceTest extends AbstractTest {
 	//              user may edit his or her rendezvouses as long as they aren't saved
 	//              them in final mode. Once a rendezvous is saved in final mode, it
 	//              cannot be edited or deleted by the creator.
+	//   · REQ 14: Some rendezvouses may be flagged as "adult only", in which case
+	//             every attempt to RSVP them by users who are under 18 must be
+	//             prohibited. Such rendezvouses must not be displayed unless the user
+	//             who is browsing them is at least 18 year old. Obviously, they must
+	//             not be shown to unauthenticated users.
 	// -------------------------------------------------------------------------------
-	// v1.0 - Implemented by Alicia
+	// v2.0 - Implemented by Alicia
 	// -------------------------------------------------------------------------------
 
 	@Test
 	public void driverListCreateAndDisplayRendezVous() {
 
+		// testingData[i][0] -> username del usuario loggeado.
+		// testingData[i][1] -> tipo de rendezVouses que se van a listar.
+		// testingData[i][2] -> nombre del rendezVous a crear.
+		// testingData[i][3] -> descripción del rendezVous a crear.
+		// testingData[i][4] -> tipo de fecha del rendezVous a crear.
+		// testingData[i][5] -> imagen  del rendezVous a crear.
+		// testingData[i][6] -> latitud de las coordenadas del rendezVous a crear.
+		// testingData[i][7] -> longitud de las coordenadas del rendezVous a crear.
+		// testingData[i][8] -> isFinal del rendezVous a crear.
+		// testingData[i][9] -> isDeleted del rendezVous a  crear.
+		// testingData[i][10] -> isForAdults del rendezVous a crear.
+		// testingData[i][11] -> excepción que debe saltar.
+
 		final Object testingData[][] = {
 			{
-				// (+) Un usuario no loggeado lista rendezVouses para menores de 18
+				// 1 - (+) Un usuario no loggeado lista rendezVouses para menores de 18
 				null, "listUnder18", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, false, null
 			}, {
-				// (-) Un usuario no loggeado lista rendezVouses para mayores de 18
+				// 2 - (-) Un usuario no loggeado lista rendezVouses para mayores de 18
 				null, "listAdults", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, false, IllegalArgumentException.class
 			}, {
-				// (+) Un usuario mayor de 18 lista rendezVouses para mayores de 18
+				// 3 - (+) Un usuario mayor de 18 lista rendezVouses para mayores de 18
 				"user1", "listAdults", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, false, null
 			}, {
-				// (-) Un usuario menor de 18 lista rendezVouses para mayores de 18
+				// 4 - (-) Un usuario menor de 18 lista rendezVouses para mayores de 18
 				"user5", "listAdults", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, false, IllegalArgumentException.class
 			}, {
-				// (-) Un usuario crea un rendezVous con el nombre a null
+				// 5 - (-) Un usuario crea un rendezVous con el nombre a null
 				"user1", "listAdults", null, "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, false, ConstraintViolationException.class
 			}, {
-				// (-) Un usuario crea un rendezVous con el nombre en blanco
+				// 6 - (-) Un usuario crea un rendezVous con el nombre en blanco
 				"user1", "listAdults", "", "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, false, ConstraintViolationException.class
 			}, {
-				// (-) Un usuario crea un rendezVous con la descripción a null
+				// 7 - (-) Un usuario crea un rendezVous con la descripción a null
 				"user1", "listAdults", "firstRendezVous", null, "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, false, ConstraintViolationException.class
 			}, {
-				// (-) Un usuario crea un rendezVous con la descripción en blanco
+				// 8 - (-) Un usuario crea un rendezVous con la descripción en blanco
 				"user1", "listAdults", "firstRendezVous", "", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, false, ConstraintViolationException.class
 			}, {
-				// (-) Un usuario crea un rendezVous con la orgDate a null
+				// 9 - (-) Un usuario crea un rendezVous con la orgDate a null
 				"user1", "listAdults", "firstRendezVous", "completeDescription", null, "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, false, IllegalArgumentException.class
 			}, {
-				// (-) Un usuario crea un rendezVous con la orgDate en pasado
+				// 10 - (-) Un usuario crea un rendezVous con la orgDate en pasado
 				"user1", "listAdults", "firstRendezVous", "completeDescription", "past", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, false, IllegalArgumentException.class
 			}, {
-				// (-) Un usuario crea un rendezVous en el que la picture no es una URL
+				// 11 - (-) Un usuario crea un rendezVous en el que la picture no es una URL
 				"user1", "listAdults", "firstRendezVous", "completeDescription", "future", "picture.png", 37.3546759, -5.9779805, false, false, false, ConstraintViolationException.class
 			}, {
-				// (-) Un usuario crea un rendezVous en el que la latitud es null y la longitud no
+				// 12 - (-) Un usuario crea un rendezVous en el que la latitud es null y la longitud no
 				"user1", "listAdults", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", null, -5.9779805, false, false, false, IllegalArgumentException.class
 			}, {
-				// (-) Un usuario crea un rendezVous en el que la longitud es null y la latitud no
+				// 13 - (-) Un usuario crea un rendezVous en el que la longitud es null y la latitud no
 				"user1", "listAdults", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, null, false, false, false, IllegalArgumentException.class
 			}, {
-				// (-) Un usuario crea un rendezVous en el que isDeleted es true
+				// 14 - (-) Un usuario crea un rendezVous en el que isDeleted es true
 				"user1", "listAdults", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, true, false, IllegalArgumentException.class
 			}, {
-				// (-) Un usuario menor de 18 crea un rendezVous con isForAdults a true
-				"user5", "listAdults", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, true, IllegalArgumentException.class
+				// 15 - (-) Un usuario menor de 18 crea un rendezVous con isForAdults a true
+				"user5", "listUnder18", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, true, IllegalArgumentException.class
 			}, {
-				// (+) Un usuario crea un rendezVous sin picture
+				// 16 - (+) Un usuario crea un rendezVous sin picture
 				"user1", "listAdults", "firstRendezVous", "completeDescription", "future", null, 37.3546759, -5.9779805, false, false, true, null
 			}, {
-				// (+) Un usuario crea un rendezVous sin GPSCoordinates
+				// 17 - (+) Un usuario crea un rendezVous sin GPSCoordinates
 				"user1", "listAdults", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", null, null, false, false, true, null
 			}, {
-				// (+) Un usuario mayor de 18 crea un rendezVous con isForAdults a true
+				// 18 - (+) Un usuario mayor de 18 crea un rendezVous con isForAdults a true
 				"user1", "listAdults", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, true, null
 			}
 		};
@@ -586,8 +599,12 @@ public class RendezVousServiceTest extends AbstractTest {
 				else if ((String) testingData[i][4] == "past")
 					rendezVousDate = new LocalDate().minusDays(1).toDate();
 
+			this.startTransaction();
+
 			this.templateListCreateAndDisplayRendezVous((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], rendezVousDate, (String) testingData[i][5], (Double) testingData[i][6],
 				(Double) testingData[i][7], (boolean) testingData[i][8], (boolean) testingData[i][9], (boolean) testingData[i][10], (Class<?>) testingData[i][11]);
+
+			this.rollbackTransaction();
 
 		}
 
@@ -675,7 +692,98 @@ public class RendezVousServiceTest extends AbstractTest {
 
 		} catch (final Throwable oops) {
 			caught = oops.getClass();
-			this.entityManager.clear();
+		}
+
+		super.unauthenticate();
+		super.checkExceptions(expected, caught);
+
+	}
+
+	// -------------------------------------------------------------------------------
+	// [UC-002] Eliminar virtualmente un RendezVous.
+	// 
+	// Requisitos relacionados:
+	//   · REQ 5.3: Update or delete the rendezvouses that he or she's created.
+	//              Deletion is virtual, that is: the information is not removed from
+	//              the database, but the rendezvous cannot be updated. Deleted
+	//              rendezvouses are flagged as such when they are displayed.
+	// -------------------------------------------------------------------------------
+	// v1.0 - Implemented by Alicia
+	// -------------------------------------------------------------------------------
+
+	@Test
+	public void driverVirtualDeleteRendezVous() {
+
+		// testingData[i][0] -> username del usuario loggeado.
+		// testingData[i][1] -> rendezVous que va a marcarse como eliminado.
+		// testingData[i][2] -> excepción que debe saltar.
+
+		final Object testingData[][] = {
+			{
+				// 1 - (-) Un usuario no loggeado elimina virtualmente un RendezVous.
+				null, "rendezVous1", IllegalArgumentException.class
+			}, {
+				// 2 - (-) Un usuario loggeado elimina virtualmente un RendezVous que no es suyo.
+				"user1", "rendezVous2", IllegalArgumentException.class
+			}, {
+				// 3 - (+) Un usuario loggeado elimina virtualmente un RendezVous suyo.
+				"user1", "rendezVous1", null
+			}, {
+				// 4 - (-) Un usuario loggeado elimina virtualmente un RendezVous ya marcado como eliminado.
+				"user1", "rendezVous1", IllegalArgumentException.class
+			}, {
+				// 5 - (+) Un usuario loggeado elimina virtualmente un RendezVous con orgDate en pasado.
+				"user1", "rendezVous1", null
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+
+			final RendezVous rendezVousToDelete = this.rendezVousService.findOne(super.getEntityId((String) testingData[i][1]));
+
+			if (i < 3 || i == 4)
+				rendezVousToDelete.setIsDeleted(false);
+
+			if (i < 4)
+				rendezVousToDelete.setOrgDate(new LocalDate().plusDays(1).toDate());
+			else if (i == 4)
+				rendezVousToDelete.setOrgDate(new LocalDate().minusDays(1).toDate());
+
+			this.startTransaction();
+
+			this.templateVirtualDeleteRendezVous((String) testingData[i][0], rendezVousToDelete, (Class<?>) testingData[i][2]);
+
+			this.rollbackTransaction();
+
+		}
+
+	}
+
+	protected void templateVirtualDeleteRendezVous(final String username, final RendezVous rendezVousToDelete, final Class<?> expected) {
+
+		// 1. Loggearse como Usuario (o como null)
+		super.authenticate(username);
+
+		Class<?> caught = null;
+
+		try {
+
+			User user = null;
+
+			if (username != null)
+				user = this.userService.findByUserAccount(LoginService.getPrincipal());
+
+			// 2. Listar mis rendezVouses
+
+			if (user != null)
+				this.rendezVousService.findAllByUser(user);
+
+			// 3. Marcar un rendezVous como eliminado
+
+			this.rendezVousService.virtualDelete(rendezVousToDelete);
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
 		}
 
 		super.unauthenticate();

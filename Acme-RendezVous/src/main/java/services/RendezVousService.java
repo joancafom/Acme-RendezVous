@@ -107,6 +107,7 @@ public class RendezVousService {
 
 		if (user.getAge() < 18)
 			Assert.isTrue(rendezVous.getIsForAdults() == false);
+
 		Assert.notNull(rendezVous.getOrgDate());
 		final Date now = new Date();
 		Assert.isTrue(rendezVous.getOrgDate().after(now));
@@ -153,6 +154,8 @@ public class RendezVousService {
 
 	public void virtualDelete(final RendezVous rendezVous) {
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.isTrue(!rendezVous.getIsDeleted());
 
 		if (user != null)
 			Assert.isTrue(rendezVous.getCreator().equals(user));
