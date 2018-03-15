@@ -1,13 +1,16 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
+
 
 import org.joda.time.LocalDate;
 import org.junit.Test;
@@ -20,6 +23,8 @@ import org.springframework.util.Assert;
 import security.LoginService;
 import utilities.AbstractTest;
 import domain.GPSCoordinates;
+import domain.Answer;
+import domain.Question;
 import domain.RendezVous;
 import domain.User;
 
@@ -43,30 +48,48 @@ public class RendezVousServiceTest extends AbstractTest {
 	@PersistenceContext
 	private EntityManager		entityManager;
 
+	@Autowired
+	private AnswerService		answerService;
+
+	@Autowired
+	private QuestionService		questionService;
+
 
 	// Drivers
 
 	/*
 	 * v1.0 - Implemented by JA
 	 * 
-	 * Req to Test: 5.4
-	 * An actor who is authenticated as a user must be able to
-	 * RSVP a rendezvous.When a user RSVPs a rendezvous,
-	 * he or she is assumed to attend it.
+	 * UC-005: RSVP a RendezVous, List my RSVPd RendezVouses and Display info about the reservation
+	 * 1. Log in as a User
+	 * 2. List all RendezVouses
+	 * 3. Select one RendezVous that has not been RSVPd
+	 * 4. Answer all the questions
+	 * 5. List my RSVPd RendezVouses
+	 * 6. Select one RendezVous that has been RSVP
+	 * 7. Show the answers to the questions
 	 * 
-	 * Test Cases (6; 1+ 5-):
+	 * Involved REQs: 5.4, 5.5, 21.2, 20.1, 14
 	 * 
-	 * + 1) A user actor provides a correct rendezVous and successfully RSVPd it
+	 * Test Cases (9; 2+ 7-):
 	 * 
-	 * - 2) An unauthenticated actor tries to RSVPd a correct rendezVous
+	 * - 1) A User selects a rendezVous that has not been RSVPd and does not answer all the questions (they are required)
 	 * 
-	 * - 3) A manager tries to RSVPd a correct rendezVous
+	 * - 2) A User selects a rendezVous that has not been RSVPd but is expired (It makes no sense to confirm your attendance to an expired event)
 	 * 
-	 * - 4) A user actor provides an expired rendezVous
+	 * + 3) A User selects a rendezVous that has not been RSVPd, answers the questions correctly and displays them
 	 * 
-	 * - 5) A underaged user actor tries to join a +18 rendezVous
+	 * - 4) An unauthenticated actor tries to RSVP a rendezVous (Only Users can do so)
 	 * 
-	 * - 6) A user actor who is currently attending the rendezVous tries to RSVP
+	 * - 5) A manager tries to RSVPd a rendezVous (Only Users can do so)
+	 * 
+	 * - 6) A User below 18 selects a rendezVous for adults and tries to RSVP (under 18 Users cannot go to +18 RendezVouses)
+	 * 
+	 * - 7) A User selects a rendezVous that has already been RSVPd (it makes no sense to confirm twice)
+	 * 
+	 * - 8) A User selects a null rendezVous
+	 * 
+	 * + 9) A User selects a rendezVous that has not been RSVPd and does not have questions, RSPVs it and then he/she displays it
 	 */
 	@Test
 	public void driverAcceptRSVP() {
@@ -76,65 +99,75 @@ public class RendezVousServiceTest extends AbstractTest {
 
 		final Object testingData[][] = {
 			{
-				"user1", "rendezVous5", futureDate, null
+				"user3", "rendezVous6", false, futureDate.toDate(), IllegalArgumentException.class
 			}, {
-				null, "rendezVous5", futureDate, IllegalArgumentException.class
+				"user3", "rendezVous3", true, null, IllegalArgumentException.class
 			}, {
-				"manager1", "rendezVous5", futureDate, IllegalArgumentException.class
+				"user1", "rendezVous6", true, futureDate.toDate(), null
 			}, {
-				"user3", "rendezVous6", null, IllegalArgumentException.class
+				null, "rendezVous5", true, futureDate.toDate(), IllegalArgumentException.class
 			}, {
-				"user5", "rendezVous5", futureDate, IllegalArgumentException.class
+				"manager1", "rendezVous5", true, futureDate.toDate(), IllegalArgumentException.class
 			}, {
-				"user2", "rendezVous6", futureDate, IllegalArgumentException.class
+				"user5", "rendezVous5", true, futureDate.toDate(), IllegalArgumentException.class
+			}, {
+				"user2", "rendezVous6", true, futureDate.toDate(), IllegalArgumentException.class
+			}, {
+				"user1", null, false, null, IllegalArgumentException.class
+			}, {
+				"user1", "rendezVous5", true, futureDate.toDate(), null
 			}
 		};
 
 		RendezVous rendezVous;
 
 		for (int i = 0; i < testingData.length; i++) {
-
 			if (testingData[i][1] != null) {
 				rendezVous = this.rendezVousService.findOne(this.getEntityId((String) testingData[i][1]));
 
 				//If we are provided a Date to change the rendezVous' one
-				if (testingData[i][2] != null) {
+				if (testingData[i][3] != null) {
 					//We ensure that the OrganizationDate is valid by updating it
 
 					this.authenticate(rendezVous.getCreator().getUserAccount().getUsername());
-					rendezVous.setOrgDate(futureDate.toDate());
+					rendezVous.setOrgDate((Date) testingData[i][3]);
 					rendezVous = this.rendezVousService.save(rendezVous);
 					this.unauthenticate();
 				}
+
 			} else
 				rendezVous = null;
 
-			this.templateAcceptRSVP((String) testingData[i][0], rendezVous, (Class<?>) testingData[i][3]);
+			this.templateAcceptRSVP((String) testingData[i][0], rendezVous, (Boolean) testingData[i][2], (Class<?>) testingData[i][4]);
 		}
 
 	}
-
 	/*
 	 * v1.0 - Implemented by JA
 	 * 
-	 * Req to Test: 5.4
-	 * An actor who is authenticated as a user must be able to
-	 * cancel a RSVPd rendezvous. When a user RSVPs a rendezvous,
-	 * he or she is assumed to attend it.
+	 * UC-006: Cancel a RSVP, List my RSVPd RendezVouses
+	 * 1. Log in as a User
+	 * 2. List RSVPd RendezVouses
+	 * 3. Select one RendezVous from the list and cancel it
+	 * 4. List my RSVPd RendezVouses
 	 * 
-	 * Test Cases (6; 1+ 5-):
+	 * Involved REQs: 5.4, 5.5
 	 * 
-	 * + 1) A user actor provides a rendezVous he/she was going to attend and successfully cancels it
+	 * Test Cases (7; 1+ 6-):
 	 * 
-	 * - 2) An unauthenticated tries to cancel a rendezVous
+	 * - 1) A User provides an expired rendezVous and tries to cancel it
 	 * 
-	 * - 3) A manager tries to cancel a rendezVous
+	 * - 2) An unauthenticated tries to cancel a RSVPd rendezVous
 	 * 
-	 * - 4) A user actor provides a rendezVous he/she's not attending and tries to cancel it
+	 * - 3) A manager tries to cancel a RSVPd rendezVous
 	 * 
-	 * - 5) A user actor provides a rendezVous that is Deleted and tries to cancel it
+	 * - 4) A User provides a rendezVous he/she's not attending and tries to cancel it
 	 * 
-	 * - 6) A user actor provides a null rendezVous and tries to cancel it
+	 * - 5) A User provides a rendezVous that is flagged as deleted and tries to cancel it
+	 * 
+	 * - 6) A User provides a null rendezVous and tries to cancel it
+	 * 
+	 * + 7) A User provides a rendezVous he/she was going to attend and successfully cancels it
 	 */
 
 	@Test
@@ -145,33 +178,35 @@ public class RendezVousServiceTest extends AbstractTest {
 
 		final Object testingData[][] = {
 			{
-				"user2", "rendezVous6", futureDate, null
+				"user2", "rendezVous6", null, IllegalArgumentException.class
 			}, {
-				null, "rendezVous6", futureDate, IllegalArgumentException.class
+				null, "rendezVous6", futureDate.toDate(), IllegalArgumentException.class
 			}, {
-				"manager1", "rendezVous6", futureDate, IllegalArgumentException.class
+				"manager1", "rendezVous6", futureDate.toDate(), IllegalArgumentException.class
 			}, {
-				"user3", "rendezVous6", futureDate, IllegalArgumentException.class
+				"user3", "rendezVous6", futureDate.toDate(), IllegalArgumentException.class
 			}, {
-				"user5", "rendezVous4", futureDate, IllegalArgumentException.class
+				"user5", "rendezVous4", futureDate.toDate(), IllegalArgumentException.class
 			}, {
-				"user2", null, futureDate, IllegalArgumentException.class
+				"user2", null, futureDate.toDate(), IllegalArgumentException.class
+			}, {
+				"user2", "rendezVous6", futureDate.toDate(), null
 			}
 		};
 
 		RendezVous rendezVous;
 
 		for (int i = 0; i < testingData.length; i++) {
-
+			System.out.println(i);
 			if (testingData[i][1] != null) {
 				rendezVous = this.rendezVousService.findOne(this.getEntityId((String) testingData[i][1]));
 
-				//If we are provided a Date to change the rendezVous' one
+				///If we are provided a Date to change the rendezVous' one
 				if (testingData[i][2] != null) {
 					//We ensure that the OrganizationDate is valid by updating it
 
 					this.authenticate(rendezVous.getCreator().getUserAccount().getUsername());
-					rendezVous.setOrgDate(futureDate.toDate());
+					rendezVous.setOrgDate((Date) testingData[i][2]);
 					rendezVous = this.rendezVousService.save(rendezVous);
 					this.unauthenticate();
 				}
@@ -234,16 +269,51 @@ public class RendezVousServiceTest extends AbstractTest {
 	}
 	// Test Templates
 
-	protected void templateAcceptRSVP(final String username, final RendezVous rendezVous, final Class<?> expected) {
+	protected void templateAcceptRSVP(final String username, final RendezVous rendezVous, final boolean answersAllQ, final Class<?> expected) {
 		//v1.0 Implemented by JA
 
 		Class<?> caught = null;
 
+		//1. Log in as a User
 		this.authenticate(username);
 
-		final User currentUser;
+		User currentUser = null;
+		Collection<RendezVous> myRVBeforeRSVP = null;
 
 		try {
+
+			//2. List all RendezVouses
+
+			final Collection<RendezVous> allBeforeRSVP = new ArrayList<RendezVous>(this.rendezVousService.findAll());
+
+			//3. Select one RendezVous that has not been RSVPd (given as a parameter)
+
+			//4. Answer all the questions
+
+			final List<Question> questions = new ArrayList<Question>();
+			if (rendezVous != null) {
+				questions.addAll(rendezVous.getQuestions());
+				Question q;
+
+				for (int i = 0; i < questions.size(); i++) {
+
+					q = questions.get(i);
+
+					//If we don't want to answer them all...
+					if (answersAllQ || i != questions.size() - 1) {
+						final Answer a = this.answerService.create(q);
+						a.setText("Sample Response");
+						this.answerService.save(a);
+					}
+				}
+			}
+			//Obtain the list of my RendezVouses before the save (if we are Users, if not, it will fail)
+			if (username != null && username.contains("user")) {
+				currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
+
+				Assert.notNull(currentUser);
+				myRVBeforeRSVP = new ArrayList<RendezVous>(currentUser.getAttendedRendezVouses());
+			}
 
 			final RendezVous savedRendezVous = this.rendezVousService.acceptRSVP(rendezVous);
 
@@ -254,10 +324,47 @@ public class RendezVousServiceTest extends AbstractTest {
 			Assert.isTrue(savedRendezVous.getId() != 0);
 			Assert.isTrue(rendezVous.equals(savedRendezVous));
 
-			currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
+			Assert.notNull(currentUser);
 
 			Assert.isTrue(savedRendezVous.getAttendants().contains(currentUser));
 			Assert.isTrue(currentUser.getAttendedRendezVouses().contains(savedRendezVous));
+
+			//5. List my RSVPd RendezVouses
+			final Collection<RendezVous> myRVAfterRSVP = new ArrayList<RendezVous>(currentUser.getAttendedRendezVouses());
+
+			Assert.notNull(myRVAfterRSVP);
+			Assert.notNull(myRVBeforeRSVP);
+			Assert.isTrue(!myRVAfterRSVP.equals(myRVBeforeRSVP));
+			Assert.isTrue(myRVAfterRSVP.containsAll(myRVBeforeRSVP));
+			Assert.isTrue(myRVAfterRSVP.size() == myRVBeforeRSVP.size() + 1);
+			Assert.isTrue(!myRVBeforeRSVP.contains(savedRendezVous));
+			Assert.isTrue(myRVAfterRSVP.contains(savedRendezVous));
+
+			//-- Assert that no new RendezVous was added
+
+			final Collection<RendezVous> allAfterRSVP = new ArrayList<RendezVous>(this.rendezVousService.findAll());
+
+			Assert.notNull(allAfterRSVP);
+			Assert.isTrue(allAfterRSVP.equals(allBeforeRSVP));
+
+			//6. Select one RendezVous that has been RSVP
+
+			final RendezVous retrievedRV = this.rendezVousService.findOne(savedRendezVous.getId());
+
+			Assert.notNull(retrievedRV);
+			Assert.isTrue(rendezVous.equals(savedRendezVous));
+
+			//7. Show the answers to the questions
+
+			final Collection<Answer> rvAnswers = new ArrayList<Answer>(this.answerService.findAllByRendezVousAndUser(retrievedRV, currentUser));
+
+			if (answersAllQ) {
+				Assert.notNull(rvAnswers);
+				Assert.isTrue(rvAnswers.size() == questions.size());
+
+				for (final Answer a : rvAnswers)
+					Assert.isTrue(a.getText().equals("Sample Response"));
+			}
 
 		} catch (final Throwable oops) {
 			caught = oops.getClass();
@@ -273,25 +380,44 @@ public class RendezVousServiceTest extends AbstractTest {
 
 		Class<?> caught = null;
 
+		//1. Log in
 		this.authenticate(username);
 
-		final User currentUser;
+		User currentUser = null;
 
 		try {
 
+			//2. List RSVPd RendezVouses (only if you are a User)
+			final Collection<RendezVous> rvBeforeDelete = new ArrayList<RendezVous>();
+			if (username != null && username.contains("user")) {
+				currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
+				rvBeforeDelete.addAll(currentUser.getAttendedRendezVouses());
+				Assert.notNull(rvBeforeDelete);
+			}
+
+			//3. Select one of the rendezVouses (given) and cancel it
 			final RendezVous savedRendezVous = this.rendezVousService.cancelRSVP(rendezVous);
 
 			//Force the transaction to happen
 			this.rendezVousService.flush();
 
-			Assert.notNull(savedRendezVous);
 			Assert.isTrue(savedRendezVous.getId() != 0);
 			Assert.isTrue(rendezVous.equals(savedRendezVous));
 
 			currentUser = this.userService.findByUserAccount(LoginService.getPrincipal());
 
+			//4. List my RSVPd RendezVouses
+
+			final Collection<RendezVous> rvAfterDelete = currentUser.getAttendedRendezVouses();
+
+			Assert.isTrue(!rvBeforeDelete.equals(rvAfterDelete));
 			Assert.isTrue(!savedRendezVous.getAttendants().contains(currentUser));
 			Assert.isTrue(!currentUser.getAttendedRendezVouses().contains(savedRendezVous));
+
+			//We check that the answers the user provided to the questions of the rendezVous are removed
+			final Collection<Answer> rvAnswers = this.answerService.findAllByRendezVousAndUser(savedRendezVous, currentUser);
+
+			Assert.isTrue(rvAnswers.isEmpty());
 
 		} catch (final Throwable oops) {
 			caught = oops.getClass();
@@ -301,7 +427,6 @@ public class RendezVousServiceTest extends AbstractTest {
 
 		this.checkExceptions(expected, caught);
 	}
-
 	protected void templateUpdateRendezVous(final String username, final RendezVous rendezVous, final Class<?> expected) {
 		/* v1.0 - josembell */
 		Class<?> caught = null;
@@ -344,6 +469,7 @@ public class RendezVousServiceTest extends AbstractTest {
 		this.checkExceptions(expected, caught);
 
 	}
+
 
 	// -------------------------------------------------------------------------------
 	// [UC-002] Listar RendezVouses, crear un nuevo RendezVous y mostrar un

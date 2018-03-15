@@ -16,6 +16,7 @@ import org.springframework.validation.Validator;
 
 import repositories.UserRepository;
 import security.Authority;
+import security.LoginService;
 import security.UserAccount;
 import security.UserAccountService;
 import domain.Answer;
@@ -76,6 +77,15 @@ public class UserService {
 		Assert.notNull(user);
 		Assert.isTrue(user.getId() == 0);
 
+		//Ensure the performer is not logged in
+
+		try {
+			LoginService.getPrincipal();
+			throw new RuntimeException("An authenticated Actor cannot register to the system");
+		} catch (final IllegalArgumentException okFlow) {
+
+		}
+
 		/* Hash the password */
 		final Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 		final String hashedPassword = encoder.encodePassword(user.getUserAccount().getPassword(), null);
@@ -83,7 +93,6 @@ public class UserService {
 
 		return this.userRepository.save(user);
 	}
-
 	public void flush() {
 
 		//v1.0 - Implemented by JA

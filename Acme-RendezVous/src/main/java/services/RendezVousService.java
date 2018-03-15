@@ -16,6 +16,7 @@ import repositories.RendezVousRepository;
 import security.LoginService;
 import security.UserAccount;
 import domain.Announcement;
+import domain.Answer;
 import domain.Comment;
 import domain.GPSCoordinates;
 import domain.Question;
@@ -41,6 +42,9 @@ public class RendezVousService {
 
 	@Autowired
 	private QuestionService			questionService;
+
+	@Autowired
+	private AnswerService			answerService;
 
 	@Autowired
 	private Validator				validator;
@@ -177,6 +181,12 @@ public class RendezVousService {
 		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
 		Assert.isTrue(rendezVous.getAttendants().contains(user));
 
+		//We delete the answers to the questions
+		final Collection<Answer> userAnswers = this.answerService.findAllByRendezVousAndUser(rendezVous, user);
+
+		for (final Answer a : userAnswers)
+			this.answerService.delete(a);
+
 		rendezVous.getAttendants().remove(user);
 		user.getAttendedRendezVouses().remove(rendezVous);
 
@@ -197,13 +207,19 @@ public class RendezVousService {
 		if (rendezVous.getIsForAdults())
 			Assert.isTrue(user.getAge() >= 18);
 
+		//Check that the User has answered all the questions
+		final Collection<Answer> userAnswers = this.answerService.findAllByRendezVousAndUser(rendezVous, user);
+
+		Assert.notNull(userAnswers);
+		Assert.isTrue(rendezVous.getQuestions().size() == userAnswers.size());
+
 		rendezVous.getAttendants().add(user);
 		user.getAttendedRendezVouses().add(rendezVous);
 
 		return this.rendezVousRepository.save(rendezVous);
 
 	}
-
+	
 	public RendezVous reconstruct(final RendezVous rendezVous, final BindingResult binding) {
 		final RendezVous result;
 

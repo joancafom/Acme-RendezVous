@@ -55,9 +55,9 @@ public class AnswerService {
 
 	public Answer save(final Answer answer) {
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+
 		Assert.notNull(user);
-		Assert.notNull(answer.getText());
-		Assert.notNull(answer.getQuestion());
+		Assert.notNull(answer);
 
 		this.answerRepository.save(answer);
 
@@ -77,6 +77,9 @@ public class AnswerService {
 	public Answer create(final Question question) {
 		final Answer answer = new Answer();
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(question);
+		Assert.notNull(user);
 
 		answer.setUser(user);
 		answer.setQuestion(question);

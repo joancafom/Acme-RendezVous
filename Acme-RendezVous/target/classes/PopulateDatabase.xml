@@ -309,6 +309,16 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="question4" class="domain.Question">
+		<property name="text" value="What should we wear that night?"/>
+		<property name="rendezVous" ref="rendezVous6"/>
+		<property name="answers">
+			<list>
+				<ref bean="answer7"/>
+			</list>
+		</property>
+	</bean>
 	 
 	<!-- Rendez-Vous -->
 	
@@ -571,7 +581,8 @@
 			</list>
 		</property>
 		<property name="questions">
-			<list>
+			<list>	
+				<ref bean="question4" />
 			</list>
 		</property>
 		<property name="comments">
@@ -898,6 +909,12 @@
 		<property name="question" ref="question3"/>
 	</bean>
 	
+	<bean id="answer7" class="domain.Answer">
+		<property name="text" value="A suit or a gown would be nice"/>
+		<property name="user" ref="user2"/>
+		<property name="question" ref="question4"/>
+	</bean>
+	
 	
 	<!-- User -->
 	
@@ -956,6 +973,7 @@
 			<list>
 				<ref bean="answer3"/>
 				<ref bean="answer5"/>
+				<ref bean="answer7"/>
 			</list>
 		</property>
 		<property name="createdRendezVouses">
