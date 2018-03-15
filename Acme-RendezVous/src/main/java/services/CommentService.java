@@ -126,4 +126,10 @@ public class CommentService {
 	public Collection<Comment> findRootCommentsByRendezVous(final RendezVous rendezVous) {
 		return this.commentRepository.findRootCommentsByRendezVous(rendezVous.getId());
 	}
+
+	/* v1.0 - josembell */
+	public void flush() {
+		this.commentRepository.flush();
+
+	}
 }
