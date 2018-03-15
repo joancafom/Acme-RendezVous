@@ -83,6 +83,24 @@ public class UserServiceTest extends AbstractTest {
 	@Test
 	public void driverRegister() {
 
+		// testingData[i][0] -> username of the Actor to log in.
+		// testingData[i][1] -> the username of the viewer.
+		// testingData[i][2] -> the name of the user.
+		// testingData[i][3] -> the surnames of the user.
+		// testingData[i][4] -> the address of the user.
+		// testingData[i][5] -> the phoneNumber of the user.
+		// testingData[i][6] -> the email of the user.
+		// testingData[i][7] -> the dateOfBirth of the user.
+		// testingData[i][8] -> the the username/password of the user.
+		// testingData[i][9] -> the expected exception.
+
+		//OR
+
+		// testingData[i][0] -> username of the Actor to log in.
+		// testingData[i][1] -> the username of the viewer.
+		// testingData[i][2] -> the user to be saved.
+		// testingData[i][3] -> the expected exception.
+
 		//We will use two patterns for data
 		// The longest one simulates regular input (as in the webpage)
 		//The second one simulates other scenarios like the User to persist being null, or already persisted

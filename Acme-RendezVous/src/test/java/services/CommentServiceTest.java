@@ -40,9 +40,14 @@ public class CommentServiceTest extends AbstractTest {
 	/*
 	 * v1.0 - Implemented by JA
 	 * 
-	 * Req to Test: 6.1
-	 * An actor who is authenticated as an administrator must be able to
-	 * remove a comment that he or she thinks is inappropriate
+	 * UC-008: Delete a Comment
+	 * 1. Log in as an Admin
+	 * 2. List all RendezVouses
+	 * 3. Select one RendezVous
+	 * 4. Select one Comment and delete it
+	 * 5. Display the rendezVous
+	 * 
+	 * Involved REQs: 6.1
 	 * 
 	 * Test Cases (5; 2+ 3-):
 	 * 

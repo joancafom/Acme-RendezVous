@@ -88,6 +88,12 @@ public class RendezVousServiceTest extends AbstractTest {
 		//A date in the future
 		final LocalDate futureDate = new LocalDate().plusDays(1);
 
+		// testingData[i][0] -> username of the Actor to log in.
+		// testingData[i][1] -> rendezVous that's going to be RSVP.
+		// testingData[i][2] -> if the user answers all questions or not.
+		// testingData[i][3] -> a date to update the rendezVous.
+		// testingData[i][4] -> the expected exception.
+
 		final Object testingData[][] = {
 			{
 				"user3", "rendezVous6", false, futureDate.toDate(), IllegalArgumentException.class
@@ -163,6 +169,11 @@ public class RendezVousServiceTest extends AbstractTest {
 
 	@Test
 	public void driverCancelRSVP() {
+
+		// testingData[i][0] -> username of the Actor to log in.
+		// testingData[i][1] -> rendezVous that's going to be canceled.
+		// testingData[i][2] -> if we want to update the orgDate of the rendezVous.
+		// testingData[i][3] -> the expected exception.
 
 		//A date in the future
 		final LocalDate futureDate = new LocalDate().plusDays(1);
