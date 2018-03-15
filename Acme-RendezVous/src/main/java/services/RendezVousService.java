@@ -61,6 +61,7 @@ public class RendezVousService {
 		final Collection<Announcement> announcements = new HashSet<Announcement>();
 		final Collection<RendezVous> similarRendezVouses = new HashSet<RendezVous>();
 		final GPSCoordinates coordinates = new GPSCoordinates();
+		final Collection<ServiceRequest> serviceRequests = new HashSet<ServiceRequest>();
 
 		rendezVous.setCreator(user);
 		rendezVous.setComments(comments);
@@ -70,6 +71,7 @@ public class RendezVousService {
 		attendants.add(user);
 		rendezVous.setAttendants(attendants);
 		rendezVous.setCoordinates(coordinates);
+		rendezVous.setServiceRequests(serviceRequests);
 
 		if (user.getAge() < 18)
 			rendezVous.setIsForAdults(false);
@@ -97,13 +99,19 @@ public class RendezVousService {
 		if (rendezVous.getId() != 0)
 			Assert.isTrue(this.rendezVousRepository.findOne(rendezVous.getId()).getIsFinal() == false);
 
+		Assert.notNull(rendezVous.getOrgDate());
 		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
 		final RendezVous result = this.rendezVousRepository.save(rendezVous);
 
 		if (rendezVous.getId() == 0) {
 			user.getAttendedRendezVouses().add(result);
 			user.getCreatedRendezVouses().add(result);
+			Assert.isTrue(!rendezVous.getIsDeleted());
 		}
+
+		Assert.isTrue(rendezVous.getCoordinates() == null || (rendezVous.getCoordinates().getLatitude() != null && rendezVous.getCoordinates().getLongitude() != null)
+			|| (rendezVous.getCoordinates().getLatitude() == null && rendezVous.getCoordinates().getLongitude() == null));
+
 		return result;
 	}
 
