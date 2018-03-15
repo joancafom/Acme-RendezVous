@@ -521,7 +521,7 @@
 		<property name="isFinal" value="false"/>
 		<property name="isDeleted" value="false"/>
 		<property name="isForAdults" value="true"/>
-		<property name="creator" ref="user5"/>
+		<property name="creator" ref="user4"/>
 		<property name="attendants">
 			<list>
 			</list>
@@ -1046,6 +1046,7 @@
 		<property name="createdRendezVouses">
 			<list>
 				<ref bean="rendezVous4"/>
+				<ref bean="rendezVous5"/>
 			</list>
 		</property>
 		<property name="attendedRendezVouses">
@@ -1076,7 +1077,6 @@
 		</property>
 		<property name="createdRendezVouses">
 			<list>
-				<ref bean="rendezVous5"/>
 			</list>
 		</property>
 		<property name="attendedRendezVouses">

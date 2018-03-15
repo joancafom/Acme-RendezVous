@@ -152,7 +152,7 @@ public class RendezVousService {
 
 	/* Other Business Methods */
 
-	public void virtualDelete(final RendezVous rendezVous) {
+	public RendezVous virtualDelete(final RendezVous rendezVous) {
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
 
 		Assert.isTrue(!rendezVous.getIsDeleted());
@@ -162,7 +162,7 @@ public class RendezVousService {
 
 		rendezVous.setIsDeleted(true);
 
-		this.rendezVousRepository.save(rendezVous);
+		return this.rendezVousRepository.save(rendezVous);
 
 	}
 

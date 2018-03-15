@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
@@ -45,11 +47,14 @@ public class RendezVousServiceTest extends AbstractTest {
 	@Autowired
 	private AnswerService		answerService;
 
+	@PersistenceContext
+	private EntityManager		entityManager;
+
 
 	// Drivers
 
 	/*
-	 * v1.0 - Implemented by JA
+	 * v2.0 - Implemented by JA
 	 * 
 	 * UC-005: RSVP a RendezVous, List my RSVPd RendezVouses and Display info about the reservation
 	 * 1. Log in as a User
@@ -135,7 +140,11 @@ public class RendezVousServiceTest extends AbstractTest {
 			} else
 				rendezVous = null;
 
+			this.startTransaction();
+
 			this.templateAcceptRSVP((String) testingData[i][0], rendezVous, (Boolean) testingData[i][2], (Class<?>) testingData[i][4]);
+
+			this.rollbackTransaction();
 		}
 
 	}
@@ -173,34 +182,36 @@ public class RendezVousServiceTest extends AbstractTest {
 		// testingData[i][0] -> username of the Actor to log in.
 		// testingData[i][1] -> rendezVous that's going to be canceled.
 		// testingData[i][2] -> if we want to update the orgDate of the rendezVous.
-		// testingData[i][3] -> the expected exception.
+		// testingData[i][3] -> to flag or not as deleted.
+		// testingData[i][4] -> the expected exception.
 
 		//A date in the future
 		final LocalDate futureDate = new LocalDate().plusDays(1);
 
 		final Object testingData[][] = {
 			{
-				"user2", "rendezVous6", null, IllegalArgumentException.class
+				"user2", "rendezVous6", null, false, IllegalArgumentException.class
 			}, {
-				null, "rendezVous6", futureDate.toDate(), IllegalArgumentException.class
+				null, "rendezVous6", futureDate.toDate(), false, IllegalArgumentException.class
 			}, {
-				"manager1", "rendezVous6", futureDate.toDate(), IllegalArgumentException.class
+				"manager1", "rendezVous6", futureDate.toDate(), false, IllegalArgumentException.class
 			}, {
-				"user3", "rendezVous6", futureDate.toDate(), IllegalArgumentException.class
+				"user3", "rendezVous6", futureDate.toDate(), false, IllegalArgumentException.class
 			}, {
-				"user5", "rendezVous4", futureDate.toDate(), IllegalArgumentException.class
+				"user5", "rendezVous6", futureDate.toDate(), true, IllegalArgumentException.class
 			}, {
-				"user2", null, futureDate.toDate(), IllegalArgumentException.class
+				"user2", null, futureDate.toDate(), false, IllegalArgumentException.class
 			}, {
-				"user2", "rendezVous6", futureDate.toDate(), null
+				"user2", "rendezVous6", futureDate.toDate(), false, null
 			}
 		};
 
 		RendezVous rendezVous;
 
 		for (int i = 0; i < testingData.length; i++) {
-			System.out.println(i);
+			
 			if (testingData[i][1] != null) {
+
 				rendezVous = this.rendezVousService.findOne(this.getEntityId((String) testingData[i][1]));
 
 				///If we are provided a Date to change the rendezVous' one
@@ -212,10 +223,29 @@ public class RendezVousServiceTest extends AbstractTest {
 					rendezVous = this.rendezVousService.save(rendezVous);
 					this.unauthenticate();
 				}
+
+				//We mark the rendezVous as deleted if indicated in the testing Data
+				if ((Boolean) testingData[i][3]) {
+					//We ensure that the OrganizationDate is valid by updating it
+
+					this.authenticate(rendezVous.getCreator().getUserAccount().getUsername());
+					rendezVous.setOrgDate((Date) testingData[i][2]);
+					rendezVous = this.rendezVousService.save(rendezVous);
+					rendezVous = this.rendezVousService.virtualDelete(rendezVous);
+
+					this.unauthenticate();
+				}
+
 			} else
 				rendezVous = null;
 
-			this.templateCancelRSVP((String) testingData[i][0], rendezVous, (Class<?>) testingData[i][3]);
+			this.startTransaction();
+
+			this.templateCancelRSVP((String) testingData[i][0], rendezVous, (Class<?>) testingData[i][4]);
+
+			this.rollbackTransaction();
+
+			this.entityManager.clear();
 		}
 
 	}
