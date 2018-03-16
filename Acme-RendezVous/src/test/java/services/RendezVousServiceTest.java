@@ -625,7 +625,10 @@ public class RendezVousServiceTest extends AbstractTest {
 				// 17 - (+) Un usuario crea un rendezVous sin GPSCoordinates
 				"user1", "listAdults", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", null, null, false, false, true, null
 			}, {
-				// 18 - (+) Un usuario mayor de 18 crea un rendezVous con isForAdults a true
+				// 18 - (+) Un usuario crea un rendezVous sin picture ni GPSCoordinates
+				"user1", "listAdults", "firstRendezVous", "completeDescription", "future", null, null, null, false, false, false, null
+			}, {
+				// 19 - (+) Un usuario mayor de 18 crea un rendezVous con isForAdults a true
 				"user1", "listAdults", "firstRendezVous", "completeDescription", "future", "http://www.images.com/picture.png", 37.3546759, -5.9779805, false, false, true, null
 			}
 		};
@@ -646,11 +649,11 @@ public class RendezVousServiceTest extends AbstractTest {
 				(Double) testingData[i][7], (boolean) testingData[i][8], (boolean) testingData[i][9], (boolean) testingData[i][10], (Class<?>) testingData[i][11]);
 
 			this.rollbackTransaction();
+			this.entityManager.clear();
 
 		}
 
 	}
-
 	protected void templateListCreateAndDisplayRendezVous(final String username, final String listOption, final String rendezVousName, final String rendezVousDescription, final Date rendezVousDate, final String rendezVousPicture,
 		final Double rendezVousLatitude, final Double rendezVousLongitude, final boolean rendezVousIsFinal, final boolean rendezVousIsDeleted, final boolean rendezVousIsForAdults, final Class<?> expected) {
 
@@ -741,7 +744,7 @@ public class RendezVousServiceTest extends AbstractTest {
 	}
 
 	// -------------------------------------------------------------------------------
-	// [UC-002] Eliminar virtualmente un RendezVous.
+	// [UC-003] Eliminar virtualmente un RendezVous.
 	// 
 	// Requisitos relacionados:
 	//   · REQ 5.3: Update or delete the rendezvouses that he or she's created.
@@ -749,7 +752,7 @@ public class RendezVousServiceTest extends AbstractTest {
 	//              the database, but the rendezvous cannot be updated. Deleted
 	//              rendezvouses are flagged as such when they are displayed.
 	// -------------------------------------------------------------------------------
-	// v1.0 - Implemented by Alicia
+	// v2.0 - Implemented by Alicia
 	// -------------------------------------------------------------------------------
 
 	@Test
@@ -784,6 +787,8 @@ public class RendezVousServiceTest extends AbstractTest {
 
 			if (i < 3 || i == 4)
 				rendezVousToDelete.setIsDeleted(false);
+			else
+				rendezVousToDelete.setIsDeleted(true);
 
 			if (i < 4)
 				rendezVousToDelete.setOrgDate(new LocalDate().plusDays(1).toDate());
@@ -795,11 +800,11 @@ public class RendezVousServiceTest extends AbstractTest {
 			this.templateVirtualDeleteRendezVous((String) testingData[i][0], rendezVousToDelete, (Class<?>) testingData[i][2]);
 
 			this.rollbackTransaction();
+			this.entityManager.clear();
 
 		}
 
 	}
-
 	protected void templateVirtualDeleteRendezVous(final String username, final RendezVous rendezVousToDelete, final Class<?> expected) {
 
 		// 1. Loggearse como Usuario (o como null)
