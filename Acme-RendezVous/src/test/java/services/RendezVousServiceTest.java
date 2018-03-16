@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 
 import security.LoginService;
 import utilities.AbstractTest;
+import domain.Administrator;
 import domain.Answer;
 import domain.GPSCoordinates;
 import domain.Question;
@@ -37,18 +38,21 @@ public class RendezVousServiceTest extends AbstractTest {
 	// System Under Test
 
 	@Autowired
-	private RendezVousService	rendezVousService;
+	private RendezVousService		rendezVousService;
 
 	//Fixtures 
 
 	@Autowired
-	private UserService			userService;
+	private UserService				userService;
 
 	@Autowired
-	private AnswerService		answerService;
+	private AdministratorService	administratorService;
+
+	@Autowired
+	private AnswerService			answerService;
 
 	@PersistenceContext
-	private EntityManager		entityManager;
+	private EntityManager			entityManager;
 
 
 	// Drivers
@@ -209,7 +213,7 @@ public class RendezVousServiceTest extends AbstractTest {
 		RendezVous rendezVous;
 
 		for (int i = 0; i < testingData.length; i++) {
-			
+
 			if (testingData[i][1] != null) {
 
 				rendezVous = this.rendezVousService.findOne(this.getEntityId((String) testingData[i][1]));
@@ -827,6 +831,110 @@ public class RendezVousServiceTest extends AbstractTest {
 			// 3. Marcar un rendezVous como eliminado
 
 			this.rendezVousService.virtualDelete(rendezVousToDelete);
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		super.unauthenticate();
+		super.checkExceptions(expected, caught);
+
+	}
+
+	// -------------------------------------------------------------------------------
+	// [UC-009] Administrador elimina virtualmente un RendezVous.
+	// 
+	// Requisitos relacionados:
+	//   · REQ 6.2: An actor who is authenticated as an administrator must be able to
+	//              remove a rendezvous that he or she thinks is inappropriate.
+	// -------------------------------------------------------------------------------
+	// v2.0 - Implemented by Alicia
+	// -------------------------------------------------------------------------------
+
+	@Test
+	public void driverDeleteRendezVous() {
+
+		// testingData[i][0] -> username del usuario loggeado.
+		// testingData[i][1] -> rendezVous que va a eliminarse.
+		// testingData[i][2] -> excepción que debe saltar.
+
+		final Object testingData[][] = {
+			{
+				// 1 - (-) Un usuario no loggeado elimina un RendezVous.
+				null, "rendezVous1", IllegalArgumentException.class
+			}, {
+				// 2 - (-) Un usuario loggeado elimina un RendezVous que no es suyo.
+				"user1", "rendezVous2", IllegalArgumentException.class
+			}, {
+				// 3 - (-) Un usuario loggeado elimina un RendezVous suyo.
+				"user1", "rendezVous1", IllegalArgumentException.class
+			}, {
+				// 4 - (-) Un administrador elimina un RendezVous a null.
+				"admin", null, IllegalArgumentException.class
+			}, {
+				// 5 - (-) Un administrador elimina un RendezVous que no existe.
+				"admin", "rendezVous1", IllegalArgumentException.class
+			}, {
+				// 6 - (+) Un administrador elimina un RendezVous que existe.
+				"admin", "rendezVous1", null
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+
+			RendezVous rendezVousToDelete = null;
+
+			if (testingData[i][1] != null)
+				rendezVousToDelete = this.rendezVousService.findOne(super.getEntityId((String) testingData[i][1]));
+
+			if (i == 4)
+				rendezVousToDelete = new RendezVous();
+
+			this.startTransaction();
+
+			this.templateDeleteRendezVous((String) testingData[i][0], rendezVousToDelete, (Class<?>) testingData[i][2]);
+
+			this.rollbackTransaction();
+			this.entityManager.clear();
+
+		}
+
+	}
+	protected void templateDeleteRendezVous(final String username, final RendezVous rendezVousToDelete, final Class<?> expected) {
+
+		// 1. Loggearse como Usuario/Administrador (o como null)
+		super.authenticate(username);
+
+		Class<?> caught = null;
+
+		try {
+
+			User user = null;
+			Administrator administrator = null;
+
+			if (username != null)
+				if (username.contains("user"))
+					user = this.userService.findByUserAccount(LoginService.getPrincipal());
+				else if (username.contains("administrator"))
+					administrator = this.administratorService.findByUserAccount(LoginService.getPrincipal());
+
+			// 2. Listar los rendezVouses
+
+			if ((user != null && user.getAge() >= 18) || administrator != null)
+				this.rendezVousService.findAll();
+			else
+				this.rendezVousService.findAllNotAdult();
+
+			// 3. Eliminar el rendezVous
+
+			this.rendezVousService.delete(rendezVousToDelete);
+			this.rendezVousService.flush();
+
+			// 4. Listar los rendezVouses y comprobar que no contienen al borrado
+
+			final Collection<RendezVous> allRendezVouses = this.rendezVousService.findAll();
+			final Boolean hola = allRendezVouses.contains(rendezVousToDelete);
+			Assert.isTrue(!hola);
 
 		} catch (final Throwable oops) {
 			caught = oops.getClass();

@@ -15,6 +15,7 @@ import org.springframework.validation.Validator;
 import repositories.RendezVousRepository;
 import security.LoginService;
 import security.UserAccount;
+import domain.Administrator;
 import domain.Announcement;
 import domain.Answer;
 import domain.Comment;
@@ -41,10 +42,16 @@ public class RendezVousService {
 	private UserService				userService;
 
 	@Autowired
+	private AdministratorService	administratorService;
+
+	@Autowired
 	private QuestionService			questionService;
 
 	@Autowired
 	private AnswerService			answerService;
+
+	@Autowired
+	private ServiceRequestService	serviceRequestService;
 
 	@Autowired
 	private Validator				validator;
@@ -127,11 +134,14 @@ public class RendezVousService {
 
 	public void delete(final RendezVous rendezVous) {
 		Assert.notNull(rendezVous);
-
 		Assert.isTrue(this.rendezVousRepository.exists(rendezVous.getId()));
 
-		for (final User u : rendezVous.getAttendants())
-			u.getAttendedRendezVouses().remove(rendezVous);
+		final Administrator administrator = this.administratorService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(administrator);
+
+		for (final User u : this.userService.findAll())
+			if (u.getAttendedRendezVouses().contains(rendezVous))
+				u.getAttendedRendezVouses().remove(rendezVous);
 
 		for (final RendezVous rv : this.rendezVousRepository.findAll())
 			if (rv.getSimilarRendezVouses().contains(rendezVous))
@@ -139,6 +149,9 @@ public class RendezVousService {
 
 		for (final Question q : rendezVous.getQuestions())
 			this.questionService.delete(q);
+
+		for (final ServiceRequest sr : rendezVous.getServiceRequests())
+			this.serviceRequestService.delete(sr);
 
 		this.rendezVousRepository.delete(rendezVous);
 	}
