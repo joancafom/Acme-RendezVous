@@ -326,7 +326,7 @@ public class AnnouncementServiceTest extends AbstractTest {
 	}
 
 	/*
-	 * v1.0 - josembell
+	 * v1.1 - josembell
 	 * 
 	 * [UC-014] - Eliminar un anuncio
 	 * 
@@ -348,6 +348,9 @@ public class AnnouncementServiceTest extends AbstractTest {
 			}, {
 				/* - 4) Un user intenta eliminar un announcement */
 				"user1", "announcement1", IllegalArgumentException.class
+			}, {
+				/* - 5) Un manager intenta eliminar un announcement */
+				"user1", "announcement1", IllegalArgumentException.class
 			}
 		};
 
@@ -365,8 +368,8 @@ public class AnnouncementServiceTest extends AbstractTest {
 
 	}
 
-	/* v1.0 - josembell */
-	private void templateDeleteAnnouncement(final String username, final Announcement announcement, final Class<?> expected) {
+	/* v1.1 - josembell */
+	protected void templateDeleteAnnouncement(final String username, final Announcement announcement, final Class<?> expected) {
 		Class<?> caught = null;
 
 		/* 1. Loggearte como administrador */

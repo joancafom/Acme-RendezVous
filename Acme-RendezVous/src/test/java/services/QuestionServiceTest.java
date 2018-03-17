@@ -6,6 +6,7 @@ import java.util.Collection;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -135,6 +136,91 @@ public class QuestionServiceTest extends AbstractTest {
 
 		super.unauthenticate();
 		super.checkExceptions(expected, caught);
+
+	}
+
+	/*
+	 * v1.0 - josembell
+	 * 
+	 * [CU-015] - Create a question for a rendezVous
+	 * 
+	 * REQ: 21.1
+	 */
+
+	@Test
+	public void driverListAndCreateQuestion() {
+		final Object testingData[][] = {
+			{
+				/* + 1) Un usuario crea una question para un rendezVous creado por él */
+				"user1", "rendezVous1", "Is this a test?", null
+			}, {
+				/* - 2) Un usuario no identificado intenta crear una question */
+				null, "rendezVous1", "Is this a test?", IllegalArgumentException.class
+			}, {
+				/* - 3) Un usuario intenta crear una question para un rendezVous que no es suyo */
+				"user1", "rendezVous7", "Is this a test?", IllegalArgumentException.class
+			}, {
+				/* - 4) Un usuario intenta crear una question para un rendezVous null */
+				"user1", null, "Is this a test?", IllegalArgumentException.class
+			}, {
+				/* - 5) Un usuario intenta crear una question sin texto */
+				"user1", "rendezVous1", null, ConstraintViolationException.class
+			}, {
+				/* - 6) Un admin intenta crear una question */
+				"admin", "rendezVous1", "Is this a test?", IllegalArgumentException.class
+			}, {
+				/* - 7) Un manager intenta crear una question */
+				"manager1", "rendezVous1", "Is this a test?", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			RendezVous rendezVous = null;
+			if (testingData[i][1] != null)
+				rendezVous = this.rendezVousService.findOne(this.getEntityId((String) testingData[i][1]));
+
+			//System.out.println("Test " + (i + 1));
+			this.templateListAndCreateQuestion((String) testingData[i][0], rendezVous, (String) testingData[i][2], (Class<?>) testingData[i][3]);
+			//System.out.println("Test " + (i + 1) + " - OK");
+		}
+	}
+
+	protected void templateListAndCreateQuestion(final String username, final RendezVous rendezVous, final String text, final Class<?> expected) {
+		Class<?> caught = null;
+
+		/* 1. Loggearse en el sistema */
+		this.authenticate(username);
+
+		try {
+			/* 2. Listar los rendezVouses y elegir uno -> entra por parámetros */
+			int questionsBefore = 0;
+			if (rendezVous != null) {
+				final Collection<Question> questions = rendezVous.getQuestions();
+				questionsBefore = questions.size();
+			}
+
+			/* 3. Crear una question */
+			final Question question = this.questionService.create(rendezVous);
+
+			/* -> Settear los campos */
+			question.setText(text);
+
+			/* -> Save */
+			this.questionService.save(question);
+
+			/* -> Flush */
+			this.questionService.flush();
+
+			/* 4. Comprobamos que existe 1 pregunta más */
+			final int questionsNow = rendezVous.getQuestions().size();
+			Assert.isTrue((questionsBefore + 1) == questionsNow);
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
 
 	}
 }

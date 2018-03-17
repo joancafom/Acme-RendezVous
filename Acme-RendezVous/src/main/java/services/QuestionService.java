@@ -60,7 +60,10 @@ public class QuestionService {
 		Assert.isTrue(question.getId() == 0);
 		Assert.isTrue(question.getRendezVous().getCreator().equals(user));
 
-		return this.questionRepository.save(question);
+		final Question result = this.questionRepository.save(question);
+		result.getRendezVous().getQuestions().add(result);
+
+		return result;
 	}
 
 	public Question findOne(final int questionId) {
