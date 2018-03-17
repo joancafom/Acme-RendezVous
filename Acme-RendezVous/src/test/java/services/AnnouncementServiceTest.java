@@ -324,4 +324,70 @@ public class AnnouncementServiceTest extends AbstractTest {
 		super.checkExceptions(expected, caught);
 
 	}
+
+	/*
+	 * v1.0 - josembell
+	 * 
+	 * [UC-014] - Eliminar un anuncio
+	 * 
+	 * REQ: 17.1
+	 */
+
+	@Test
+	public void driverDeleteAnnouncement() {
+		final Object testingData[][] = {
+			{
+				/* + 1) Un administrador elimina un anuncio de un RendezVous creado por él */
+				"admin", "announcement1", null
+			}, {
+				/* - 2) Un usuario no identificado elimina un anuncio */
+				null, "announcement1", IllegalArgumentException.class
+			}, {
+				/* - 3) Un administrador identificado elimina un announcement null */
+				"admin", null, IllegalArgumentException.class
+			}, {
+				/* - 4) Un user intenta eliminar un announcement */
+				"user1", "announcement1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			Announcement announcement;
+			if (testingData[i][1] != null)
+				announcement = this.announcementService.findOne(this.getEntityId((String) testingData[i][1]));
+			else
+				announcement = null;
+
+			//System.out.println("Test " + (i + 1));
+			this.templateDeleteAnnouncement((String) testingData[i][0], announcement, (Class<?>) testingData[i][2]);
+			//System.out.println("Test " + (i + 1) + " - OK");
+		}
+
+	}
+
+	/* v1.0 - josembell */
+	private void templateDeleteAnnouncement(final String username, final Announcement announcement, final Class<?> expected) {
+		Class<?> caught = null;
+
+		/* 1. Loggearte como administrador */
+		this.authenticate(username);
+
+		try {
+			/* 2. Listar todos los RendezVouses */
+			final Collection<Announcement> allAnnouncements = this.announcementService.findAll();
+
+			/* 3. Seleccionar un RendezVous -> announcement.getRendezVous() */
+
+			/* 4. Seleccionar un anuncio -> el que entra por parámetros */
+			this.announcementService.delete(announcement);
+			Assert.isTrue(this.announcementService.findAll().size() + 1 == allAnnouncements.size());
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+
+	}
 }

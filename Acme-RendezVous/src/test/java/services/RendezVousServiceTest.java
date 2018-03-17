@@ -994,9 +994,9 @@ public class RendezVousServiceTest extends AbstractTest {
 			else
 				similarRendezVous = null;
 
-			System.out.println("Test " + (i + 1));
+			//System.out.println("Test " + (i + 1));
 			this.templateAddSimilarRendezVous((String) testingData[i][0], rendezVous, similarRendezVous, (Class<?>) testingData[i][3]);
-			System.out.println("Test " + (i + 1) + " - OK");
+			//System.out.println("Test " + (i + 1) + " - OK");
 		}
 
 	}
