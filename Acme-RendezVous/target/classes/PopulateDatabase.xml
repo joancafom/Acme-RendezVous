@@ -613,20 +613,25 @@
   			</list>
   		</property>
   		<property name="similarRendezVouses">
-  			<list /> 
-  				</property>
-				<property name="announcements">
-  			<list /> 
+  			<list>
+  			</list> 
+  		</property>
+		<property name="announcements">
+  			<list>
+  			</list> 
   		</property>
 		<property name="questions">
-  			<list /> 
-  				</property>
-				<property name="comments">
-  			<list /> 
+  			<list>
+  			</list> 
+  		</property>
+		<property name="comments">
+  			<list>
+  			</list> 
   		</property>
 		<property name="serviceRequests">
-  		<list /> 
-  			</property>
+  			<list>
+  			</list> 
+  		</property>
   	</bean>
 	
 	
@@ -1118,6 +1123,7 @@
 		<property name="attendedRendezVouses">
 			<list>
 				<ref bean="rendezVous2"/>
+				<ref bean="rendezVous7"/>
 			</list>
 		</property>
 		<property name="comments">

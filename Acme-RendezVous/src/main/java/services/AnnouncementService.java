@@ -71,6 +71,10 @@ public class AnnouncementService {
 		this.announcementRepository.delete(announcement);
 	}
 
+	public void flush() {
+		this.announcementRepository.flush();
+	}
+
 	//Other Business Methods
 
 	public List<Announcement> findByCurrentChronological() {
