@@ -128,7 +128,7 @@ public class RendezVousServiceTest extends AbstractTest {
 		RendezVous rendezVous;
 
 		for (int i = 0; i < testingData.length; i++) {
-			
+
 			if (testingData[i][1] != null) {
 				rendezVous = this.rendezVousService.findOne(this.getEntityId((String) testingData[i][1]));
 
@@ -275,7 +275,7 @@ public class RendezVousServiceTest extends AbstractTest {
 				"user2", "rendezVous6", 1, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, null
 			}, {
 				/* + 2) Un actor menor de edad edita un rendezVous validado creado por el */
-				"user5", "rendezVous5", 1, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, null
+				"user5", "rendezVous7", 1, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, null
 			}, {
 				/* - 3) Un usuario no autentificado intenta editar un rendezVous */
 				null, "rendezVous4", 0, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, IllegalArgumentException.class
@@ -299,7 +299,7 @@ public class RendezVousServiceTest extends AbstractTest {
 				"user1", "rendezVous1", 2, "nombreOk", "descripciónOk", pastDate, 1.0, 1.0, false, IllegalArgumentException.class
 			}, {
 				/* - 10)Un usuario que es menor de edar intenta establecer un rendezVous para mayores de edad */
-				"user5", "rendezVous5", 1, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, true, IllegalArgumentException.class
+				"user5", "rendezVous7", 1, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, true, IllegalArgumentException.class
 			}, {
 				/* - 11)Un usuario intenta editar un rendezVous que está en versión final */
 				"user3", "rendezVous2", 1, "nombreOk", "descripciónOk", futureDate, 1.0, 1.0, false, IllegalArgumentException.class
@@ -317,10 +317,10 @@ public class RendezVousServiceTest extends AbstractTest {
 				this.authenticate(rendezVous.getCreator().getUserAccount().getUsername());
 			} else
 				rendezVous = null;
-			System.out.println("TEST-" + i);
+			//System.out.println("TEST-" + i);
 			this.templateListUpdateRendezVous((String) testingData[i][0], rendezVous, (Integer) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4], (Date) testingData[i][5], (Double) testingData[i][6], (Double) testingData[i][7],
 				(Boolean) testingData[i][8], (Class<?>) testingData[i][9]);
-			System.out.println("TEST-" + i + " - OK");
+			//System.out.println("TEST-" + i + " - OK");
 		}
 
 	}
@@ -371,7 +371,6 @@ public class RendezVousServiceTest extends AbstractTest {
 		this.checkExceptions(expected, caught);
 
 	}
-	// Test Templates
 
 	protected void templateAcceptRSVP(final String username, final RendezVous rendezVous, final boolean answersAllQ, final Class<?> expected) {
 		//v1.0 Implemented by JA

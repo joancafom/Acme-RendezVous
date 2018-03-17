@@ -594,6 +594,41 @@
 			</list>
 		</property>
 	</bean>
+	<bean id="rendezVous7" class="domain.RendezVous">
+  		<property name="name" value="Melodrama Fan Meeting" /> 
+  		<property name="description" value="We'll discuss about which is the best Lorde's song" /> 
+		<property name="orgDate">
+			<bean factory-method="parse" factory-bean="dateFormat">
+  			<constructor-arg value="02/10/2018 22:15" /> 
+  		</bean>
+  		</property>
+ 		<property name="picture" value="http://www.philmarriott.net/wp-content/uploads/2017/06/Lorde-Melodrama-Header.jpg" /> 
+ 		<property name="isFinal" value="false" /> 
+ 		<property name="isDeleted" value="false" /> 
+  		<property name="isForAdults" value="false" /> 
+  		<property name="creator" ref="user5" />
+  		<property name="attendants">
+			<list>
+  				<ref bean="user5" /> 
+  			</list>
+  		</property>
+  		<property name="similarRendezVouses">
+  			<list /> 
+  				</property>
+				<property name="announcements">
+  			<list /> 
+  		</property>
+		<property name="questions">
+  			<list /> 
+  				</property>
+				<property name="comments">
+  			<list /> 
+  		</property>
+		<property name="serviceRequests">
+  		<list /> 
+  			</property>
+  	</bean>
+	
 	
 	<!-- Service -->
 	
@@ -1077,6 +1112,7 @@
 		</property>
 		<property name="createdRendezVouses">
 			<list>
+				<ref bean="rendezVous7"/>
 			</list>
 		</property>
 		<property name="attendedRendezVouses">
