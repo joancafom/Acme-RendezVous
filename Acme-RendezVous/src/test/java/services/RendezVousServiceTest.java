@@ -843,7 +843,7 @@ public class RendezVousServiceTest extends AbstractTest {
 	}
 
 	// -------------------------------------------------------------------------------
-	// [UC-009] Administrador elimina virtualmente un RendezVous.
+	// [UC-009] Administrador elimina un RendezVous.
 	// 
 	// Requisitos relacionados:
 	//   · REQ 6.2: An actor who is authenticated as an administrator must be able to
@@ -934,8 +934,7 @@ public class RendezVousServiceTest extends AbstractTest {
 			// 4. Listar los rendezVouses y comprobar que no contienen al borrado
 
 			final Collection<RendezVous> allRendezVouses = this.rendezVousService.findAll();
-			final Boolean hola = allRendezVouses.contains(rendezVousToDelete);
-			Assert.isTrue(!hola);
+			Assert.isTrue(!allRendezVouses.contains(rendezVousToDelete));
 
 		} catch (final Throwable oops) {
 			caught = oops.getClass();
