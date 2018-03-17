@@ -67,10 +67,18 @@ public class QuestionService {
 		return this.questionRepository.findOne(questionId);
 	}
 
+	// v1.0 - Implemented by Alicia
+	public Collection<Question> findAll() {
+		return this.questionRepository.findAll();
+	}
+
 	public void delete(final Question question) {
 		Assert.notNull(question);
-
 		Assert.isTrue(this.questionRepository.exists(question.getId()));
+
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(user);
+		Assert.isTrue(user.getCreatedRendezVouses().contains(question.getRendezVous()));
 
 		for (final Answer a : question.getAnswers())
 			this.answerService.delete(a);
@@ -80,6 +88,13 @@ public class QuestionService {
 
 	public List<Question> findAllOrderedByRendezVous(final RendezVous rendezVous) {
 		return this.questionRepository.findAllOrderedByRendezVous(rendezVous.getId());
+	}
+
+	// Other business methods
+
+	// v1.9 - Implemented by Alicia
+	public void flush() {
+		this.questionRepository.flush();
 	}
 
 }
