@@ -284,7 +284,11 @@ public class RendezVousService {
 	}
 
 	public void addSimilarRendezVous(final RendezVous pRV, final RendezVous sRV) {
+		Assert.notNull(pRV);
+		Assert.notNull(sRV);
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		if (user.getAge() < 18)
+			Assert.isTrue(sRV.getIsForAdults() == false);
 		Assert.isTrue(pRV.getCreator().equals(user));
 		Assert.isTrue(user.getCreatedRendezVouses().contains(pRV));
 		Assert.isTrue(!pRV.getSimilarRendezVouses().contains(sRV));

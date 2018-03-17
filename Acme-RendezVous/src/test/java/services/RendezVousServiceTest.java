@@ -943,4 +943,88 @@ public class RendezVousServiceTest extends AbstractTest {
 		super.checkExceptions(expected, caught);
 
 	}
+
+	/*
+	 * v1.0 - josembell
+	 * 
+	 * [CU-012] - Mostrar y añadir rendezVouses similares
+	 * 
+	 * REQ: 15.2, 4.3, 14
+	 */
+
+	@Test
+	public void driverLinkSimilarRendezVous() {
+		final Object testingData[][] = {
+			{
+				/* + 1) Un usuario loggeado añade un existente RendezVous como similar a un RendezVous creado por él */
+				"user1", "rendezVous1", "rendezVous2", null
+			}, {
+				/* - 2) Un usuario no identificado añade un existente RendezVous como similar a otro RendezVous */
+				null, "rendezVous1", "rendezVous2", IllegalArgumentException.class
+			}, {
+				/* - 3) Un usuario identificado intenta añadir un RendezVous null como similar a uno creado por él */
+				"user1", "rendezVous1", null, IllegalArgumentException.class
+			}, {
+				/* - 4) Un usuario identificado intenta añadir un RendezVous existente como similar a otro que no es creado por él */
+				"user1", "rendezVous7", "rendezVous2", IllegalArgumentException.class
+			}, {
+				/* - 5) Un usuario identificado intenta añadir un RendezVous existente como similar a otro null */
+				"user1", null, "rendezVous2", IllegalArgumentException.class
+			}, {
+				/* - 6) Un usuario identificado intenta añadir un RendezVous que ya es similar a otro creado por él */
+				"user1", "rendezVous3", "rendezVous1", IllegalArgumentException.class
+			}, {
+				/* + 7) Un usuario identificado menor de edad añade un RendezVous para menores de edad como similar a otro creado por el */
+				"user5", "rendezVous7", "rendezVous6", null
+			}, {
+				/* - 8) Un usuario identificado menor de edad añade un RendezVous para mayores de edad como similar a otro creado por el */
+				"user5", "rendezVous7", "rendezVous1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			RendezVous rendezVous;
+			RendezVous similarRendezVous;
+			if (testingData[i][1] != null)
+				rendezVous = this.rendezVousService.findOne(this.getEntityId((String) testingData[i][1]));
+			else
+				rendezVous = null;
+			if (testingData[i][2] != null)
+				similarRendezVous = this.rendezVousService.findOne(this.getEntityId((String) testingData[i][2]));
+			else
+				similarRendezVous = null;
+
+			System.out.println("Test " + (i + 1));
+			this.templateAddSimilarRendezVous((String) testingData[i][0], rendezVous, similarRendezVous, (Class<?>) testingData[i][3]);
+			System.out.println("Test " + (i + 1) + " - OK");
+		}
+
+	}
+	/* v1.0 - josembell */
+	private void templateAddSimilarRendezVous(final String username, final RendezVous rendezVous, final RendezVous similarRendezVous, final Class<?> expected) {
+		Class<?> caught = null;
+
+		/* 1. Loggearte como usuario */
+		this.authenticate(username);
+
+		try {
+			int numSimilarRendezVousesBefore = 0;
+			int numSimilarRendezVousesAfter = 0;
+			if (rendezVous != null)
+				numSimilarRendezVousesBefore = rendezVous.getSimilarRendezVouses().size();
+
+			/* 4. Añadir un rendezVous similar -> el que entra por parámetros */
+			this.rendezVousService.addSimilarRendezVous(rendezVous, similarRendezVous);
+			if (rendezVous != null)
+				numSimilarRendezVousesAfter = rendezVous.getSimilarRendezVouses().size();
+
+			Assert.isTrue(numSimilarRendezVousesBefore + 1 == numSimilarRendezVousesAfter);
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+	}
 }
