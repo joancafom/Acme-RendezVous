@@ -81,12 +81,26 @@ public class ServiceService {
 
 	public domain.Service save(final domain.Service newService) {
 		/* v1.0 - josembell */
+		// v2.0 - Modified by JA
+
+		Assert.notNull(newService);
+
 		final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
 		Assert.notNull(manager);
-		Assert.isTrue(manager.getServices().contains(newService));
+
+		if (newService.getId() != 0)
+			Assert.isTrue(manager.getServices().contains(newService));
+		else
+			Assert.isTrue(!newService.getIsCanceled());
+
 		Assert.isTrue(newService.getManager().equals(manager));
 
-		return this.serviceRepository.save(newService);
+		final domain.Service savedService = this.serviceRepository.save(newService);
+		Assert.notNull(savedService);
+
+		manager.getServices().add(savedService);
+
+		return savedService;
 	}
 
 	public void delete(final domain.Service service) {
@@ -98,6 +112,11 @@ public class ServiceService {
 		Assert.isTrue(service.getServiceRequests().isEmpty());
 
 		this.serviceRepository.delete(service);
+	}
+
+	public void flush() {
+		// v1.0 - Implemented by JA
+		this.serviceRepository.flush();
 	}
 
 	/* Other Business methods */
