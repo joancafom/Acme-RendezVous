@@ -128,6 +128,7 @@ public class RendezVousServiceTest extends AbstractTest {
 		RendezVous rendezVous;
 
 		for (int i = 0; i < testingData.length; i++) {
+			
 			if (testingData[i][1] != null) {
 				rendezVous = this.rendezVousService.findOne(this.getEntityId((String) testingData[i][1]));
 
@@ -149,11 +150,12 @@ public class RendezVousServiceTest extends AbstractTest {
 			this.templateAcceptRSVP((String) testingData[i][0], rendezVous, (Boolean) testingData[i][2], (Class<?>) testingData[i][4]);
 
 			this.rollbackTransaction();
+			this.entityManager.clear();
 		}
 
 	}
 	/*
-	 * v1.0 - Implemented by JA
+	 * v2.0 - Implemented by JA
 	 * 
 	 * UC-006: Cancel a RSVP, List my RSVPd RendezVouses
 	 * 1. Log in as a User
@@ -248,7 +250,6 @@ public class RendezVousServiceTest extends AbstractTest {
 			this.templateCancelRSVP((String) testingData[i][0], rendezVous, (Class<?>) testingData[i][4]);
 
 			this.rollbackTransaction();
-
 			this.entityManager.clear();
 		}
 

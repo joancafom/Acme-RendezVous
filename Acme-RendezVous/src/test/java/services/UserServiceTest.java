@@ -197,7 +197,6 @@ public class UserServiceTest extends AbstractTest {
 			//Force the transaction to happen
 			this.userService.flush();
 
-			Assert.notNull(savedUser);
 			Assert.isTrue(savedUser.getId() != 0);
 			Assert.isTrue(!userToSave.equals(savedUser));
 
@@ -210,7 +209,6 @@ public class UserServiceTest extends AbstractTest {
 
 			final Collection<User> usersAfter = this.userService.findAll();
 
-			Assert.notNull(usersAfter);
 			Assert.isTrue(!usersBefore.equals(usersAfter));
 			Assert.isTrue((usersBefore.size() + 1) == usersAfter.size());
 			Assert.isTrue(usersAfter.containsAll(usersBefore));
@@ -221,7 +219,6 @@ public class UserServiceTest extends AbstractTest {
 
 			final User retrivedUser = this.userService.findOne(savedUser.getId());
 
-			Assert.notNull(retrivedUser);
 			Assert.isTrue(retrivedUser.equals(savedUser));
 
 		} catch (final Throwable oops) {

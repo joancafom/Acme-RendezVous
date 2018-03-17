@@ -14,6 +14,7 @@ import org.springframework.validation.Validator;
 
 import repositories.CommentRepository;
 import security.LoginService;
+import domain.Administrator;
 import domain.Comment;
 import domain.RendezVous;
 import domain.User;
@@ -25,15 +26,18 @@ public class CommentService {
 	/* Repositories */
 
 	@Autowired
-	private CommentRepository	commentRepository;
+	private CommentRepository		commentRepository;
 
 	/* Services */
 
 	@Autowired
-	private UserService			userService;
+	private UserService				userService;
 
 	@Autowired
-	private Validator			validator;
+	private AdministratorService	administratorService;
+
+	@Autowired
+	private Validator				validator;
 
 
 	/* CRUD Methods */
@@ -90,19 +94,25 @@ public class CommentService {
 
 		Assert.notNull(comment);
 
-		if (comment.getParentComment() != null)
-			comment.getParentComment().getReplies().remove(comment);
+		final Administrator currentAdmin = this.administratorService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(currentAdmin);
 
 		this.deleteWithReferences(comment);
 
 	}
-
 	//Other Business Methods
 
 	private void deleteWithReferences(final Comment comment) {
 
-		for (final Comment reply : comment.getReplies())
+		final Collection<Comment> repliesCopy = new ArrayList<Comment>(comment.getReplies());
+
+		for (final Comment reply : repliesCopy)
 			this.deleteWithReferences(reply);
+
+		if (comment.getParentComment() != null)
+			comment.getParentComment().getReplies().remove(comment);
+
+		comment.getRendezVous().getComments().remove(comment);
 
 		this.commentRepository.delete(comment);
 

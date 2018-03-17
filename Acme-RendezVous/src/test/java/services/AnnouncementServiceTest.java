@@ -51,7 +51,7 @@ public class AnnouncementServiceTest extends AbstractTest {
 	 * 
 	 * Test Cases (3; 1+ 2-):
 	 * 
-	 * + 1) A user correctly retrieves all the anouncements related to the rendezVouses
+	 * + 1) A user correctly retrieves all the announcements related to the rendezVouses
 	 * he/she has RSVPd, ordered chronologically in descending order
 	 * 
 	 * - 2) An unauthenticated actor tries to get the stream of announcements

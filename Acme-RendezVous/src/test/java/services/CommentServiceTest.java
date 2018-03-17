@@ -1,8 +1,11 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
@@ -29,10 +32,17 @@ public class CommentServiceTest extends AbstractTest {
 	//Service Under Test
 	@Autowired
 	private CommentService		commentService;
+
+	//Helping services
+
 	@Autowired
 	private RendezVousService	rendezVousService;
+
 	@Autowired
 	private UserService			userService;
+
+	@PersistenceContext
+	private EntityManager		entityManager;
 
 
 	//Drivers
@@ -42,10 +52,9 @@ public class CommentServiceTest extends AbstractTest {
 	 * 
 	 * UC-008: Delete a Comment
 	 * 1. Log in as an Admin
-	 * 2. List all RendezVouses
-	 * 3. Select one RendezVous
-	 * 4. Select one Comment and delete it
-	 * 5. Display the rendezVous
+	 * 2. Select one RendezVous
+	 * 3. Select one Comment and delete it
+	 * 4. Display the rendezVous and the comments
 	 * 
 	 * Involved REQs: 6.1
 	 * 
@@ -81,12 +90,18 @@ public class CommentServiceTest extends AbstractTest {
 		Comment testComment;
 
 		for (int i = 0; i < testingData.length; i++) {
+
+			this.startTransaction();
+
 			if (testingData[i][1] != null)
 				testComment = this.commentService.findOne(this.getEntityId((String) testingData[i][1]));
 			else
 				testComment = null;
 
 			this.templateDeleteComment((String) testingData[i][0], testComment, (Class<?>) testingData[i][2]);
+
+			this.rollbackTransaction();
+			this.entityManager.clear();
 		}
 
 	}
@@ -97,16 +112,41 @@ public class CommentServiceTest extends AbstractTest {
 
 		Class<?> caught = null;
 
+		//1. Log in
 		this.authenticate(username);
 
 		try {
 
+			//2. Select one rendezVous (determined by the comment)
+			RendezVous chosenRendezVous = null;
+			final Collection<Comment> commentsBefore = new ArrayList<Comment>();
+
+			if (comment != null) {
+				chosenRendezVous = comment.getRendezVous();
+				commentsBefore.addAll(chosenRendezVous.getComments());
+			}
+
+			//3. Select one comment (given) and delete it
+
 			this.commentService.delete(comment);
+
+			this.commentService.flush();
 
 			Assert.isNull(this.commentService.findOne(comment.getId()));
 
 			if (comment.getParentComment() != null)
 				Assert.isTrue(!comment.getParentComment().getReplies().contains(comment));
+
+			for (final Comment reply : comment.getReplies())
+				Assert.isNull(this.commentService.findOne(reply.getId()));
+
+			//4. Display the rendezVous and the comments
+			final Collection<Comment> commentsAfter = chosenRendezVous.getComments();
+
+			Assert.isTrue(!commentsBefore.equals(commentsAfter));
+			Assert.isTrue(commentsBefore.containsAll(commentsAfter));
+			Assert.isTrue(commentsAfter.size() <= commentsBefore.size() - 1);
+			Assert.isTrue(!commentsAfter.contains(comment));
 
 		} catch (final Throwable oops) {
 			caught = oops.getClass();
@@ -116,7 +156,6 @@ public class CommentServiceTest extends AbstractTest {
 
 		this.checkExceptions(expected, caught);
 	}
-
 	/*
 	 * v1.0 - josembell
 	 * 
