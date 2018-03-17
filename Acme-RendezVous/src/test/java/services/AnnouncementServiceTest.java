@@ -2,6 +2,7 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 
 import org.joda.time.LocalDate;
 import org.junit.Test;
@@ -200,5 +202,126 @@ public class AnnouncementServiceTest extends AbstractTest {
 		this.unauthenticate();
 
 		this.checkExceptions(expected, caught);
+	}
+
+	// -------------------------------------------------------------------------------
+	// [UC-011] Listar Announcements y crear un nuevo Announcement.
+	// 
+	// Requisitos relacionados:
+	//   · REQ 12: Rendezvouses may have announcements. The system must record the
+	//             moment when an announcement is made, plus a title and a
+	//             description.
+	//   · REQ 15.1: An actor who is not authenticated must be able to list the
+	//               announcements that are associated with each rendezvous.
+	//   · REQ 16.3: An actor who is authenticated as a user must be able to create an
+	//               announcement regarding one of the rendezvouses that he or she's
+	//               created previously.
+	// -------------------------------------------------------------------------------
+	// v1.0 - Implemented by Alicia
+	// -------------------------------------------------------------------------------
+
+	@Test
+	public void driverListAndCreateAnnouncement() {
+
+		// testingData[i][0] -> username del usuario loggeado.
+		// testingData[i][1] -> creationMoment del announcement a crear.
+		// testingData[i][2] -> title del announcement a crear.
+		// testingData[i][3] -> description del rendezVous a crear.
+		// testingData[i][4] -> rendezVous del announcement a crear.
+		// testingData[i][5] -> excepción que debe saltar.
+
+		final Object testingData[][] = {
+			{
+				// 1 - (+) Un usuario no loggeado lista announcements de un rendezVous
+				null, null, null, null, "rendezVous1", null
+			}, {
+				// 2 - (-) Un usuario no loggeado crea un announcement
+				null, null, "announcementTitle", "announcementDescription", "rendezVous1", IllegalArgumentException.class
+			}, {
+				// 3 - (+) Un usuario lista announcements de un rendezVous suyo y crea un announcement más
+				"user1", null, "announcementTitle", "announcementDescription", "rendezVous1", null
+			}, {
+				// 4 - (-) Un usuario crea un announcement con el título a null
+				"user1", null, null, "announcementDescription", "rendezVous1", ConstraintViolationException.class
+			}, {
+				// 5 - (-) Un usuario crea un announcement con el título en blanco
+				"user1", null, "", "announcementDescription", "rendezVous1", ConstraintViolationException.class
+			}, {
+				// 6 - (-) Un usuario crea un announcement con la descripción a null
+				"user1", null, "announcementTitle", null, "rendezVous1", ConstraintViolationException.class
+			}, {
+				// 7 - (-) Un usuario crea un announcement con la descripción en blanco
+				"user1", null, "announcementTitle", "", "rendezVous1", ConstraintViolationException.class
+			}, {
+				// 8 - (-) Un usuario crea un announcement para un rendezVous que no es suyo
+				"user1", null, "announcementTitle", "announcementDescription", "rendezVous2", IllegalArgumentException.class
+			}, {
+				// 9 - (-) Un administrador crea un announcement
+				"admin", null, "announcementTitle", "announcementDescription", "rendezVous1", IllegalArgumentException.class
+			}, {
+				// 10 - (-) Un manager crea un announcement
+				"manager1", null, "announcementTitle", "announcementDescription", "rendezVous1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+
+			RendezVous rendezVous = null;
+
+			if (testingData[i][4] != null)
+				rendezVous = this.rendezVousService.findOne(super.getEntityId((String) testingData[i][4]));
+
+			this.startTransaction();
+
+			this.templateListAndCreateAnnouncement((String) testingData[i][0], (Date) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (String) testingData[i][4], rendezVous, (Class<?>) testingData[i][5]);
+
+			this.rollbackTransaction();
+			this.entityManager.clear();
+
+		}
+
+	}
+	protected void templateListAndCreateAnnouncement(final String username, final Date creationMoment, final String title, final String description, final String rendezVousBean, final RendezVous rendezVous, final Class<?> expected) {
+
+		// 1. Loggearse como Usuario (o como null)
+		super.authenticate(username);
+
+		Class<?> caught = null;
+
+		try {
+
+			// 2. Listar todos los announcements asociados con un rendezVous
+
+			final Collection<Announcement> allByRendezVous = this.announcementService.findByRendezVousId(super.getEntityId(rendezVousBean));
+
+			if (!(username == null && expected == null)) {
+				// 3. Crear un nuevo announcement para el rendezVous
+
+				final Announcement createdAnnouncement = this.announcementService.create(rendezVous);
+
+				createdAnnouncement.setCreationMoment(creationMoment);
+				createdAnnouncement.setTitle(title);
+				createdAnnouncement.setDescription(description);
+
+				final Announcement savedAnnouncement = this.announcementService.save(createdAnnouncement);
+
+				// Flush
+				this.announcementService.flush();
+
+				// 4. Listar los announcements y comprobar que contiene al nuevo
+
+				final Collection<Announcement> newAllByRendezVous = this.announcementService.findByRendezVousId(super.getEntityId(rendezVousBean));
+
+				Assert.isTrue(!allByRendezVous.containsAll(newAllByRendezVous));
+				Assert.isTrue(this.announcementService.findAll().contains(savedAnnouncement));
+			}
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		super.unauthenticate();
+		super.checkExceptions(expected, caught);
+
 	}
 }

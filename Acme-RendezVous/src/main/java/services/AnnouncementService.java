@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class AnnouncementService {
 
 		final Announcement announcement = new Announcement();
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(user);
 
 		Assert.notNull(rendezVous);
 		Assert.isTrue(rendezVous.getCreator().equals(user));
@@ -48,6 +50,11 @@ public class AnnouncementService {
 
 	public Announcement findOne(final int announcementId) {
 		return this.announcementRepository.findOne(announcementId);
+	}
+
+	// v1.0 - Implemented by Alicia
+	public Collection<Announcement> findAll() {
+		return this.announcementRepository.findAll();
 	}
 
 	public Announcement save(final Announcement announcement) {
@@ -71,10 +78,6 @@ public class AnnouncementService {
 		this.announcementRepository.delete(announcement);
 	}
 
-	public void flush() {
-		this.announcementRepository.flush();
-	}
-
 	//Other Business Methods
 
 	public List<Announcement> findByCurrentChronological() {
@@ -86,4 +89,13 @@ public class AnnouncementService {
 		return this.announcementRepository.findByUserIDChronological(user.getId());
 	}
 
+	// v1.0 - Implemented by Alicia
+	public void flush() {
+		this.announcementRepository.flush();
+	}
+
+	// v1.0 - Implemented by Alicia
+	public Collection<Announcement> findByRendezVousId(final int rendezVousId) {
+		return this.announcementRepository.findByRendezVousId(rendezVousId);
+	}
 }
