@@ -106,10 +106,18 @@ public class AdministratorService {
 	}
 
 	public Double getAvgAnnouncementsPerRendezVous() {
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.avgAnnouncementsPerRendezVous();
 	}
 
 	public Double getStdAnnouncementsPerRendezVous() {
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.stdAnnouncementsPerRendezVous();
 	}
 
@@ -123,6 +131,11 @@ public class AdministratorService {
 	}
 
 	public Collection<RendezVous> getRendezVousAboveAvgPlus10SimilarRendezVouses() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.rendezVousAboveAvgPlus10SimilarRendezVouses();
 	}
 
@@ -145,14 +158,25 @@ public class AdministratorService {
 	}
 
 	public Double getAvgRepliesPerComment() {
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.avgRepliesPerComment();
 	}
 
 	public Double getStdRepliesPerComment() {
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
 		return this.administratorRepository.stdRepliesPerComment();
 	}
 
 	public Double getAvgAnswersPerRendezVous() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
 
 		final Collection<Long> answerPerRendezVous = this.administratorRepository.answerPerRendezVous();
 
@@ -170,6 +194,10 @@ public class AdministratorService {
 		return res;
 	}
 	public Double getStdAnswersPerRendezVous() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
 
 		final Collection<Long> answerPerRendezVous = this.administratorRepository.answerPerRendezVous();
 

@@ -19,6 +19,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
+import domain.Comment;
+import domain.Question;
 import domain.RendezVous;
 import domain.User;
 
@@ -40,8 +42,13 @@ public class AdministratorServiceTest extends AbstractTest {
 	@Autowired
 	private RendezVousService		rendezVousService;
 
+	@Autowired
+	private CommentService			commentService;
+
 
 	//Drivers
+
+	//--- Level C ---
 
 	/*
 	 * v1.0 - Implemented by JA
@@ -61,7 +68,7 @@ public class AdministratorServiceTest extends AbstractTest {
 	 * - 3) A manager actor tries to get the statistics
 	 */
 	@Test
-	public void driverDashboardRendezVousPerUser() {
+	public void driverDashboardRendezVousCreatedPerUser() {
 
 		final Object testingData[][] = {
 			{
@@ -74,7 +81,7 @@ public class AdministratorServiceTest extends AbstractTest {
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.templateDashboardRendezVousPerUser((String) testingData[i][0], (Class<?>) testingData[i][1]);
+			this.templateDashboardRendezVousCreatedPerUser((String) testingData[i][0], (Class<?>) testingData[i][1]);
 
 	}
 
@@ -85,11 +92,11 @@ public class AdministratorServiceTest extends AbstractTest {
 	 * 1. Log in as an Admin
 	 * 2. Display the Dashboard
 	 * 
-	 * Involved REQs: 16.3.1
+	 * Involved REQs: 16.3.2
 	 * 
 	 * Test Cases (3; 1+ 2-):
 	 * 
-	 * + 1) An administrator correctly retrieves the ratio of users created RendezVouses vs. have never created
+	 * + 1) An administrator correctly retrieves the ratio of users that have created RendezVouses vs. have never created
 	 * 
 	 * - 2) An unauthenticated actor tries to get the statistics
 	 * 
@@ -110,112 +117,6 @@ public class AdministratorServiceTest extends AbstractTest {
 
 		for (int i = 0; i < testingData.length; i++)
 			this.templateDahsboardRatioCreatedRendezVouses((String) testingData[i][0], (Class<?>) testingData[i][1]);
-
-	}
-
-	/*
-	 * v1.0 - Implemented by JA
-	 * 
-	 * UC-010: Display a Dashboard
-	 * 1. Log in as an Admin
-	 * 2. Display the Dashboard
-	 * 
-	 * Involved REQs: 16.3.4
-	 * 
-	 * Test Cases (3; 1+ 2-):
-	 * 
-	 * + 1) An administrator correctly retrieves the avg and the standard deviation of the RSVPd RendezVouses Per User
-	 * 
-	 * - 2) An unauthenticated actor tries to get the statistics
-	 * 
-	 * - 3) A manager actor tries to get the statistics
-	 */
-	@Test
-	public void driverDashboardRSVPRendezVousPerUser() {
-
-		final Object testingData[][] = {
-			{
-				"admin", null
-			}, {
-				null, IllegalArgumentException.class
-			}, {
-				"manager1", IllegalArgumentException.class
-			}
-		};
-
-		for (int i = 0; i < testingData.length; i++)
-			this.templateDashboardRSVPRendezVousPerUser((String) testingData[i][0], (Class<?>) testingData[i][1]);
-
-	}
-
-	/*
-	 * v1.0 - Implemented by JA
-	 * 
-	 * UC-010: Display a Dashboard
-	 * 1. Log in as an Admin
-	 * 2. Display the Dashboard
-	 * 
-	 * Involved REQs: 17.2.2
-	 * 
-	 * Test Cases (3; 1+ 2-):
-	 * 
-	 * + 1) An administrator correctly retrieves the RendezVouses whose number of announcements
-	 * is above 75% the average
-	 * 
-	 * - 2) An unauthenticated actor tries to get the same results
-	 * 
-	 * - 3) A manager actor tries to get the same results
-	 */
-	@Test
-	public void driverDashboardRendezVousAbove75AvgAnnouncements() {
-
-		final Object testingData[][] = {
-			{
-				"admin", null
-			}, {
-				null, IllegalArgumentException.class
-			}, {
-				"manager1", IllegalArgumentException.class
-			}
-		};
-
-		for (int i = 0; i < testingData.length; i++)
-			this.templateDashboardRendezVousAbove75AvgAnnouncements((String) testingData[i][0], (Class<?>) testingData[i][1]);
-
-	}
-
-	/*
-	 * v1.0 - Implemented by JA
-	 * 
-	 * UC-010: Display a Dashboard
-	 * 1. Log in as an Admin
-	 * 2. Display the Dashboard
-	 * 
-	 * Involved REQs: 22.1.1
-	 * 
-	 * Test Cases (3; 1+ 2-):
-	 * 
-	 * + 1) An administrator correctly retrieves the avg and the standard deviation of the number of questions per rendezVous
-	 * 
-	 * - 2) An unauthenticated actor tries to get the statistics
-	 * 
-	 * - 3) A manager actor tries to get the statistics
-	 */
-	@Test
-	public void driverDashboardQuestionsPerRendezVous() {
-
-		final Object testingData[][] = {
-			{
-				"admin", null
-			}, {
-				null, IllegalArgumentException.class
-			}, {
-				"manager1", IllegalArgumentException.class
-			}
-		};
-
-		for (int i = 0; i < testingData.length; i++)
-			this.templateDashboardQuestionsPerRendezVous((String) testingData[i][0], (Class<?>) testingData[i][1]);
 
 	}
 
@@ -261,6 +162,41 @@ public class AdministratorServiceTest extends AbstractTest {
 	 * 1. Log in as an Admin
 	 * 2. Display the Dashboard
 	 * 
+	 * Involved REQs: 16.3.4
+	 * 
+	 * Test Cases (3; 1+ 2-):
+	 * 
+	 * + 1) An administrator correctly retrieves the avg and the standard deviation of the RSVPd RendezVouses Per User
+	 * 
+	 * - 2) An unauthenticated actor tries to get the statistics
+	 * 
+	 * - 3) A manager actor tries to get the statistics
+	 */
+	@Test
+	public void driverDashboardRSVPRendezVousPerUser() {
+
+		final Object testingData[][] = {
+			{
+				"admin", null
+			}, {
+				null, IllegalArgumentException.class
+			}, {
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++)
+			this.templateDashboardRSVPRendezVousPerUser((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+	}
+
+	/*
+	 * v1.0 - Implemented by JA
+	 * 
+	 * UC-010: Display a Dashboard
+	 * 1. Log in as an Admin
+	 * 2. Display the Dashboard
+	 * 
 	 * Involved REQs: 16.3.5
 	 * 
 	 * Test Cases (3; 1+ 2-):
@@ -289,9 +225,228 @@ public class AdministratorServiceTest extends AbstractTest {
 
 	}
 
+	//--- Level B ---
+
+	/*
+	 * v1.0 - Implemented by JA
+	 * 
+	 * UC-010: Display a Dashboard
+	 * 1. Log in as an Admin
+	 * 2. Display the Dashboard
+	 * 
+	 * Involved REQs: 17.2.1
+	 * 
+	 * Test Cases (3; 1+ 2-):
+	 * 
+	 * + 1) An administrator correctly retrieves the avg and std of Announcements per RendezVous
+	 * 
+	 * - 2) An unauthenticated actor tries to get the same results
+	 * 
+	 * - 3) A manager actor tries to get the same results
+	 */
+
+	@Test
+	public void driverDashboardAnnouncementsPerRendezVous() {
+
+		final Object testingData[][] = {
+			{
+				"admin", null
+			}, {
+				null, IllegalArgumentException.class
+			}, {
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++)
+			this.templateDashboardAnnouncementsPerRendezVous((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+	}
+
+	/*
+	 * v1.0 - Implemented by JA
+	 * 
+	 * UC-010: Display a Dashboard
+	 * 1. Log in as an Admin
+	 * 2. Display the Dashboard
+	 * 
+	 * Involved REQs: 17.2.2
+	 * 
+	 * Test Cases (3; 1+ 2-):
+	 * 
+	 * + 1) An administrator correctly retrieves the RendezVouses whose number of announcements
+	 * is above 75% the average
+	 * 
+	 * - 2) An unauthenticated actor tries to get the same results
+	 * 
+	 * - 3) A manager actor tries to get the same results
+	 */
+
+	@Test
+	public void driverDashboardRendezVousesAbove75AvgAnnouncements() {
+
+		final Object testingData[][] = {
+			{
+				"admin", null
+			}, {
+				null, IllegalArgumentException.class
+			}, {
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++)
+			this.templateDashboardRendezVousesAbove75AvgAnnouncements((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+	}
+
+	/*
+	 * v1.0 - Implemented by JA
+	 * 
+	 * UC-010: Display a Dashboard
+	 * 1. Log in as an Admin
+	 * 2. Display the Dashboard
+	 * 
+	 * Involved REQs: 17.2.3
+	 * 
+	 * Test Cases (3; 1+ 2-):
+	 * 
+	 * + 1) An administrator correctly retrieves the RendezVouses that are linked to a number of RendezVouses greater than Avg + 10%
+	 * 
+	 * - 2) An unauthenticated actor tries to get the same results
+	 * 
+	 * - 3) A manager actor tries to get the same results
+	 */
+
+	@Test
+	public void driverDashboardRendezVousAboveAvgPlus10SimilarRendezVouses() {
+
+		final Object testingData[][] = {
+			{
+				"admin", null
+			}, {
+				null, IllegalArgumentException.class
+			}, {
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++)
+			this.templateDashboardRendezVousAboveAvgPlus10SimilarRendezVouses((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+	}
+
+	//--- Level A ---
+
+	/*
+	 * v1.0 - Implemented by JA
+	 * 
+	 * UC-010: Display a Dashboard
+	 * 1. Log in as an Admin
+	 * 2. Display the Dashboard
+	 * 
+	 * Involved REQs: 22.1.1
+	 * 
+	 * Test Cases (3; 1+ 2-):
+	 * 
+	 * + 1) An administrator correctly retrieves the avg and the standard deviation of the number of questions per rendezVous
+	 * 
+	 * - 2) An unauthenticated actor tries to get the statistics
+	 * 
+	 * - 3) A manager actor tries to get the statistics
+	 */
+	@Test
+	public void driverDashboardQuestionsPerRendezVous() {
+
+		final Object testingData[][] = {
+			{
+				"admin", null
+			}, {
+				null, IllegalArgumentException.class
+			}, {
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++)
+			this.templateDashboardQuestionsPerRendezVous((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+	}
+
+	/*
+	 * v1.0 - Implemented by JA
+	 * 
+	 * UC-010: Display a Dashboard
+	 * 1. Log in as an Admin
+	 * 2. Display the Dashboard
+	 * 
+	 * Involved REQs: 22.1.2
+	 * 
+	 * Test Cases (3; 1+ 2-):
+	 * 
+	 * + 1) An administrator correctly retrieves the avg and the standard deviation of the number of answers per rendezVous
+	 * 
+	 * - 2) An unauthenticated actor tries to get the statistics
+	 * 
+	 * - 3) A manager actor tries to get the statistics
+	 */
+	@Test
+	public void driverDashboardAnswersPerRendezVous() {
+
+		final Object testingData[][] = {
+			{
+				"admin", null
+			}, {
+				null, IllegalArgumentException.class
+			}, {
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++)
+			this.templateDashboardAnswersPerRendezVous((String) testingData[i][0], (Class<?>) testingData[i][1]);
+	}
+
+	/*
+	 * v1.0 - Implemented by JA
+	 * 
+	 * UC-010: Display a Dashboard
+	 * 1. Log in as an Admin
+	 * 2. Display the Dashboard
+	 * 
+	 * Involved REQs: 22.1.3
+	 * 
+	 * Test Cases (3; 1+ 2-):
+	 * 
+	 * + 1) An administrator correctly retrieves the avg and std of replies per Comment
+	 * 
+	 * - 2) An unauthenticated actor tries to get the statistics
+	 * 
+	 * - 3) A manager actor tries to get the statistics
+	 */
+	@Test
+	public void driverDashboardRepliesPerComment() {
+
+		final Object testingData[][] = {
+			{
+				"admin", null
+			}, {
+				null, IllegalArgumentException.class
+			}, {
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++)
+			this.templateDashboardRepliesPerComment((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+	}
+
 	//Templates
 
-	protected void templateDashboardRendezVousPerUser(final String username, final Class<?> expected) {
+	//--- Level C ---
+
+	protected void templateDashboardRendezVousCreatedPerUser(final String username, final Class<?> expected) {
 		//v1.0 Implemented by JA
 
 		Class<?> caught = null;
@@ -307,117 +462,11 @@ public class AdministratorServiceTest extends AbstractTest {
 			for (final User u : this.userService.findAll())
 				numberRendezVousesPerUser.add(u.getCreatedRendezVouses().size());
 
-			Assert.notNull(avgCreatedRendezVousPerUser);
-			Assert.notNull(stdCreatedRendezVousPerUser);
-
 			//We need to round statistics up two 3 decimals to compare...
 			final Double retrievedAvg = this.roundNumber(avgCreatedRendezVousPerUser, 3);
 			final Double retrievedStd = this.roundNumber(stdCreatedRendezVousPerUser, 3);
 			final Double computedAvg = this.roundNumber(this.computeAverage(numberRendezVousesPerUser), 3);
 			final Double computedStd = this.roundNumber(this.computeStd(numberRendezVousesPerUser), 3);
-
-			Assert.isTrue(retrievedAvg.equals(computedAvg));
-			Assert.isTrue(retrievedStd.equals(computedStd));
-
-		} catch (final Throwable oops) {
-			caught = oops.getClass();
-		}
-
-		this.unauthenticate();
-
-		this.checkExceptions(expected, caught);
-	}
-
-	protected void templateDashboardRSVPRendezVousPerUser(final String username, final Class<?> expected) {
-		//v1.0 Implemented by JA
-
-		Class<?> caught = null;
-
-		this.authenticate(username);
-
-		try {
-
-			final Double avgRSVPRendezVousPerUser = this.administratorService.getAvgRSVPPerUser();
-			final Double stdRSVPRendezVousPerUser = this.administratorService.getStdDeviationRSVPPerUser();
-			final List<Integer> numberRSVPRendezVousesPerUser = new ArrayList<Integer>();
-
-			for (final User u : this.userService.findAll())
-				numberRSVPRendezVousesPerUser.add(u.getAttendedRendezVouses().size());
-
-			Assert.notNull(avgRSVPRendezVousPerUser);
-			Assert.notNull(stdRSVPRendezVousPerUser);
-
-			//We need to round statistics up two 3 decimals to compare...
-			final Double retrievedAvg = this.roundNumber(avgRSVPRendezVousPerUser, 3);
-			final Double retrievedStd = this.roundNumber(stdRSVPRendezVousPerUser, 3);
-			final Double computedAvg = this.roundNumber(this.computeAverage(numberRSVPRendezVousesPerUser), 3);
-			final Double computedStd = this.roundNumber(this.computeStd(numberRSVPRendezVousesPerUser), 3);
-
-			Assert.isTrue(retrievedAvg.equals(computedAvg));
-			Assert.isTrue(retrievedStd.equals(computedStd));
-
-		} catch (final Throwable oops) {
-			caught = oops.getClass();
-		}
-
-		this.unauthenticate();
-
-		this.checkExceptions(expected, caught);
-	}
-
-	protected void templateDashboardRendezVousAbove75AvgAnnouncements(final String username, final Class<?> expected) {
-		//v1.0 Implemented by JA
-
-		Class<?> caught = null;
-
-		this.authenticate(username);
-
-		try {
-
-			final Set<RendezVous> retrievedRendezVouses = new HashSet<RendezVous>(this.administratorService.getRendezVousAbove75AvgAnnouncements());
-			final Double limit = this.administratorService.getAvgAnnouncementsPerRendezVous() * 0.75;
-
-			final Collection<RendezVous> computedRendezVouses = new HashSet<RendezVous>();
-			for (final RendezVous rv : this.rendezVousService.findAll())
-				if (rv.getAnnouncements().size() > limit)
-					computedRendezVouses.add(rv);
-
-			Assert.notNull(retrievedRendezVouses);
-			Assert.isTrue(retrievedRendezVouses.equals(computedRendezVouses));
-
-		} catch (final Throwable oops) {
-			caught = oops.getClass();
-		}
-
-		this.unauthenticate();
-
-		this.checkExceptions(expected, caught);
-	}
-
-	protected void templateDashboardQuestionsPerRendezVous(final String username, final Class<?> expected) {
-		//v1.0 Implemented by JA
-
-		Class<?> caught = null;
-
-		this.authenticate(username);
-
-		try {
-
-			final Double avgQuestionsPerRendezVous = this.administratorService.getAvgQuestionsPerRendezVous();
-			final Double stdQuestionsPerRendezVous = this.administratorService.getStdQuestionsPerRendezVous();
-			final List<Integer> numberQuestionsPerRendezVous = new ArrayList<Integer>();
-
-			for (final RendezVous rv : this.rendezVousService.findAll())
-				numberQuestionsPerRendezVous.add(rv.getQuestions().size());
-
-			Assert.notNull(avgQuestionsPerRendezVous);
-			Assert.notNull(stdQuestionsPerRendezVous);
-
-			//We need to round statistics up two 3 decimals to compare...
-			final Double retrievedAvg = this.roundNumber(avgQuestionsPerRendezVous, 3);
-			final Double retrievedStd = this.roundNumber(stdQuestionsPerRendezVous, 3);
-			final Double computedAvg = this.roundNumber(this.computeAverage(numberQuestionsPerRendezVous), 3);
-			final Double computedStd = this.roundNumber(this.computeStd(numberQuestionsPerRendezVous), 3);
 
 			Assert.isTrue(retrievedAvg.equals(computedAvg));
 			Assert.isTrue(retrievedStd.equals(computedStd));
@@ -481,14 +530,45 @@ public class AdministratorServiceTest extends AbstractTest {
 			for (final RendezVous rv : this.rendezVousService.findAll())
 				numberUsersPerRendezVous.add(rv.getAttendants().size());
 
-			Assert.notNull(avgUsersPerRendezVous);
-			Assert.notNull(stdUsersPerRendezVous);
-
 			//We need to round statistics up two 3 decimals to compare...
 			final Double retrievedAvg = this.roundNumber(avgUsersPerRendezVous, 3);
 			final Double retrievedStd = this.roundNumber(stdUsersPerRendezVous, 3);
 			final Double computedAvg = this.roundNumber(this.computeAverage(numberUsersPerRendezVous), 3);
 			final Double computedStd = this.roundNumber(this.computeStd(numberUsersPerRendezVous), 3);
+
+			Assert.isTrue(retrievedAvg.equals(computedAvg));
+			Assert.isTrue(retrievedStd.equals(computedStd));
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+
+		this.checkExceptions(expected, caught);
+	}
+
+	protected void templateDashboardRSVPRendezVousPerUser(final String username, final Class<?> expected) {
+		//v1.0 Implemented by JA
+
+		Class<?> caught = null;
+
+		this.authenticate(username);
+
+		try {
+
+			final Double avgRSVPRendezVousPerUser = this.administratorService.getAvgRSVPPerUser();
+			final Double stdRSVPRendezVousPerUser = this.administratorService.getStdDeviationRSVPPerUser();
+			final List<Integer> numberRSVPRendezVousesPerUser = new ArrayList<Integer>();
+
+			for (final User u : this.userService.findAll())
+				numberRSVPRendezVousesPerUser.add(u.getAttendedRendezVouses().size());
+
+			//We need to round statistics up two 3 decimals to compare...
+			final Double retrievedAvg = this.roundNumber(avgRSVPRendezVousPerUser, 3);
+			final Double retrievedStd = this.roundNumber(stdRSVPRendezVousPerUser, 3);
+			final Double computedAvg = this.roundNumber(this.computeAverage(numberRSVPRendezVousesPerUser), 3);
+			final Double computedStd = this.roundNumber(this.computeStd(numberRSVPRendezVousesPerUser), 3);
 
 			Assert.isTrue(retrievedAvg.equals(computedAvg));
 			Assert.isTrue(retrievedStd.equals(computedStd));
@@ -536,6 +616,218 @@ public class AdministratorServiceTest extends AbstractTest {
 			computedTopTen = computedTopTen.subList(0, computedTopTen.size() < 10 ? computedTopTen.size() : 10);
 
 			Assert.isTrue(computedTopTen.equals(retrievedTopTen));
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+
+		this.checkExceptions(expected, caught);
+	}
+
+	//--- Level B ---
+
+	protected void templateDashboardAnnouncementsPerRendezVous(final String username, final Class<?> expected) {
+		//v1.0 Implemented by JA
+
+		Class<?> caught = null;
+
+		this.authenticate(username);
+
+		try {
+
+			final Double avgAnnouncementsPerRV = this.administratorService.getAvgAnnouncementsPerRendezVous();
+			final Double stdAnnouncementsPerRV = this.administratorService.getStdAnnouncementsPerRendezVous();
+			final List<Integer> numberAnnouncementsPerRV = new ArrayList<Integer>();
+
+			for (final RendezVous rv : this.rendezVousService.findAll())
+				numberAnnouncementsPerRV.add(rv.getAnnouncements().size());
+
+			//We need to round statistics up two 3 decimals to compare...
+			final Double retrievedAvg = this.roundNumber(avgAnnouncementsPerRV, 3);
+			final Double retrievedStd = this.roundNumber(stdAnnouncementsPerRV, 3);
+			final Double computedAvg = this.roundNumber(this.computeAverage(numberAnnouncementsPerRV), 3);
+			final Double computedStd = this.roundNumber(this.computeStd(numberAnnouncementsPerRV), 3);
+
+			Assert.isTrue(retrievedAvg.equals(computedAvg));
+			Assert.isTrue(retrievedStd.equals(computedStd));
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+
+		this.checkExceptions(expected, caught);
+	}
+
+	protected void templateDashboardRendezVousesAbove75AvgAnnouncements(final String username, final Class<?> expected) {
+		//v1.0 Implemented by JA
+
+		Class<?> caught = null;
+
+		this.authenticate(username);
+
+		try {
+
+			final Set<RendezVous> retrievedRendezVouses = new HashSet<RendezVous>(this.administratorService.getRendezVousAbove75AvgAnnouncements());
+			final Double limit = this.administratorService.getAvgAnnouncementsPerRendezVous() * 0.75;
+
+			final Collection<RendezVous> computedRendezVouses = new HashSet<RendezVous>();
+			for (final RendezVous rv : this.rendezVousService.findAll())
+				if (rv.getAnnouncements().size() > limit)
+					computedRendezVouses.add(rv);
+
+			Assert.isTrue(retrievedRendezVouses.equals(computedRendezVouses));
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+
+		this.checkExceptions(expected, caught);
+	}
+
+	protected void templateDashboardRendezVousAboveAvgPlus10SimilarRendezVouses(final String username, final Class<?> expected) {
+		//v1.0 Implemented by JA
+
+		Class<?> caught = null;
+
+		this.authenticate(username);
+
+		try {
+
+			final Set<RendezVous> retrievedRendezVouses = new HashSet<RendezVous>(this.administratorService.getRendezVousAboveAvgPlus10SimilarRendezVouses());
+
+			//Compute the avg
+			final List<Integer> numberLikedRendezVousesPerRV = new ArrayList<Integer>();
+
+			for (final RendezVous rv : this.rendezVousService.findAll())
+				numberLikedRendezVousesPerRV.add(rv.getSimilarRendezVouses().size());
+
+			final Double limit = this.roundNumber(this.computeAverage(numberLikedRendezVousesPerRV), 3) * 1.1;
+
+			//Compute the RendezVouses
+			final Collection<RendezVous> computedRendezVouses = new HashSet<RendezVous>();
+			for (final RendezVous rv : this.rendezVousService.findAll())
+				if (rv.getSimilarRendezVouses().size() > limit)
+					computedRendezVouses.add(rv);
+
+			Assert.isTrue(retrievedRendezVouses.equals(computedRendezVouses));
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+
+		this.checkExceptions(expected, caught);
+	}
+
+	//--- Level A ---
+
+	protected void templateDashboardQuestionsPerRendezVous(final String username, final Class<?> expected) {
+		//v1.0 Implemented by JA
+
+		Class<?> caught = null;
+
+		this.authenticate(username);
+
+		try {
+
+			final Double avgQuestionsPerRendezVous = this.administratorService.getAvgQuestionsPerRendezVous();
+			final Double stdQuestionsPerRendezVous = this.administratorService.getStdQuestionsPerRendezVous();
+			final List<Integer> numberQuestionsPerRendezVous = new ArrayList<Integer>();
+
+			for (final RendezVous rv : this.rendezVousService.findAll())
+				numberQuestionsPerRendezVous.add(rv.getQuestions().size());
+
+			//We need to round statistics up two 3 decimals to compare...
+			final Double retrievedAvg = this.roundNumber(avgQuestionsPerRendezVous, 3);
+			final Double retrievedStd = this.roundNumber(stdQuestionsPerRendezVous, 3);
+			final Double computedAvg = this.roundNumber(this.computeAverage(numberQuestionsPerRendezVous), 3);
+			final Double computedStd = this.roundNumber(this.computeStd(numberQuestionsPerRendezVous), 3);
+
+			Assert.isTrue(retrievedAvg.equals(computedAvg));
+			Assert.isTrue(retrievedStd.equals(computedStd));
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+
+		this.checkExceptions(expected, caught);
+	}
+
+	protected void templateDashboardAnswersPerRendezVous(final String username, final Class<?> expected) {
+		//v1.0 Implemented by JA
+
+		Class<?> caught = null;
+
+		this.authenticate(username);
+
+		try {
+
+			final Double avgAnswersPerRendezVous = this.administratorService.getAvgAnswersPerRendezVous();
+			final Double stdAnswersPerRendezVous = this.administratorService.getStdAnswersPerRendezVous();
+			final List<Integer> numberAnswersPerRendezVous = new ArrayList<Integer>();
+
+			int tmp = 0;
+			for (final RendezVous rv : this.rendezVousService.findAll()) {
+
+				for (final Question q : rv.getQuestions())
+					tmp += q.getAnswers().size();
+
+				numberAnswersPerRendezVous.add(tmp);
+
+				tmp = 0;
+			}
+
+			//We need to round statistics up two 3 decimals to compare...
+			final Double retrievedAvg = this.roundNumber(avgAnswersPerRendezVous, 3);
+			final Double retrievedStd = this.roundNumber(stdAnswersPerRendezVous, 3);
+			final Double computedAvg = this.roundNumber(this.computeAverage(numberAnswersPerRendezVous), 3);
+			final Double computedStd = this.roundNumber(this.computeStd(numberAnswersPerRendezVous), 3);
+
+			Assert.isTrue(retrievedAvg.equals(computedAvg));
+			Assert.isTrue(retrievedStd.equals(computedStd));
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+
+		this.checkExceptions(expected, caught);
+	}
+
+	protected void templateDashboardRepliesPerComment(final String username, final Class<?> expected) {
+		//v1.0 Implemented by JA
+
+		Class<?> caught = null;
+
+		this.authenticate(username);
+
+		try {
+
+			final Double avgRepliesPerComment = this.administratorService.getAvgRepliesPerComment();
+			final Double stdRepliesPerComment = this.administratorService.getStdRepliesPerComment();
+			final List<Integer> numberRepliesPerComment = new ArrayList<Integer>();
+
+			for (final Comment c : this.commentService.findAll())
+				numberRepliesPerComment.add(c.getReplies().size());
+
+			//We need to round statistics up two 3 decimals to compare...
+			final Double retrievedAvg = this.roundNumber(avgRepliesPerComment, 3);
+			final Double retrievedStd = this.roundNumber(stdRepliesPerComment, 3);
+			final Double computedAvg = this.roundNumber(this.computeAverage(numberRepliesPerComment), 3);
+			final Double computedStd = this.roundNumber(this.computeStd(numberRepliesPerComment), 3);
+
+			Assert.isTrue(retrievedAvg.equals(computedAvg));
+			Assert.isTrue(retrievedStd.equals(computedStd));
 
 		} catch (final Throwable oops) {
 			caught = oops.getClass();
