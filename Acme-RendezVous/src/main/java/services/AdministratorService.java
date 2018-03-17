@@ -52,14 +52,29 @@ public class AdministratorService {
 	}
 
 	public Double getUsersWithCreatedRendezVousesVSUsersWithoutCreatedRendezVouses() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.usersWithCreatedRendezVousesVSUsersWithoutCreatedRendezVouses();
 	}
 
 	public Double getAvgUsersPerRendezVous() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.avgUsersPerRendezVous();
 	}
 
 	public Double getStdDeviationUsersPerRendezVous() {
+
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		return this.administratorRepository.stdDeviationUsersPerRendezVous();
 	}
 
@@ -82,6 +97,10 @@ public class AdministratorService {
 	}
 
 	public Collection<RendezVous> getTopTenMoreRSVP() {
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+
+		Assert.notNull(admin);
+
 		final Page<RendezVous> rendezVousPage = this.administratorRepository.topMoreRSVP(new PageRequest(0, 10));
 		return rendezVousPage.getContent();
 	}
