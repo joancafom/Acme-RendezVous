@@ -84,6 +84,7 @@ public class ServiceRequestService {
 
 		//We cannot edit ServiceRequests
 		Assert.isTrue(newServiceRequest.getId() == 0);
+		Assert.notNull(newServiceRequest.getRendezVous());
 		Assert.isTrue(currentUser.equals(newServiceRequest.getRendezVous().getCreator()));
 
 		//Ensure the creditCard's not expired
@@ -91,7 +92,8 @@ public class ServiceRequestService {
 			|| (now.getYear() == newServiceRequest.getCreditCard().getYear() && now.getMonthOfYear() < newServiceRequest.getCreditCard().getMonth()));
 
 		//We must make sure that the RendezVous does not have that Service already
-		Assert.isTrue(!this.serviceService.checkRendezVousUsingService(newServiceRequest.getRendezVous(), newServiceRequest.getService()));
+		final Boolean res = this.serviceService.checkRendezVousUsingService(newServiceRequest.getRendezVous(), newServiceRequest.getService());
+		Assert.isTrue(!res);
 
 		return this.serviceRequestRepository.save(newServiceRequest);
 
@@ -110,6 +112,11 @@ public class ServiceRequestService {
 		}
 
 		this.serviceRequestRepository.delete(serviceRequest);
+
+	}
+	/* v1.0 - josembell */
+	public void flush() {
+		this.serviceRequestRepository.flush();
 
 	}
 }

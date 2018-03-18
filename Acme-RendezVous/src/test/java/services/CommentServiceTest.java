@@ -170,22 +170,19 @@ public class CommentServiceTest extends AbstractTest {
 				/* + 1) Un usuario crea un comentario válido para un rendezVous válido */
 				"user1", 3, "rendezVous2", null, "This is a test", "http://economipedia.com/wp-content/uploads/2015/11/test-de-estr%C3%A9s.png", null
 			}, {
-				/* + 2) Un usuario responde a un comentario válido para un rendezVous válido */
-				"user1", 3, "rendezVous2", "comment3", "This is a test", "http://economipedia.com/wp-content/uploads/2015/11/test-de-estr%C3%A9s.png", null
-			}, {
-				/* - 3) Un usuario no identificado intenta crear un comentario */
+				/* - 2) Un usuario no identificado intenta crear un comentario */
 				null, 0, "rendezVous2", null, "This is a test", "whttp://economipedia.com/wp-content/uploads/2015/11/test-de-estr%C3%A9s.png", IllegalArgumentException.class
 			}, {
-				/* - 4) Un usuario identificado intenta crear un comentario en un RendezVous null */
+				/* - 3) Un usuario identificado intenta crear un comentario en un RendezVous null */
 				"user1", 3, null, null, "This is a test", "http://economipedia.com/wp-content/uploads/2015/11/test-de-estr%C3%A9s.png", IllegalArgumentException.class
 			}, {
-				/* - 5) Un usuario identificado intenta crear un comentario en un RendezVous al que no asiste */
+				/* - 4) Un usuario identificado intenta crear un comentario en un RendezVous al que no asiste */
 				"user1", 3, "rendezVous4", null, "This is a test", "http://economipedia.com/wp-content/uploads/2015/11/test-de-estr%C3%A9s.png", IllegalArgumentException.class
 			}, {
-				/* - 6) Un usuario identificado intenta crear un comentario sin texto */
+				/* - 5) Un usuario identificado intenta crear un comentario sin texto */
 				"user1", 3, "rendezVous2", null, null, "http://economipedia.com/wp-content/uploads/2015/11/test-de-estr%C3%A9s.png", ConstraintViolationException.class
 			}, {
-				/* - 7) un usuario identificado intenta crear un comentario con una imagen con url errónea */
+				/* - 6) un usuario identificado intenta crear un comentario con una imagen con url errónea */
 				"user1", 3, "rendezVous2", null, "This is a test", "fail", ConstraintViolationException.class
 			}
 		};
