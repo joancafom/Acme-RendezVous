@@ -691,7 +691,7 @@
 	<bean id="service5" class="domain.Service">
 		<property name="name" value="Projector Renting"/>
 		<property name="description" value="A movie? A music video? Maybe some photos? Dazzle them up with an up to 5000lx projector!"/>
-		<property name="isCanceled" value="false"/>
+		<property name="isCanceled" value="true"/>
 		<property name="manager" ref="manager2"/>
 		<property name="serviceRequests">
 			<list>

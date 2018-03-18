@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -15,6 +16,7 @@ import org.springframework.validation.Validator;
 
 import repositories.ManagerRepository;
 import security.Authority;
+import security.LoginService;
 import security.UserAccount;
 import security.UserAccountService;
 import domain.Manager;
@@ -62,7 +64,18 @@ public class ManagerService {
 		return this.managerRepository.findAll();
 	}
 	/* Version 1.0 - josembell */
+	// v2.0 - Changes by Alicia
 	public Manager save(final Manager manager) {
+		Assert.notNull(manager);
+		Assert.isTrue(manager.getId() == 0);
+
+		try {
+			LoginService.getPrincipal();
+			throw new RuntimeException("An authenticated Actor cannot register to the system");
+		} catch (final IllegalArgumentException okFlow) {
+
+		}
+
 		/* Hash the password */
 		final Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 		final String hashedPassword = encoder.encodePassword(manager.getUserAccount().getPassword(), null);
@@ -98,5 +111,12 @@ public class ManagerService {
 		binding.addAllErrors(userAccountErrors);
 
 		return manager;
+	}
+
+	// Other business methods
+
+	// v1.0 - Implemented by Alicia
+	public void flush() {
+		this.managerRepository.flush();
 	}
 }
