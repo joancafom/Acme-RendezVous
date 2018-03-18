@@ -962,7 +962,7 @@ public class AdministratorServiceTest extends AbstractTest {
 			// 2. Mostrar las estadísticas
 			final Collection<Service> bestSellingServices = this.administratorService.bestSellingServices();
 
-			Assert.isTrue(bestSellingServices.containsAll(this.serviceService.findAll()));
+			Assert.isTrue(bestSellingServices.size() <= 5);
 
 			Integer sells = null;
 			for (final Service s : bestSellingServices)
@@ -972,6 +972,18 @@ public class AdministratorServiceTest extends AbstractTest {
 					Assert.isTrue(sells >= s.getServiceRequests().size());
 					sells = s.getServiceRequests().size();
 				}
+
+			Integer moreSellsA = 0;
+			for (final Service s : this.serviceService.findAll())
+				if (s.getServiceRequests().size() > moreSellsA)
+					moreSellsA = s.getServiceRequests().size();
+
+			Integer moreSellsB = 0;
+			for (final Service s : bestSellingServices)
+				if (s.getServiceRequests().size() > moreSellsB)
+					moreSellsB = s.getServiceRequests().size();
+
+			Assert.isTrue(moreSellsA <= moreSellsB);
 
 		} catch (final Throwable oops) {
 			caught = oops.getClass();
@@ -1093,15 +1105,7 @@ public class AdministratorServiceTest extends AbstractTest {
 			// 2. Mostrar las estadísticas
 			final Collection<Manager> managersWithMoreServicesCancelled = this.administratorService.managersWithMoreServicesCancelled();
 
-			final Collection<Manager> allManagersCancelled = new HashSet<Manager>();
-			for (final Manager m : this.managerService.findAll())
-				for (final Service s : m.getServices())
-					if (s.getIsCanceled()) {
-						allManagersCancelled.add(m);
-						break;
-					}
-
-			Assert.isTrue(managersWithMoreServicesCancelled.containsAll(allManagersCancelled));
+			Assert.isTrue(managersWithMoreServicesCancelled.size() <= 5);
 
 			Integer cancelledServices = null;
 
@@ -1119,6 +1123,28 @@ public class AdministratorServiceTest extends AbstractTest {
 					cancelledServices = managerCancelledServices;
 				}
 			}
+
+			Integer moreCancelledA = 0;
+			for (final Manager m : this.managerService.findAll()) {
+				Integer mCancelled = 0;
+				for (final Service s : m.getServices())
+					if (s.getIsCanceled())
+						mCancelled += 1;
+				if (mCancelled > moreCancelledA)
+					moreCancelledA = mCancelled;
+			}
+
+			Integer moreCancelledB = 0;
+			for (final Manager m : managersWithMoreServicesCancelled) {
+				Integer mCancelled = 0;
+				for (final Service s : m.getServices())
+					if (s.getIsCanceled())
+						mCancelled += 1;
+				if (mCancelled > moreCancelledB)
+					moreCancelledB = mCancelled;
+			}
+
+			Assert.isTrue(moreCancelledA <= moreCancelledB);
 
 		} catch (final Throwable oops) {
 			caught = oops.getClass();

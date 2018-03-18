@@ -71,15 +71,15 @@ public interface AdministratorRepository extends JpaRepository<Administrator, In
 	@Query("select sum(q.answers.size) from Question q group by q.rendezVous")
 	Collection<Long> answerPerRendezVous();
 
-	// v1.0 - Implemented by Alicia
-	@Query("select s from Service s order by s.serviceRequests.size desc")
-	Collection<Service> bestSellingServices();
+	// v2.0 - Implemented by Alicia
+	@Query(value = "select s from Service s where s.serviceRequests.size > 0 order by s.serviceRequests.size desc")
+	Page<Service> bestSellingServices(Pageable pageable);
 
 	// v1.0 - Implemented by Alicia
 	@Query("select m1 from Manager m1 where m1.services.size > (select avg(m2.services.size) from Manager m2)")
 	Collection<Manager> managersMoreServicesThanAverage();
 
-	// v1.0 - Implemented by Alicia
-	@Query("select s.manager from Service s where s.isCanceled = true group by s.manager order by count(s) desc")
-	Collection<Manager> managersWithMoreServicesCancelled();
+	// v2.0 - Implemented by Alicia
+	@Query(value = "select s.manager from Service s where s.isCanceled = true group by s.manager order by count(s) desc")
+	Page<Manager> managersWithMoreServicesCancelled(Pageable pageable);
 }

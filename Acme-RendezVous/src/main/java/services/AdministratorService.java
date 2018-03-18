@@ -219,12 +219,13 @@ public class AdministratorService {
 		return this.administratorRepository.findByUserAccount(userAccount.getId());
 	}
 
-	// v2.0 - Implemented by Alicia
+	// v3.0 - Implemented by Alicia
 	public Collection<domain.Service> bestSellingServices() {
 		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
 		Assert.notNull(admin);
 
-		return this.administratorRepository.bestSellingServices();
+		final Page<domain.Service> servicePage = this.administratorRepository.bestSellingServices(new PageRequest(0, 5));
+		return servicePage.getContent();
 	}
 
 	// v2.0 - Implemented by Alicia
@@ -235,12 +236,13 @@ public class AdministratorService {
 		return this.administratorRepository.managersMoreServicesThanAverage();
 	}
 
-	// v2.0 - Implemented by Alicia
+	// v3.0 - Implemented by Alicia
 	public Collection<Manager> managersWithMoreServicesCancelled() {
 		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
 		Assert.notNull(admin);
 
-		return this.administratorRepository.managersWithMoreServicesCancelled();
+		final Page<Manager> managerPage = this.administratorRepository.managersWithMoreServicesCancelled(new PageRequest(0, 5));
+		return managerPage.getContent();
 	}
 
 }
