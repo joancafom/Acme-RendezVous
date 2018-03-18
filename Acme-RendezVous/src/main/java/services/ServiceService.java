@@ -81,24 +81,23 @@ public class ServiceService {
 
 	public domain.Service save(final domain.Service newService) {
 		/* v1.0 - josembell */
-		// v2.0 - Modified by JA
+		// v3.0 - Modified by JA
 
 		Assert.notNull(newService);
 
 		final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
 		Assert.notNull(manager);
 
+		Assert.isTrue(!newService.getIsCanceled());
+		Assert.isTrue(newService.getManager().equals(manager));
 		if (newService.getId() != 0)
 			Assert.isTrue(manager.getServices().contains(newService));
-		else
-			Assert.isTrue(!newService.getIsCanceled());
-
-		Assert.isTrue(newService.getManager().equals(manager));
 
 		final domain.Service savedService = this.serviceRepository.save(newService);
-		Assert.notNull(savedService);
 
-		manager.getServices().add(savedService);
+		Assert.notNull(savedService);
+		if (newService.getId() == 0)
+			manager.getServices().add(savedService);
 
 		return savedService;
 	}
