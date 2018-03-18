@@ -13,6 +13,7 @@ import org.springframework.validation.Validator;
 
 import repositories.ServiceRepository;
 import security.LoginService;
+import domain.Administrator;
 import domain.Manager;
 import domain.RendezVous;
 import domain.ServiceRequest;
@@ -40,6 +41,9 @@ public class ServiceService {
 
 	@Autowired
 	private ManagerService			managerService;
+
+	@Autowired
+	private AdministratorService	administratorService;
 
 	@Autowired
 	private Validator				validator;
@@ -159,7 +163,9 @@ public class ServiceService {
 
 	public void cancel(final domain.Service service) {
 
-		// v2.0 - Implemented by Alicia
+		// v3.0 - Implemented by Alicia
+		final Administrator admin = this.administratorService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(admin);
 
 		Assert.isTrue(!service.getIsCanceled());
 
@@ -168,7 +174,7 @@ public class ServiceService {
 
 		service.setIsCanceled(true);
 
-		this.save(service);
+		this.serviceRepository.save(service);
 
 	}
 

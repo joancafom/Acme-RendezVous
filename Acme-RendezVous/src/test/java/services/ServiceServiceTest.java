@@ -19,6 +19,7 @@ import org.springframework.util.Assert;
 import security.LoginService;
 import utilities.AbstractTest;
 import domain.Manager;
+import domain.Service;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -316,5 +317,82 @@ public class ServiceServiceTest extends AbstractTest {
 		this.unauthenticate();
 
 		this.checkExceptions(expected, caught);
+	}
+
+	// -------------------------------------------------------------------------------
+	// [UC-2-003] Administrador cancela un Servicio.
+	// 
+	// Requisitos relacionados:
+	//   · REQ 2: Managers manage services, for which the system must store a name, a
+	//            description, and an optional picture.
+	//   · REQ 6.1: An actor who is authenticated as an administrator must be able to
+	//              cancel a service that he or she finds inappropriate. Such services
+	//              cannot be requested for any rendezvous. They must be flagged
+	//              appropriately when listed.
+	// -------------------------------------------------------------------------------
+	// v1.0 - Implemented by Alicia
+	// -------------------------------------------------------------------------------
+
+	@Test
+	public void driverCancelService() {
+
+		// testingData[i][0] -> username del usuario loggeado.
+		// testingData[i][1] -> servicio que va a marcarse como cancelado.
+		// testingData[i][2] -> excepción que debe saltar.
+
+		final Object testingData[][] = {
+			{
+				// 1 - (-) Un usuario no loggeado cancela un Servicio.
+				null, "service1", IllegalArgumentException.class
+			}, {
+				// 2 - (-) Un Manager loggeado cancela un Servicio que es suyo.
+				"manager3", "service1", IllegalArgumentException.class
+			}, {
+				// 3 - (+) Un Administrator loggeado cancela un Servicio.
+				"admin", "service1", null
+			}, {
+				// 4 - (-) Un Administrator cancela un Servicio ya marcado como cancelado.
+				"admin", "service2", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+
+			final Service serviceToCancel = this.serviceService.findOne(super.getEntityId((String) testingData[i][1]));
+
+			if (i < 3)
+				serviceToCancel.setIsCanceled(false);
+			else
+				serviceToCancel.setIsCanceled(true);
+
+			this.startTransaction();
+
+			this.templateCancelService((String) testingData[i][0], serviceToCancel, (Class<?>) testingData[i][2]);
+
+			this.rollbackTransaction();
+			this.entityManager.clear();
+		}
+	}
+
+	protected void templateCancelService(final String username, final Service serviceToCancel, final Class<?> expected) {
+
+		// 1. Loggearse (o como null)
+		super.authenticate(username);
+
+		Class<?> caught = null;
+
+		try {
+
+			// 2. Cancelar un Servicio
+
+			this.serviceService.cancel(serviceToCancel);
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		super.unauthenticate();
+		super.checkExceptions(expected, caught);
+
 	}
 }
