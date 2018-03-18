@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.junit.Test;
@@ -20,8 +22,10 @@ import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
 import domain.Comment;
+import domain.Manager;
 import domain.Question;
 import domain.RendezVous;
+import domain.Service;
 import domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,6 +48,15 @@ public class AdministratorServiceTest extends AbstractTest {
 
 	@Autowired
 	private CommentService			commentService;
+
+	@Autowired
+	private ServiceService			serviceService;
+
+	@Autowired
+	private ManagerService			managerService;
+
+	@PersistenceContext
+	private EntityManager			entityManager;
 
 
 	//Drivers
@@ -891,5 +904,227 @@ public class AdministratorServiceTest extends AbstractTest {
 		final Double res = Math.round(number.doubleValue() * dcPlacesB10) / dcPlacesB10;
 
 		return res;
+	}
+
+	// -------------------------------------------------------------------------------
+	// [UC-2-004] An administrator displays the dashboard.
+	// 
+	// Requisitos relacionados:
+	//   · REQ 6.2: An actor who is authenticated as an administrator must be able to
+	//              display a dashboard with the following information:
+	//              * The best-selling services.
+	//              * The managers who provide more services than the average.
+	//              * The managers who have got more services cancelled.
+	// -------------------------------------------------------------------------------
+	// v1.0 - Implemented by Alicia
+	// -------------------------------------------------------------------------------
+
+	@Test
+	public void driverDashboardBestSellingServices() {
+
+		final Object testingData[][] = {
+
+			// testingData[i][0] -> username del usuario loggeado.
+			// testingData[i][1] -> excepción que debe saltar.
+
+			{
+				// 1 - (+) An administrator displays the statistics
+				"admin", null
+			}, {
+				// 2 - (-) An unauthenticated actor displays the statistics
+				null, IllegalArgumentException.class
+			}, {
+				// 3 - (-) A manager displays the statistics
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			this.startTransaction();
+
+			this.templateDashboardBestSellingServices((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+			this.rollbackTransaction();
+			this.entityManager.clear();
+		}
+
+	}
+
+	protected void templateDashboardBestSellingServices(final String username, final Class<?> expected) {
+
+		Class<?> caught = null;
+
+		// 1. Loggearse (o como null)
+		this.authenticate(username);
+
+		try {
+
+			// 2. Mostrar las estadísticas
+			final Collection<Service> bestSellingServices = this.administratorService.bestSellingServices();
+
+			Assert.isTrue(bestSellingServices.containsAll(this.serviceService.findAll()));
+
+			Integer sells = null;
+			for (final Service s : bestSellingServices)
+				if (sells == null)
+					sells = s.getServiceRequests().size();
+				else {
+					Assert.isTrue(sells >= s.getServiceRequests().size());
+					sells = s.getServiceRequests().size();
+				}
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+	}
+
+	@Test
+	public void driverDashboardManagersMoreServicesThanAverage() {
+
+		final Object testingData[][] = {
+
+			// testingData[i][0] -> username del usuario loggeado.
+			// testingData[i][1] -> excepción que debe saltar.
+
+			{
+				// 1 - (+) An administrator displays the statistics
+				"admin", null
+			}, {
+				// 2 - (-) An unauthenticated actor displays the statistics
+				null, IllegalArgumentException.class
+			}, {
+				// 3 - (-) A manager displays the statistics
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			this.startTransaction();
+
+			this.templateDashboardManagersMoreServicesThanAverage((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+			this.rollbackTransaction();
+			this.entityManager.clear();
+		}
+
+	}
+
+	protected void templateDashboardManagersMoreServicesThanAverage(final String username, final Class<?> expected) {
+
+		Class<?> caught = null;
+
+		// 1. Loggearse (o como null)
+		this.authenticate(username);
+
+		try {
+
+			// 2. Mostrar las estadísticas
+			final Collection<Manager> managersMoreServicesThanAverage = this.administratorService.managersMoreServicesThanAverage();
+
+			int sum = 0;
+			int number = 0;
+
+			for (final Manager m : this.managerService.findAll()) {
+				number += 1;
+				sum += m.getServices().size();
+			}
+
+			final int avg = sum / number;
+
+			final Collection<Manager> newManagersMoreServicesThanAverage = new HashSet<Manager>();
+			for (final Manager m : this.managerService.findAll())
+				if (m.getServices().size() > avg)
+					newManagersMoreServicesThanAverage.add(m);
+
+			Assert.isTrue(managersMoreServicesThanAverage.containsAll(newManagersMoreServicesThanAverage));
+			Assert.isTrue(managersMoreServicesThanAverage.size() == newManagersMoreServicesThanAverage.size());
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+	}
+
+	@Test
+	public void driverDashboardManagersWithMoreServicesCancelled() {
+
+		final Object testingData[][] = {
+
+			// testingData[i][0] -> username del usuario loggeado.
+			// testingData[i][1] -> excepción que debe saltar.
+
+			{
+				// 1 - (+) An administrator displays the statistics
+				"admin", null
+			}, {
+				// 2 - (-) An unauthenticated actor displays the statistics
+				null, IllegalArgumentException.class
+			}, {
+				// 3 - (-) A manager displays the statistics
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			this.startTransaction();
+
+			this.templateDashboardManagersWithMoreServicesCancelled((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+			this.rollbackTransaction();
+			this.entityManager.clear();
+		}
+
+	}
+
+	protected void templateDashboardManagersWithMoreServicesCancelled(final String username, final Class<?> expected) {
+
+		Class<?> caught = null;
+
+		// 1. Loggearse (o como null)
+		this.authenticate(username);
+
+		try {
+
+			// 2. Mostrar las estadísticas
+			final Collection<Manager> managersWithMoreServicesCancelled = this.administratorService.managersWithMoreServicesCancelled();
+
+			final Collection<Manager> allManagersCancelled = new HashSet<Manager>();
+			for (final Manager m : this.managerService.findAll())
+				for (final Service s : m.getServices())
+					if (s.getIsCanceled()) {
+						allManagersCancelled.add(m);
+						break;
+					}
+
+			Assert.isTrue(managersWithMoreServicesCancelled.containsAll(allManagersCancelled));
+
+			Integer cancelledServices = null;
+
+			for (final Manager m : managersWithMoreServicesCancelled) {
+				int managerCancelledServices = 0;
+
+				for (final Service s : m.getServices())
+					if (s.getIsCanceled())
+						managerCancelledServices += 1;
+
+				if (cancelledServices == null)
+					cancelledServices = managerCancelledServices;
+				else {
+					Assert.isTrue(cancelledServices >= managerCancelledServices);
+					cancelledServices = managerCancelledServices;
+				}
+			}
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
 	}
 }
