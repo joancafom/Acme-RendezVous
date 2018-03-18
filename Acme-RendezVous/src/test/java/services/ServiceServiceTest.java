@@ -56,9 +56,10 @@ public class ServiceServiceTest extends AbstractTest {
 	 * 
 	 * Involved REQs: 2, 5.2
 	 * 
-	 * Test Cases (13; 2+ 11-):
+	 * Test Cases (16; 2+ 14-):
 	 * 
 	 * + 1) A Manager logs in, list his/her Services, selects one and modifies some data correctly (name, description and picture)
+	 * Then he faithfully checks that the changes appear in the listing.
 	 * 
 	 * - 2) A User logs in, selects one Service and tries to modify it using correct data (name, description and picture)
 	 * 
@@ -73,6 +74,7 @@ public class ServiceServiceTest extends AbstractTest {
 	 * - 7) A Manager logs in, list his/her Services, selects one and tries to modify it with incorrect data (description = " ")
 	 * 
 	 * + 8) A Manager logs in, list his/her Services, selects one with a picture and removes it (picture = null)
+	 * Then he faithfully checks that the changes appear in the listing.
 	 * 
 	 * - 9) A Manager logs in, list his/her Services, selects one and tries to modify it with incorrect data (name with XSS)
 	 * 
@@ -87,48 +89,56 @@ public class ServiceServiceTest extends AbstractTest {
 	 * - 14) A Manager logs in, selects one Service from another Manager and tries to modify it using correct data (description)
 	 * 
 	 * - 15) A Manager logs in and tries to update a null Service
+	 * 
+	 * - 16) A Manager logs in, list his/her Services and tries to edit a cancelled Service.
 	 */
 
 	@Test
 	public void driverListEditService() {
 
 		// testingData[i][0] -> username of the Actor to log in.
-		// testingData[i][1] -> the name of the Service.
-		// testingData[i][2] -> the description of the Service.
-		// testingData[i][3] -> the picture URL of the Service.
-		// testingData[i][4] -> isCanceled property of Service.
-		// testingData[i][5] -> the beanName of the Service to retrieve from the BD.
-		// testingData[i][6] -> if we want to retrieve a Service from the BD or not.
+		// testingData[i][1] -> the beanName of the Service to edit.
+		// testingData[i][2] -> the name of the Service.
+		// testingData[i][3] -> the description of the Service.
+		// testingData[i][4] -> the picture URL of the Service.
+		// testingData[i][5] -> isCanceled property of Service.
+		// testingData[i][6] -> String with the names of the parameters we want to update, separated by blank spaces
 		// testingData[i][7] -> the expected exception.
 
 		final Object testingData[][] = {
 
 			{
-				"manager1", "Test Service 1", "Test Description 1", "https://goo.gl/FbAHdJ", false, null, false, null
+				"manager3", "service1", "Test Service 1", "Test Description 1", "https://goo.gl/FbAHdJ", false, "name description picture", null
 			}, {
-				null, "Test Service 2", "Test Description 2", "https://goo.gl/FbAHdJ", false, null, false, IllegalArgumentException.class
+				"user1", "service1", "Test Service 2", "Test Description 2", "https://goo.gl/FbAHdJ", false, "name description picture", IllegalArgumentException.class
 			}, {
-				"user2", "Test Service 3", "Test Description 3", "https://goo.gl/FbAHdJ", false, null, false, IllegalArgumentException.class
+				null, "service1", "Test Service 3", "Test Description 3", "https://goo.gl/FbAHdJ", false, "name description picture", IllegalArgumentException.class
 			}, {
-				"manager1", "Test Service 4", "Test Description 4", null, false, null, false, null
+				"manager3", "service2", null, null, null, false, "name", ConstraintViolationException.class
 			}, {
-				"manager2", null, "Test Description 5", "https://goo.gl/FbAHdJ", false, null, false, ConstraintViolationException.class
+				"manager3", "service2", " ", null, null, false, "name", ConstraintViolationException.class
 			}, {
-				"manager2", " ", "Test Description 6", "https://goo.gl/FbAHdJ", false, null, false, ConstraintViolationException.class
+				"manager2", "service3", null, null, null, false, "description", ConstraintViolationException.class
 			}, {
-				"manager2", "Test Service 7", null, "https://goo.gl/FbAHdJ", false, null, false, ConstraintViolationException.class
+				"manager2", "service3", null, " ", null, false, "description", ConstraintViolationException.class
 			}, {
-				"manager1", "Test Service 8", " ", "https://goo.gl/FbAHdJ", false, null, false, ConstraintViolationException.class
+				"manager3", "service2", null, null, null, false, "picture", null
 			}, {
-				"manager1", "<script>alert('Hacked!');</script>", "Test Description 9", "https://goo.gl/FbAHdJ", false, null, false, ConstraintViolationException.class
+				"manager2", "service3", "<script>alert('Hacked!');</script>", null, null, false, "name", ConstraintViolationException.class
 			}, {
-				"manager1", "Test Service 10", "<script>alert('Hacked!');</script>", "https://goo.gl/FbAHdJ", false, null, false, ConstraintViolationException.class
+				"manager2", "service3", null, "<script>alert('Hacked!');</script>", null, false, "description", ConstraintViolationException.class
 			}, {
-				"manager2", "Test Service 11", "Test Description 11", "<script>alert('Hacked!');</script>", false, null, false, ConstraintViolationException.class
+				"manager3", "service1", null, null, "<script>alert('Hacked!');</script>", false, "picture", ConstraintViolationException.class
 			}, {
-				"manager2", null, null, null, null, null, true, IllegalArgumentException.class
+				"manager2", "service4", null, null, null, false, "isCanceled", IllegalArgumentException.class
 			}, {
-				"manager3", "Test Service 13", "Test Description 13", "https://goo.gl/FbAHdJ", true, null, false, IllegalArgumentException.class
+				"manager2", "service5", null, null, null, true, "isCanceled", IllegalArgumentException.class
+			}, {
+				"manager1", "service1", null, "Test Description 14", null, false, "description", IllegalArgumentException.class
+			}, {
+				"manager1", null, null, null, null, false, "", IllegalArgumentException.class
+			}, {
+				"manager2", "service4", "Test Service 16", null, null, false, "name", IllegalArgumentException.class
 			}
 		};
 
@@ -138,20 +148,36 @@ public class ServiceServiceTest extends AbstractTest {
 
 			this.startTransaction();
 
-			if ((Boolean) testingData[i][6])
-				if (testingData[i][5] != null)
-					service = this.serviceService.findOne(this.getEntityId((String) testingData[i][5]));
-				else
-					service = null;
+			if (testingData[i][1] != null) {
+				service = this.serviceService.findOne(this.getEntityId((String) testingData[i][1]));
 
-			this.templateListCreateService((String) testingData[i][0], service, (Boolean) testingData[i][6], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (Boolean) testingData[i][4], (Class<?>) testingData[i][7]);
+				System.out.println("Ask about Detach & StringsStates");
+				//We will detach the entity to prevent automatic flushes when we set the properties
+				this.entityManager.detach(service);
+			} else
+				service = null;
+
+			final String changes = (String) testingData[i][6];
+
+			if (changes.contains("name"))
+				service.setName((String) testingData[i][2]);
+
+			if (changes.contains("description"))
+				service.setDescription((String) testingData[i][3]);
+
+			if (changes.contains("picture"))
+				service.setPicture((String) testingData[i][4]);
+
+			if (changes.contains("isCanceled"))
+				service.setIsCanceled((Boolean) testingData[i][5]);
+
+			this.templateListEditService((String) testingData[i][0], service, changes, (Class<?>) testingData[i][7]);
 
 			this.rollbackTransaction();
 			this.entityManager.clear();
 		}
 
 	}
-
 	/*
 	 * v1.0 - Implemented by JA
 	 * 
@@ -256,12 +282,6 @@ public class ServiceServiceTest extends AbstractTest {
 	}
 	// Test Templates
 
-	/*
-	 * 1. Log in to the system as a Manager
-	 * 2. List his/her Services
-	 * 3. Create a Service
-	 * 4. List his/her Services and check the changes
-	 */
 	protected void templateListCreateService(final String username, final domain.Service service, final Boolean useGiven, final String name, final String description, final String url, final Boolean isCanceled, final Class<?> expected) {
 		//v1.0 Implemented by JA
 
@@ -317,6 +337,72 @@ public class ServiceServiceTest extends AbstractTest {
 		this.unauthenticate();
 
 		this.checkExceptions(expected, caught);
+	}
+
+
+	protected void templateListEditService(final String username, final domain.Service serviceToSave, final String changesPerformed, final Class<?> expected) {
+
+		//v1.0 Implemented by JA
+
+		Class<?> caught = null;
+		Manager manager = null;
+
+		//1. Log in to the system
+		this.authenticate(username);
+
+		try {
+
+			//2. List his/her Service (skipped if not a manager)
+			final List<domain.Service> myServicesBefore = new ArrayList<domain.Service>();
+
+			//We use a String to Store the current State of the List, as it is a shallow copy and when 
+			//modified later (after the save()) its content will also be updated! Representing the List as 
+			//a String we can store its current state and compare it later, it won't change!
+			String myServicesBeforeState = "";
+
+			if (username != null && username.contains("manager")) {
+				manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+				myServicesBefore.addAll(manager.getServices());
+			}
+
+			myServicesBeforeState = myServicesBefore.toString();
+
+			//3. Select a Service from the list (given as a parameter)
+
+			//4. Edit the Service (given with the editions)
+
+			final domain.Service editedService = this.serviceService.save(serviceToSave);
+			this.serviceService.flush();
+
+			//Check the changes we have made
+
+			if (changesPerformed.contains("name"))
+				Assert.isTrue(editedService.getName().equals(serviceToSave.getName()));
+
+			if (changesPerformed.contains("description"))
+				Assert.isTrue(editedService.getDescription().equals(serviceToSave.getDescription()));
+
+			if (changesPerformed.contains("picture"))
+				Assert.isTrue((editedService.getPicture() == null && serviceToSave.getPicture() == null) || editedService.getPicture().equals(serviceToSave.getPicture()));
+
+			if (changesPerformed.contains("isCanceled"))
+				Assert.isTrue(editedService.getIsCanceled() == serviceToSave.getIsCanceled());
+
+			//5. List his/her Services and check the changes
+			final List<domain.Service> myServicesAfter = new ArrayList<domain.Service>(manager.getServices());
+			final String myServicesAfterState = myServicesAfter.toString();
+
+			Assert.isTrue(!myServicesAfterState.equals(myServicesBeforeState));
+			Assert.isTrue(myServicesAfter.size() == myServicesBefore.size());
+			Assert.isTrue(myServicesAfter.contains(editedService));
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+
 	}
 
 	// -------------------------------------------------------------------------------
@@ -395,4 +481,6 @@ public class ServiceServiceTest extends AbstractTest {
 		super.checkExceptions(expected, caught);
 
 	}
+
+
 }

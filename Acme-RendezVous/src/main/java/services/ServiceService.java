@@ -94,8 +94,13 @@ public class ServiceService {
 
 		Assert.isTrue(!newService.getIsCanceled());
 		Assert.isTrue(newService.getManager().equals(manager));
-		if (newService.getId() != 0)
+
+		if (newService.getId() != 0) {
+			final domain.Service oldService = this.findOne(newService.getId());
+
 			Assert.isTrue(manager.getServices().contains(newService));
+			Assert.isTrue(!oldService.getIsCanceled());
+		}
 
 		final domain.Service savedService = this.serviceRepository.save(newService);
 
