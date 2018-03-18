@@ -2,6 +2,8 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -151,7 +153,7 @@ public class ServiceServiceTest extends AbstractTest {
 			if (testingData[i][1] != null) {
 				service = this.serviceService.findOne(this.getEntityId((String) testingData[i][1]));
 
-				System.out.println("Ask about Detach & StringsStates");
+				//System.out.println("Ask about Detach & StringsStates");
 				//We will detach the entity to prevent automatic flushes when we set the properties
 				this.entityManager.detach(service);
 			} else
@@ -339,7 +341,6 @@ public class ServiceServiceTest extends AbstractTest {
 		this.checkExceptions(expected, caught);
 	}
 
-
 	protected void templateListEditService(final String username, final domain.Service serviceToSave, final String changesPerformed, final Class<?> expected) {
 
 		//v1.0 Implemented by JA
@@ -482,5 +483,94 @@ public class ServiceServiceTest extends AbstractTest {
 
 	}
 
+	/*
+	 * v1.0 - josembell
+	 * 
+	 * [UC-2-007] - List and Delete Services
+	 * 
+	 * REQ: 2, 4.2, 5.1, 5.2
+	 */
 
+	@Test
+	public void driverListAndDeleteService() {
+		final Object testingData[][] = {
+			{
+				/* + 1) Un manager elimina un Service creado por él */
+				"manager2", "service4", null
+			}, {
+				/* - 2) Un usuario no identificado elimina un Service */
+				null, "service4", IllegalArgumentException.class
+			}, {
+				/* - 3) Un manager identificado intenta eliminar un Service null */
+				"manager2", null, IllegalArgumentException.class
+			}, {
+				/* - 4) Un manager identificado intenta eliminar un Service que no le pertenece */
+				"manager2", "service2", IllegalArgumentException.class
+			}, {
+				/* - 5) Un manager identificado intenta eliminar un Service que está siendo usado */
+				"manager3", "service1", IllegalArgumentException.class
+			}, {
+				/* - 6) Un usuario intenta eliminar un Service */
+				"user1", "service1", IllegalArgumentException.class
+			}, {
+				/* - 7) Un admin intenta eliminar un Service */
+				"admin", "service1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			domain.Service service = null;
+			if (testingData[i][1] != null)
+				service = this.serviceService.findOne(this.getEntityId((String) testingData[i][1]));
+
+			//System.out.println("Test " + (i + 1));
+			this.templateListAndDeleteService((String) testingData[i][0], service, (Class<?>) testingData[i][2]);
+			//System.out.println("Test " + (i + 1)+" - OK");
+		}
+	}
+
+	/* v1.0 - josembell */
+	protected void templateListAndDeleteService(final String username, final Service service, final Class<?> expected) {
+		Class<?> caught = null;
+
+		/* 1. Loggearse como Manager */
+		this.authenticate(username);
+
+		try {
+			/* 2. Listar todos los Services */
+			final Collection<Service> allServices = this.serviceService.findAll();
+			final int numAllServicesBefore = allServices.size();
+
+			/* 3. Listar mis Services */
+			Collection<Service> myServices = new HashSet<Service>();
+			int numMyServicesBefore = 0;
+			Manager manager = null;
+			if (username != null) {
+				manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+				if (manager != null) {
+					myServices = manager.getServices();
+					numMyServicesBefore = myServices.size();
+				}
+			}
+
+			/* 4. Eliminar un Service -> el que entra por parámetros */
+			this.serviceService.delete(service);
+
+			/* 5. Asegurar que el Service ya no lo tiene el manager */
+			Assert.isTrue(!manager.getServices().contains(service));
+			final int numMyServicesNow = manager.getServices().size();
+			Assert.isTrue(numMyServicesBefore == numMyServicesNow + 1);
+
+			/* 6. Asegurar que el Service ya no está disponible en todos los services */
+			//Assert.isTrue(!allServices.contains(service));
+			final int numAllServicesNow = this.serviceService.findAll().size();
+			Assert.isTrue(numAllServicesBefore == numAllServicesNow + 1);
+
+		} catch (final Throwable oopsIDidItAgain) {
+			caught = oopsIDidItAgain.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+	}
 }

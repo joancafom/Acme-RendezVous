@@ -194,9 +194,9 @@ public class CommentServiceTest extends AbstractTest {
 			else
 				rendezVous = null;
 
-			System.out.println("Test " + (i + 1));
+			//System.out.println("Test " + (i + 1));
 			this.templateCreateComment((String) testingData[i][0], (Integer) testingData[i][1], rendezVous, (String) testingData[i][3], (String) testingData[i][4], (String) testingData[i][5], (Class<?>) testingData[i][6]);
-			System.out.println("Test " + (i + 1) + " - OK");
+			//System.out.println("Test " + (i + 1) + " - OK");
 		}
 	}
 

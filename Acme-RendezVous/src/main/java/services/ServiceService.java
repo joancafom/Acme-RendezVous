@@ -118,8 +118,8 @@ public class ServiceService {
 		Assert.isTrue(manager.getServices().contains(service));
 		Assert.isTrue(service.getManager().equals(manager));
 		Assert.isTrue(service.getServiceRequests().isEmpty());
-
 		this.serviceRepository.delete(service);
+		manager.getServices().remove(service);
 	}
 
 	public void flush() {

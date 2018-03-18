@@ -40,7 +40,7 @@ public class ServiceRequestServiceTest extends AbstractTest {
 	// Fixtures
 
 	/*
-	 * v1.0 - josembell
+	 * v1.1 - josembell
 	 * 
 	 * [UC-2-002] - Request and Display requested Services
 	 * 
@@ -83,25 +83,22 @@ public class ServiceRequestServiceTest extends AbstractTest {
 				/* - 10) Un usuario identificado solicita un servicio pero no indica correctamente el número de la tarjeta */
 				"user1", "rendezVous1", "service2", "This is a test", "John Doe", "JJVA", "1", 793, 10, 2020, ConstraintViolationException.class
 			}, {
-				/* - 11) Un usuario identificado solicita un servicio pero no indica el CVV */
-				"user1", "rendezVous1", "service2", "This is a test", "John Doe", "JJVA", "5370339536264743", null, 10, 2020, ConstraintViolationException.class
-			}, {
-				/* - 12) Un usuario identificado solicita un servicio pero no indica correctamente el CVV */
+				/* - 11) Un usuario identificado solicita un servicio pero no indica correctamente el CVV */
 				"user1", "rendezVous1", "service2", "This is a test", "John Doe", "JJVA", "5370339536264743", 1, 10, 2020, ConstraintViolationException.class
 			}, {
-				/* - 13) Un usuario identificado solicita un servicio pero no indica correctamente el CVV */
+				/* - 12) Un usuario identificado solicita un servicio pero no indica correctamente el CVV */
 				"user1", "rendezVous1", "service2", "This is a test", "John Doe", "JJVA", "5370339536264743", 1000, 10, 2020, ConstraintViolationException.class
 			}, {
-				/* - 14) Un usuario identificado solicita un servicio pero no indica correctamente el mes */
+				/* - 13) Un usuario identificado solicita un servicio pero no indica correctamente el mes */
 				"user1", "rendezVous1", "service2", "This is a test", "John Doe", "JJVA", "5370339536264743", 793, 14, 2020, ConstraintViolationException.class
 			}, {
-				/* - 15) Un usuario identificado solicita un servicio pero no indica correctamente el año */
+				/* - 14) Un usuario identificado solicita un servicio pero no indica correctamente el año */
 				"user1", "rendezVous1", "service2", "This is a test", "John Doe", "JJVA", "5370339536264743", 793, 10, 2017, IllegalArgumentException.class
 			}, {
-				/* - 16) Un manager intenta solicitar un servicio */
+				/* - 15) Un manager intenta solicitar un servicio */
 				"manager1", "rendezVous1", "service2", "This is a test", "John Doe", "JJVA", "5370339536264743", 793, 10, 2020, IllegalArgumentException.class
 			}, {
-				/* - 17) Un admin intenta solicitar un servicio */
+				/* - 16) Un admin intenta solicitar un servicio */
 				"admin", "rendezVous1", "service2", "This is a test", "John Doe", "JJVA", "5370339536264743", 793, 10, 2020, IllegalArgumentException.class
 			}
 
@@ -124,7 +121,7 @@ public class ServiceRequestServiceTest extends AbstractTest {
 		}
 
 	}
-	/* v1.0 - josembell */
+	/* v1.1 - josembell */
 	protected void templateRequestService(final String username, final RendezVous rendezVous, final Service service, final String comments, final String holderName, final String brandName, final String creditCardNumber, final Integer CVV,
 		final Integer month, final Integer year, final Class<?> expected) {
 		Class<?> caught = null;
@@ -147,12 +144,9 @@ public class ServiceRequestServiceTest extends AbstractTest {
 			creditCard.setHolderName(holderName);
 			creditCard.setBrandName(brandName);
 			creditCard.setNumber(creditCardNumber);
-			if (CVV != null)
-				creditCard.setCVV(CVV);
-			if (month != null)
-				creditCard.setMonth(month);
-			if (year != null)
-				creditCard.setYear(year);
+			creditCard.setCVV(CVV);
+			creditCard.setMonth(month);
+			creditCard.setYear(year);
 
 			request.setCreditCard(creditCard);
 
