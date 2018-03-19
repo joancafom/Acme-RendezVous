@@ -75,6 +75,8 @@ public class RendezVousAdministratorController extends AbstractController {
 		final ModelAndView res;
 		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
 
+		Assert.notNull(rendezVous);
+
 		res = new ModelAndView("rendezVous/remove");
 		res.addObject("rendezVous", rendezVous);
 

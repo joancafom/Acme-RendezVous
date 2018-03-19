@@ -71,6 +71,7 @@
 	<form:hidden path="isFinal"/>
 	<form:hidden path="isForAdults"/>
 	<form:hidden path="isDeleted"/>
+	<form:hidden path="serviceRequests"/>
 	
 	<p><spring:message code="rendezVous.delete.confirmation"/></p>
 	<acme:submit name="delete" code="rendezVous.yes"/>
