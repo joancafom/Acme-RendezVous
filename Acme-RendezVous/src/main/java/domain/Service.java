@@ -6,6 +6,7 @@ import java.util.Collection;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
@@ -70,6 +71,7 @@ public class Service extends DomainEntity {
 
 	private Manager						manager;
 	private Collection<ServiceRequest>	serviceRequests;
+	private Collection<Category>		categories;
 
 
 	@NotNull
@@ -84,6 +86,13 @@ public class Service extends DomainEntity {
 	@OneToMany(mappedBy = "service")
 	public Collection<ServiceRequest> getServiceRequests() {
 		return this.serviceRequests;
+	}
+
+	@NotNull
+	@Valid
+	@ManyToMany
+	public Collection<Category> getCategories() {
+		return this.categories;
 	}
 
 	public void setManager(final Manager manager) {
