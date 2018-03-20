@@ -49,6 +49,8 @@ public class CategoryService {
 
 	/* v1.0 - josembell */
 	public Category save(final Category category) {
+		Assert.notNull(category);
+
 		Collection<Category> sameLevelCategories = new HashSet<Category>();
 		if (category.getParentCategory() != null)
 			sameLevelCategories = category.getParentCategory().getChildCategories();
@@ -67,6 +69,7 @@ public class CategoryService {
 
 	/* v1.0 - josembell */
 	public void delete(final Category category) {
+		Assert.notNull(category);
 		/* TODO: Implementar recursión para eliminar los childCategories */
 		this.categoryRepository.delete(category);
 	}

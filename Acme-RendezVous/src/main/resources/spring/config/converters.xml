@@ -35,6 +35,9 @@
 		<bean class="converters.AnswerToStringConverter"/>
 		<bean class="converters.StringToAnswerConverter"/>
 		
+		<bean class="converters.CategoryToStringConverter"/>
+		<bean class="converters.StringToCategoryConverter"/>
+		
 		<bean class="converters.CommentToStringConverter"/>
 		<bean class="converters.StringToCommentConverter"/>
 		
