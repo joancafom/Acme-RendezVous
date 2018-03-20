@@ -24,4 +24,12 @@ public interface RendezVousRepository extends JpaRepository<RendezVous, Integer>
 	@Query("select r from RendezVous r where r.creator.id = ?1")
 	Collection<RendezVous> findAllByUserId(int userId);
 
+	/* v1.1 - josembell */
+	@Query("select sr.rendezVous from Category c join c.services s join s.serviceRequests sr where c.id=?1")
+	Collection<RendezVous> findAllByCategory(int categoryId);
+
+	/* v1.0 - josembell */
+	@Query("select sr.rendezVous from Category c join c.services s join s.serviceRequests sr where c.id=?1 and sr.rendezVous.isForAdults = false")
+	Collection<RendezVous> findAllNotAdultByCategory(int categoryId);
+
 }

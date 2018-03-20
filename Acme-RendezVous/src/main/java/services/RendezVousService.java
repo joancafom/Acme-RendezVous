@@ -18,6 +18,7 @@ import security.UserAccount;
 import domain.Administrator;
 import domain.Announcement;
 import domain.Answer;
+import domain.Category;
 import domain.Comment;
 import domain.GPSCoordinates;
 import domain.Question;
@@ -367,6 +368,16 @@ public class RendezVousService {
 
 		return res;
 
+	}
+
+	/* v1.0 - josembell */
+	public Collection<RendezVous> findAllByCategory(final Category category) {
+		return this.rendezVousRepository.findAllByCategory(category.getId());
+	}
+
+	/* v1.0 - josembell */
+	public Collection<RendezVous> findAllNotAdultByCategory(final Category category) {
+		return this.rendezVousRepository.findAllNotAdultByCategory(category.getId());
 	}
 
 }

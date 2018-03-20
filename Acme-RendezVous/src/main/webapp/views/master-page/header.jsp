@@ -46,6 +46,7 @@ window.onload = function(){
 			<li><a href="rendezVous/user/list.do?show=attended"><spring:message code="master.page.user.attendedRendezVouses" /></a></li>
 			<li><a href="user/user/list.do"><spring:message code="master.page.user.users" /></a></li>
 			<li><a href="rendezVous/user/list.do?show=all"><spring:message code="master.page.user.allRendezVouses" /></a></li>
+			<li><a href="rendezVous/user/list.do?show=category"><spring:message code="master.page.user.allRendezVousesByCategory" /></a></li>
 			<li><a href="announcement/user/list.do"><spring:message code="master.page.user.announcements" /></a></li>
 			<li><a href="service/user/list.do"><spring:message code="master.page.actor.service" /></a></li>
 			<li><a href="user/user/display.do"><spring:message code="master.page.profile" /> (<security:authentication property="principal.username" />)</a></li>
@@ -58,7 +59,8 @@ window.onload = function(){
 		</security:authorize>
 		
 		<security:authorize access="isAnonymous()">
-			<li><a href="rendezVous/list.do"><spring:message code="master.page.user.allRendezVouses" /></a></li>
+			<li><a href="rendezVous/list.do?show=all"><spring:message code="master.page.user.allRendezVouses" /></a></li>
+			<li><a href="rendezVous/list.do?show=category"><spring:message code="master.page.user.allRendezVousesByCategory" /></a></li>
 			<li><a href="user/list.do"><spring:message code="master.page.user.allUsers" /></a></li>
 			<li><a href="user/register.do"><spring:message code="master.page.user.register" /></a></li>
 			<li><a href="manager/register.do"><spring:message code="master.page.manager.register" /></a></li>

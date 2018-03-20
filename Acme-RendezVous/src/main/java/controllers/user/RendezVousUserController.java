@@ -19,12 +19,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import security.LoginService;
 import services.AnswerService;
+import services.CategoryService;
 import services.CommentService;
 import services.QuestionService;
 import services.RendezVousService;
 import services.UserService;
 import controllers.AbstractController;
 import domain.Answer;
+import domain.Category;
 import domain.Question;
 import domain.RendezVous;
 import domain.User;
@@ -51,12 +53,15 @@ public class RendezVousUserController extends AbstractController {
 	@Autowired
 	private CommentService		commentService;
 
+	@Autowired
+	private CategoryService		categoryService;
+
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ModelAndView list(@RequestParam final String show) {
+	public ModelAndView list(@RequestParam final String show, @RequestParam(required = false) final Integer categoryId) {
 		ModelAndView result;
 		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
-		final Collection<RendezVous> rendezVouses;
+		Collection<RendezVous> rendezVouses = null;
 		final User me = user;
 
 		Assert.notNull(user);
@@ -66,14 +71,43 @@ public class RendezVousUserController extends AbstractController {
 
 		if (show.equals("mine")) {
 			rendezVouses = user.getCreatedRendezVouses();
+			result.addObject("hasRendezVouses", true);
 			own = true;
 
-		} else if (show.equals("attended"))
+		} else if (show.equals("attended")) {
 			rendezVouses = user.getAttendedRendezVouses();
-		else if (show.equals("all") && user.getAge() < 18)
+			result.addObject("hasRendezVouses", true);
+		} else if (show.equals("all") && user.getAge() < 18) {
 			rendezVouses = this.rendezVousService.findAllNotAdult();
-		else
+			result.addObject("hasRendezVouses", true);
+		} else if (show.equals("category")) {
+			Collection<Category> categories = null;
+
+			if (categoryId != null) {
+
+				final Category category = this.categoryService.findOne(categoryId);
+				Assert.notNull(category);
+				if (user.getAge() < 18)
+					rendezVouses = this.rendezVousService.findAllNotAdultByCategory(category);
+				else
+					rendezVouses = this.rendezVousService.findAllByCategory(category);
+
+				categories = category.getChildCategories();
+				result.addObject("hasCategories", true);
+				result.addObject("hasRendezVouses", true);
+				result.addObject("category", category);
+
+			} else {
+				categories = this.categoryService.findRootCategories();
+				result.addObject("hasCategories", true);
+				result.addObject("hasRendezVouses", false);
+			}
+
+			result.addObject("categories", categories);
+		} else {
 			rendezVouses = this.rendezVousService.findAll();
+			result.addObject("hasRendezVouses", true);
+		}
 
 		result.addObject("own", own);
 		result.addObject("me", me);

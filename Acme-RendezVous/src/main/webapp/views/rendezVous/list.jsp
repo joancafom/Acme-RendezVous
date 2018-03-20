@@ -15,6 +15,32 @@
 </style>
 <jsp:useBean id="now" class="java.util.Date" />
 
+<jstl:if test="${category!=null}">
+	<jstl:set var="parentCategory" value="${category.name}"/>
+</jstl:if>
+
+<jstl:if test="${hasCategories==true}">
+	<jstl:if test="${category==null}">
+		<h2><spring:message code="rendezVous.categories"/></h2>
+	</jstl:if>
+	<jstl:if test="${category!=null}">
+		<h2><spring:message code="rendezVous.subcategories"/> <jstl:out value="${category.name}"/></h2>
+	</jstl:if>
+	<display:table name="categories" id="category" requestURI="rendezVous${actorWS}/list.do" class="displaytag">
+		<display:column titleKey="category.name">
+			<a href="rendezVous/${actorWS}list.do?show=category&categoryId=${category.id}"><jstl:out value="${category.name}"/></a>
+		</display:column>
+		<display:column titleKey="category.description">
+			<jstl:out value="${category.description}"/>
+		</display:column>
+	</display:table>
+</jstl:if>
+
+<jstl:if test="${parentCategory!=null}">
+	<h2><spring:message code="rendezVous.rendezVouses.category"/> <jstl:out value="${parentCategory}"/></h2>
+</jstl:if>
+
+<jstl:if test="${hasRendezVouses==true}">
 <jstl:if test="${!own}">
 	<display:table name="rendezVouses" id="rendezVous" requestURI="rendezVous${actorWS}/list.do" class="displaytag">
 		<display:column titleKey="rendezVous.state" class="tableRendezVous">
@@ -153,4 +179,5 @@
 	</display:table>
 	
 	<a href="rendezVous/user/create.do"><spring:message code="rendezVous.create"/></a>
+</jstl:if>
 </jstl:if>
