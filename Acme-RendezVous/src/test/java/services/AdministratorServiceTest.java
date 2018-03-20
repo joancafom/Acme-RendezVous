@@ -21,11 +21,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
+import domain.Category;
 import domain.Comment;
 import domain.Manager;
 import domain.Question;
 import domain.RendezVous;
 import domain.Service;
+import domain.ServiceRequest;
 import domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -54,6 +56,9 @@ public class AdministratorServiceTest extends AbstractTest {
 
 	@Autowired
 	private ManagerService			managerService;
+
+	@Autowired
+	private CategoryService			categoryService;
 
 	@PersistenceContext
 	private EntityManager			entityManager;
@@ -1145,6 +1150,220 @@ public class AdministratorServiceTest extends AbstractTest {
 			}
 
 			Assert.isTrue(moreCancelledA <= moreCancelledB);
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+	}
+
+	// -------------------------------------------------------------------------------
+	// [UC-2-012] An administrator displays the dashboard.
+	// 
+	// Requisitos relacionados:
+	//   · REQ 11.2: An actor who is authenticated as an administrator must be able to
+	//              display a dashboard with the following information:
+	//				* The average number of categories per rendezvous.
+	//              * The average ratio of services in each category.
+	//              * The average, the minimum, the maximum, and the standard
+	//                deviation of services requested per rendezvous.
+	// -------------------------------------------------------------------------------
+	// v1.0 - Implemented by Alicia
+	// -------------------------------------------------------------------------------
+
+	@Test
+	public void driverDashboardAvgCategoriesPerRendezVous() {
+
+		final Object testingData[][] = {
+
+			// testingData[i][0] -> username del usuario loggeado.
+			// testingData[i][1] -> excepción que debe saltar.
+
+			{
+				// 1 - (+) An administrator displays the statistics
+				"admin", null
+			}, {
+				// 2 - (-) An unauthenticated actor displays the statistics
+				null, IllegalArgumentException.class
+			}, {
+				// 3 - (-) A manager displays the statistics
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			this.startTransaction();
+
+			this.templateDashboardAvgCategoriesPerRendezVous((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+			this.rollbackTransaction();
+			this.entityManager.clear();
+		}
+
+	}
+
+	protected void templateDashboardAvgCategoriesPerRendezVous(final String username, final Class<?> expected) {
+
+		Class<?> caught = null;
+
+		// 1. Loggearse (o como null)
+		this.authenticate(username);
+
+		try {
+
+			// 2. Mostrar las estadísticas
+			final Double avgCategoriesPerRendezVous = this.administratorService.getAvgCategoriesPerRendezVous();
+			final List<Integer> numberCategoriesPerRendezVous = new ArrayList<Integer>();
+
+			for (final RendezVous r : this.rendezVousService.findAll()) {
+				Integer sum = 0;
+				for (final ServiceRequest sr : r.getServiceRequests())
+					sum += sr.getService().getCategories().size();
+				numberCategoriesPerRendezVous.add(sum);
+			}
+
+			final Double retrievedAvg = this.roundNumber(avgCategoriesPerRendezVous, 3);
+			final Double computedAvg = this.roundNumber(this.computeAverage(numberCategoriesPerRendezVous), 3);
+
+			Assert.isTrue(retrievedAvg.equals(computedAvg));
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+	}
+
+	@Test
+	public void driverDashboardAvgRatioServicesPerCategory() {
+
+		final Object testingData[][] = {
+
+			// testingData[i][0] -> username del usuario loggeado.
+			// testingData[i][1] -> excepción que debe saltar.
+
+			{
+				// 1 - (+) An administrator displays the statistics
+				"admin", null
+			}, {
+				// 2 - (-) An unauthenticated actor displays the statistics
+				null, IllegalArgumentException.class
+			}, {
+				// 3 - (-) A manager displays the statistics
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			this.startTransaction();
+
+			this.templateDashboardAvgRatioServicesPerCategory((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+			this.rollbackTransaction();
+			this.entityManager.clear();
+		}
+
+	}
+
+	protected void templateDashboardAvgRatioServicesPerCategory(final String username, final Class<?> expected) {
+
+		Class<?> caught = null;
+
+		// 1. Loggearse (o como null)
+		this.authenticate(username);
+
+		try {
+
+			// 2. Mostrar las estadísticas
+			final Double avgRatioServicesPerCategory = this.administratorService.getAvgRatioServicesPerCategory();
+			final List<Double> ratioServicesPerCategory = new ArrayList<Double>();
+
+			final Integer servicesNumber = this.serviceService.findAll().size();
+			for (final Category c : this.categoryService.findAll())
+				ratioServicesPerCategory.add(c.getServices().size() * 1.0 / servicesNumber);
+
+			final Double retrievedAvg = this.roundNumber(avgRatioServicesPerCategory, 3);
+			final Double computedAvg = this.roundNumber(this.computeAverage(ratioServicesPerCategory), 3);
+
+			Assert.isTrue(retrievedAvg.equals(computedAvg));
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+	}
+	@Test
+	public void driverDashboardAvgMinMaxStdServicesRequestedPerRendezVous() {
+
+		final Object testingData[][] = {
+
+			// testingData[i][0] -> username del usuario loggeado.
+			// testingData[i][1] -> excepción que debe saltar.
+
+			{
+				// 1 - (+) An administrator displays the statistics
+				"admin", null
+			}, {
+				// 2 - (-) An unauthenticated actor displays the statistics
+				null, IllegalArgumentException.class
+			}, {
+				// 3 - (-) A manager displays the statistics
+				"manager1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			this.startTransaction();
+
+			this.templateDashboardAvgMinMaxStdServicesRequestedPerRendezVous((String) testingData[i][0], (Class<?>) testingData[i][1]);
+
+			this.rollbackTransaction();
+			this.entityManager.clear();
+		}
+
+	}
+
+	protected void templateDashboardAvgMinMaxStdServicesRequestedPerRendezVous(final String username, final Class<?> expected) {
+
+		Class<?> caught = null;
+
+		// 1. Loggearse (o como null)
+		this.authenticate(username);
+
+		try {
+
+			// 2. Mostrar las estadísticas
+			final Double avgServicesRequestedPerRendezVous = this.administratorService.getAvgServicesRequestedPerRendezVous();
+			final Double minServicesRequestedPerRendezVous = this.administratorService.getMinServicesRequestedPerRendezVous();
+			final Double maxServicesRequestedPerRendezVous = this.administratorService.getMaxServicesRequestedPerRendezVous();
+			final Double stdServicesRequestedPerRendezVous = this.administratorService.getStdServicesRequestedPerRendezVous();
+			final List<Integer> numberServicesRequestedPerRendezVous = new ArrayList<Integer>();
+
+			Double computedMin = 0.0;
+			Double computedMax = 0.0;
+			for (final RendezVous r : this.rendezVousService.findAll()) {
+				numberServicesRequestedPerRendezVous.add(r.getServiceRequests().size());
+
+				if (r.getServiceRequests().size() < computedMin)
+					computedMin = r.getServiceRequests().size() * 1.0;
+				else if (r.getServiceRequests().size() > computedMax)
+					computedMax = r.getServiceRequests().size() * 1.0;
+			}
+
+			final Double retrievedAvg = this.roundNumber(avgServicesRequestedPerRendezVous, 3);
+			final Double retrievedStd = this.roundNumber(stdServicesRequestedPerRendezVous, 3);
+			final Double computedAvg = this.roundNumber(this.computeAverage(numberServicesRequestedPerRendezVous), 3);
+			final Double computedStd = this.roundNumber(this.computeStd(numberServicesRequestedPerRendezVous), 3);
+
+			Assert.isTrue(retrievedAvg.equals(computedAvg));
+			Assert.isTrue(retrievedStd.equals(computedStd));
+			Assert.isTrue(minServicesRequestedPerRendezVous.equals(computedMin));
+			Assert.isTrue(maxServicesRequestedPerRendezVous.equals(computedMax));
 
 		} catch (final Throwable oops) {
 			caught = oops.getClass();
