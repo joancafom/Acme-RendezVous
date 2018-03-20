@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.CategoryService;
 import controllers.AbstractController;
 import domain.Category;
 
@@ -108,7 +109,7 @@ public class CategoryAdministratorController extends AbstractController {
 			this.categoryService.delete(category);
 			String parentCategoryId = "";
 			if (category.getParentCategory() != null)
-				parentCategoryId = new Integer(savedCategory.getParentCategory().getId()).toString();
+				parentCategoryId = new Integer(category.getParentCategory().getId()).toString();
 
 			res = new ModelAndView("redirect:list.do?rootCategoryId=" + parentCategoryId);
 

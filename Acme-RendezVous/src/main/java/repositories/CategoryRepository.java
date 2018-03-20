@@ -13,6 +13,6 @@ import domain.Category;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
 	@Query("select c from Category c where c.parentCategory=null")
-	Collection<Category> findFirstLevelCategories();
+	Collection<Category> findRootCategories();
 
 }

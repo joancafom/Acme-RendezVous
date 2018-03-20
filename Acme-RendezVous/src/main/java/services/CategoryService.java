@@ -55,7 +55,7 @@ public class CategoryService {
 		if (category.getParentCategory() != null)
 			sameLevelCategories = category.getParentCategory().getChildCategories();
 		else
-			sameLevelCategories = this.findFirstLevelCategories();
+			sameLevelCategories = this.findRootCategories();
 
 		for (final Category c : sameLevelCategories)
 			Assert.isTrue(!category.getName().equals(c.getName()));
@@ -82,8 +82,8 @@ public class CategoryService {
 	/* Other business methods */
 
 	/* v1.0 - josembell */
-	private Collection<Category> findFirstLevelCategories() {
-		return this.categoryRepository.findFirstLevelCategories();
+	public Collection<Category> findRootCategories() {
+		return this.categoryRepository.findRootCategories();
 	}
 
 }

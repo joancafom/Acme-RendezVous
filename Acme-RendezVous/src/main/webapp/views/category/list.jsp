@@ -24,14 +24,14 @@
 
 </h2>
 
-<display:table name="categoriesCollection" id="categoryItem" requestURI="category/admin/list.do" class="displaytag">
+<display:table name="categoriesCollection" id="categoryItem" requestURI="category/administrator/list.do" class="displaytag">
 	<display:column titleKey="category.name" sortable="true">
-		<a href="category/admin/list.do?rootCategoryId=${categoryItem.id}"><jstl:out value="${categoryItem.name}" /></a>
+		<a href="category/administrator/list.do?rootCategoryId=${categoryItem.id}"><jstl:out value="${categoryItem.name}" /></a>
 	</display:column>
 	<display:column titleKey="category.description" property="categoryItem.description" />
 	<display:column>
-		<a href="category/admin/edit.do?categoryId=${categoryItem.id}"><spring:message code="category.edit"/></a>
+		<a href="category/administrator/edit.do?categoryId=${categoryItem.id}"><spring:message code="category.edit"/></a>
 	</display:column>
 </display:table>
 
-<a href="category/admin/create.do?parentCategoryId=${parentCategoryId}"><spring:message code="category.create"/></a>
+<a href="category/administrator/create.do?parentCategoryId=${parentCategoryId}"><spring:message code="category.create"/></a>

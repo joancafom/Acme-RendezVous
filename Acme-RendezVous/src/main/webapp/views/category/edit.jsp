@@ -7,7 +7,7 @@
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
-<form:form action="category/admin/edit.do" modelAttribute="category">
+<form:form action="category/administrator/edit.do" modelAttribute="category">
 
 	<!-- Hidden Inputs -->
 	<form:hidden path="id"/>
@@ -21,7 +21,7 @@
 	<acme:textbox code="category.name" path="name"/><br>
 	<acme:textarea code="category.description" path="description"/><br>
 	
-	<acme:cancel url="category/admin/list.do" code="category.cancel"/>
+	<acme:cancel url="category/administrator/list.do" code="category.cancel"/>
 	<jstl:if test="${category.id != 0}">
 		<acme:submit name="delete" code="category.delete"/>
 	</jstl:if>
