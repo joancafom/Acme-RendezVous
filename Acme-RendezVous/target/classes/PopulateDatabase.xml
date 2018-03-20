@@ -649,6 +649,11 @@
 				<ref bean="serviceRequest6"/>
 			</list>
 		</property>
+		<property name="categories">
+			<list>
+				<ref bean="category9"/>
+			</list>
+		</property>
 	</bean>
 	
 	<bean id="service2" class="domain.Service">
@@ -660,6 +665,11 @@
 		<property name="serviceRequests">
 			<list>
 				<ref bean="serviceRequest4"/>
+			</list>
+		</property>
+		<property name="categories">
+			<list>
+				<ref bean="category4"/>
 			</list>
 		</property>
 	</bean>
@@ -675,6 +685,11 @@
 				<ref bean="serviceRequest3"/>
 			</list>
 		</property>
+		<property name="categories">
+			<list>
+				<ref bean="category2"/>
+			</list>
+		</property>
 	</bean>
 	
 	<bean id="service4" class="domain.Service">
@@ -684,6 +699,12 @@
 		<property name="manager" ref="manager2"/>
 		<property name="serviceRequests">
 			<list>
+			</list>
+		</property>
+		<property name="categories">
+			<list>
+				<ref bean="category4"/>
+				<ref bean="category11"/>
 			</list>
 		</property>
 	</bean>
@@ -696,6 +717,178 @@
 		<property name="serviceRequests">
 			<list>
 				<ref bean="serviceRequest5"/>
+			</list>
+		</property>
+		<property name="categories">
+			<list>
+				<ref bean="category2"/>
+				<ref bean="category3"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Category -->
+	
+	<bean id="category1" class="domain.Category">
+		<property name="name" value="Leisure"/>
+		<property name="description" value="Everything you need to have fun activities."/>
+		<property name="services">
+			<list>
+			</list>
+		</property>
+		<property name="childCategories">
+			<list>
+				<ref bean="category2"/>
+				<ref bean="category3"/>
+				<ref bean="category4"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="category2" class="domain.Category">
+		<property name="name" value="Music"/>
+		<property name="description" value="Everything you need to produce your own music or to listen to others' music."/>
+		<property name="services">
+			<list>
+				<ref bean="service3"/>
+				<ref bean="service5"/>
+			</list>
+		</property>
+		<property name="parentCategory" ref="category1"/>
+		<property name="childCategories">
+			<list>
+				<ref bean="category5"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="category3" class="domain.Category">
+		<property name="name" value="Movies"/>
+		<property name="description" value="Everything you need to make your movies, either homemade or professional."/>
+		<property name="services">
+			<ref bean="service5"/>
+		</property>
+		<property name="parentCategory" ref="category1"/>
+		<property name="childCategories">
+			<list>
+				<ref bean="category6"/>
+				<ref bean="category7"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="category4" class="domain.Category">
+		<property name="name" value="Outdoor activities"/>
+		<property name="description" value="Everything you need for all types of outdoor activties, from sport ones to parties."/>
+		<property name="services">
+			<list>
+				<ref bean="service2"/>
+				<ref bean="service4"/>
+			</list>
+		</property>
+		<property name="parentCategory" ref="category1"/>
+		<property name="childCategories">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="category5" class="domain.Category">
+		<property name="name" value="Instruments"/>
+		<property name="description" value="All kind of instruments, from pianos to flutes."/>
+		<property name="services">
+			<list>
+			</list>
+		</property>
+		<property name="parentCategory" ref="category2"/>
+		<property name="childCategories">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="category6" class="domain.Category">
+		<property name="name" value="Wardrobe"/>
+		<property name="description" value="Special wardrobe from movies and plays."/>
+		<property name="services">
+			<list>
+			</list>
+		</property>
+		<property name="parentCategory" ref="category3"/>
+		<property name="childCategories">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="category7" class="domain.Category">
+		<property name="name" value="Atrezzo"/>
+		<property name="description" value="Special atrezzo from movies and plays."/>
+		<property name="services">
+			<list>
+			</list>
+		</property>
+		<property name="parentCategory" ref="category3"/>
+		<property name="childCategories">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="category8" class="domain.Category">
+		<property name="name" value="Cooking"/>
+		<property name="description" value="Everything you need related to the cooking world, including patisserie."/>
+		<property name="services">
+			<list>
+			</list>
+		</property>
+		<property name="childCategories">
+			<list>
+				<ref bean="category9"/>
+				<ref bean="category10"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="category9" class="domain.Category">
+		<property name="name" value="Catering"/>
+		<property name="description" value="Special menus and catering services."/>
+		<property name="services">
+			<list>
+				<ref bean="service1"/>
+			</list>
+		</property>
+		<property name="parentCategory" ref="category8"/>
+		<property name="childCategories">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="category10" class="domain.Category">
+		<property name="name" value="Appliance"/>
+		<property name="description" value="All kind of kitchen appliance."/>
+		<property name="services">
+			<list>
+			</list>
+		</property>
+		<property name="parentCategory" ref="category8"/>
+		<property name="childCategories">
+			<list>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="category11" class="domain.Category">
+		<property name="name" value="Vehicles"/>
+		<property name="description" value="All kind of vehicles for rent."/>
+		<property name="services">
+			<list>
+				<ref bean="service4"/>
+			</list>
+		</property>
+		<property name="childCategories">
+			<list>
 			</list>
 		</property>
 	</bean>
