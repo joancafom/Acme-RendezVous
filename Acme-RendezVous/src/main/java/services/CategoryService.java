@@ -48,6 +48,7 @@ public class CategoryService {
 	}
 
 	/* v1.0 - josembell */
+	/* v2.0 - Modified by JA */
 	public Category save(final Category category) {
 		Assert.notNull(category);
 
@@ -56,6 +57,9 @@ public class CategoryService {
 			sameLevelCategories = category.getParentCategory().getChildCategories();
 		else
 			sameLevelCategories = this.findRootCategories();
+
+		if (category.getId() != 0)
+			sameLevelCategories.remove(category);
 
 		for (final Category c : sameLevelCategories)
 			Assert.isTrue(!category.getName().equals(c.getName()));
@@ -67,13 +71,20 @@ public class CategoryService {
 		return saved;
 	}
 
-	/* v1.0 - josembell */
 	public void delete(final Category category) {
+
+		// v1.0 - Implemented by JA
+
 		Assert.notNull(category);
-		/* TODO: Implementar recursión para eliminar los childCategories */
+
+		for (final Category childCat : category.getChildCategories())
+			this.delete(childCat);
+
+		for (final domain.Service s : category.getServices())
+			s.getCategories().remove(category);
+
 		this.categoryRepository.delete(category);
 	}
-
 	/* v1.0 - josembell */
 	public void flush() {
 		this.categoryRepository.flush();

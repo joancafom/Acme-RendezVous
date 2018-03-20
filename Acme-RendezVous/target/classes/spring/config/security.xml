@@ -60,6 +60,7 @@
 		
 		<security:intercept-url pattern="/category/administrator/list.do" access="hasRole('ADMINISTRATOR')"/> 
 		<security:intercept-url pattern="/category/administrator/edit.do" access="hasRole('ADMINISTRATOR')"/> 
+		<security:intercept-url pattern="/category/administrator/create.do" access="hasRole('ADMINISTRATOR')"/> 
 		
 		<security:intercept-url pattern="/comment/user/create.do" access="hasRole('USER')" />
 		<security:intercept-url pattern="/comment/user/edit.do" access="hasRole('USER')" />

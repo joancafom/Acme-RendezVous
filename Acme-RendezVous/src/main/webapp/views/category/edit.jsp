@@ -21,7 +21,17 @@
 	<acme:textbox code="category.name" path="name"/><br>
 	<acme:textarea code="category.description" path="description"/><br>
 	
-	<acme:cancel url="category/administrator/list.do" code="category.cancel"/>
+	<%-- Determine whether we want to go back to a root node or a child --%>
+	<jstl:choose>
+		<jstl:when test="${category.parentCategory ne null}">
+			<jstl:set var="backPage" value="category/administrator/list.do?rootCategoryId=${category.parentCategory.id}" />
+		</jstl:when>
+		<jstl:otherwise>
+			<jstl:set var="backPage" value="category/administrator/list.do" />
+		</jstl:otherwise>
+	</jstl:choose>
+	
+	<acme:cancel url="${backPage}" code="category.cancel"/>
 	<jstl:if test="${category.id != 0}">
 		<acme:submit name="delete" code="category.delete"/>
 	</jstl:if>

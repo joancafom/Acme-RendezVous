@@ -52,6 +52,29 @@ public class CategoryAdministratorController extends AbstractController {
 		return res;
 	}
 
+	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	public ModelAndView create(@RequestParam final Integer parentCategoryId) {
+
+		// v1.0 - Implemented by JA
+
+		ModelAndView res;
+		final Category parentCategory;
+		if (parentCategoryId != null) {
+			parentCategory = this.categoryService.findOne(parentCategoryId);
+			Assert.notNull(parentCategory);
+
+		} else
+			parentCategory = null;
+
+		final Category category = this.categoryService.create(parentCategory);
+		Assert.notNull(category);
+
+		res = this.createEditModelAndView(category);
+
+		return res;
+
+	}
+
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public ModelAndView edit(@RequestParam final int categoryId) {
 
@@ -71,8 +94,6 @@ public class CategoryAdministratorController extends AbstractController {
 	public ModelAndView save(@Valid final Category category, final BindingResult binding) {
 
 		// v1.0 - Implemented by JA
-
-		System.out.println("Category.commit.error");
 
 		ModelAndView res;
 
@@ -97,7 +118,7 @@ public class CategoryAdministratorController extends AbstractController {
 
 	}
 
-	@RequestMapping(value = "/delete", method = RequestMethod.POST, params = "delete")
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "delete")
 	public ModelAndView delete(final Category category, final BindingResult binding) {
 
 		// v1.0 - Implemented by JA
@@ -107,6 +128,7 @@ public class CategoryAdministratorController extends AbstractController {
 		try {
 
 			this.categoryService.delete(category);
+
 			String parentCategoryId = "";
 			if (category.getParentCategory() != null)
 				parentCategoryId = new Integer(category.getParentCategory().getId()).toString();
