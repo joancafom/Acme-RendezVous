@@ -154,3 +154,11 @@
 	<display:column titleKey="manager.email" property="email"/>
 
 </display:table>
+
+<!-- RendezVous 2.0 - Level B -->
+<p><strong><spring:message code="avg.categoriesPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgCategoriesPerRendezVous}"/></p>
+<p><strong><spring:message code="avg.ratioServicesPerCategory"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgRatioServicesPerCategory}"/></p>
+<p><strong><spring:message code="avg.servicesRequestedPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${avgServicesRequestedPerRendezVous}"/></p>
+<p><strong><spring:message code="min.servicesRequestedPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${minServicesRequestedPerRendezVous}"/></p>
+<p><strong><spring:message code="max.servicesRequestedPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${maxServicesRequestedPerRendezVous}"/></p>
+<p><strong><spring:message code="std.servicesRequestedPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdServicesRequestedPerRendezVous}"/></p>

@@ -57,6 +57,15 @@ public class AdministratorController extends AbstractController {
 		res.addObject("managersMoreServicesThanAverage", this.administratorService.managersMoreServicesThanAverage());
 		res.addObject("managersWithMoreServicesCancelled", this.administratorService.managersWithMoreServicesCancelled());
 
+		// RendezVous 2.0 - Level B
+		// v1.0 - Implemented by Alicia
+		res.addObject("avgCategoriesPerRendezVous", this.administratorService.getAvgCategoriesPerRendezVous());
+		res.addObject("avgRatioServicesPerCategory", this.administratorService.getAvgRatioServicesPerCategory());
+		res.addObject("avgServicesRequestedPerRendezVous", this.administratorService.getAvgServicesRequestedPerRendezVous());
+		res.addObject("minServicesRequestedPerRendezVous", this.administratorService.getMinServicesRequestedPerRendezVous());
+		res.addObject("maxServicesRequestedPerRendezVous", this.administratorService.getMaxServicesRequestedPerRendezVous());
+		res.addObject("stdServicesRequestedPerRendezVous", this.administratorService.getStdServicesRequestedPerRendezVous());
+
 		return res;
 	}
 }

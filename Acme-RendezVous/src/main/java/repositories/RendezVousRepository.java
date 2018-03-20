@@ -24,8 +24,4 @@ public interface RendezVousRepository extends JpaRepository<RendezVous, Integer>
 	@Query("select r from RendezVous r where r.creator.id = ?1")
 	Collection<RendezVous> findAllByUserId(int userId);
 
-	/* TODO */
-	@Query("")
-	Collection<RendezVous> findByCategory(int categoryId);
-
 }
