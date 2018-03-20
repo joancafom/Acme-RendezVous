@@ -103,4 +103,7 @@ public class Service extends DomainEntity {
 		this.serviceRequests = serviceRequests;
 	}
 
+	public void setCategories(final Collection<Category> categories) {
+		this.categories = categories;
+	}
 }
