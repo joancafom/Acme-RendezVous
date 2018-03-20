@@ -16,7 +16,16 @@
 			<jstl:set var="parentCategoryId" value="" />
 		</jstl:when>
 		<jstl:otherwise>
-			<spring:message code="category.childCategories" />: <jstl:out value="${rootCategory.name}" />
+			<spring:message code="category.childCategories" />: 
+			<jstl:choose>
+				<jstl:when test="${rootCategory.parentCategory ne null}">
+					<a href="category/administrator/list.do?rootCategoryId=<jstl:out value="${rootCategory.parentCategory.id}" />"><jstl:out value="${rootCategory.parentCategory.name}" /></a>/<jstl:out value="${rootCategory.name}" />
+				</jstl:when>
+				<jstl:otherwise>
+					<a href="category/administrator/list.do">...</a>/<jstl:out value="${rootCategory.name}" />
+				</jstl:otherwise>
+			</jstl:choose>
+	
 			<jstl:set var="categoriesCollection" value="${rootCategory.childCategories}" />
 			<jstl:set var="parentCategoryId" value="${rootCategory.id}" />
 		</jstl:otherwise>

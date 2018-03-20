@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import repositories.CategoryRepository;
+import security.LoginService;
+import domain.Administrator;
 import domain.Category;
 
 @Service
@@ -19,10 +21,12 @@ public class CategoryService {
 
 	/* Repository */
 	@Autowired
-	private CategoryRepository	categoryRepository;
-
+	private CategoryRepository		categoryRepository;
 
 	/* Services */
+	@Autowired
+	private AdministratorService	administratorService;
+
 
 	/* CRUD */
 
@@ -48,9 +52,12 @@ public class CategoryService {
 	}
 
 	/* v1.0 - josembell */
-	/* v2.0 - Modified by JA */
+	/* v3.0 - Modified by JA */
 	public Category save(final Category category) {
 		Assert.notNull(category);
+
+		final Administrator admin = this.administratorService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(admin);
 
 		Collection<Category> sameLevelCategories = new HashSet<Category>();
 		if (category.getParentCategory() != null)
@@ -61,6 +68,7 @@ public class CategoryService {
 		if (category.getId() != 0)
 			sameLevelCategories.remove(category);
 
+		Assert.notNull(category.getName());
 		for (final Category c : sameLevelCategories)
 			Assert.isTrue(!category.getName().equals(c.getName()));
 
@@ -70,7 +78,6 @@ public class CategoryService {
 
 		return saved;
 	}
-
 	public void delete(final Category category) {
 
 		// v1.0 - Implemented by JA
