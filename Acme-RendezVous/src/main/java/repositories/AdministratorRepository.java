@@ -83,11 +83,10 @@ public interface AdministratorRepository extends JpaRepository<Administrator, In
 	@Query(value = "select s.manager from Service s where s.isCanceled = true group by s.manager order by count(s) desc")
 	Page<Manager> managersWithMoreServicesCancelled(Pageable pageable);
 
-	// RendezVous 2.0 - Level B -----------------------------------------------------------------
-	
+	// Acme-RendezVous 2.0 - Level B ------------------------------------------------------------
 	// v1.0 - Implemented by Alicia
-	@Query("select sum(sr.service.categories.size) from ServiceRequest sr group by sr.rendezVous")
-	Collection<Long> categoriesPerRendezVous();
+	@Query("select sum(sr.service.categories.size) * 1.0 / (select count(r) * 1.0 from RendezVous r) from ServiceRequest sr")
+	Double avgCategoriesPerRendezVous();
 
 	// v1.0 - Implemented by Alicia
 	@Query("select avg(c.services.size * 1.0 / (select count(s) from Service s)) from Category c")

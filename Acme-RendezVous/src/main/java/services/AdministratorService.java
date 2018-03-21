@@ -244,27 +244,14 @@ public class AdministratorService {
 		final Page<Manager> managerPage = this.administratorRepository.managersWithMoreServicesCancelled(new PageRequest(0, 5));
 		return managerPage.getContent();
 	}
-	
-	// RendezVous 2.0 - Level B ----------------------------------------------------------------
 
+	// Acme-RendezVous 2.0 - Level B ------------------------------------------------------------------
 	// v1.0 - Implemented by Alicia
 	public Double getAvgCategoriesPerRendezVous() {
 		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
 		Assert.notNull(admin);
 
-		final Collection<Long> categoriesPerRendezVous = this.administratorRepository.categoriesPerRendezVous();
-
-		Long sum = 0L;
-		for (final Long a : categoriesPerRendezVous)
-			sum += a;
-
-		Double res = 0.0;
-		final Double count = new Double(this.rendezVousService.findAll().size());
-
-		if (count != 0.0)
-			res = sum / count;
-
-		return res;
+		return this.administratorRepository.avgCategoriesPerRendezVous();
 	}
 
 	// v1.0 - Implemented by Alicia
