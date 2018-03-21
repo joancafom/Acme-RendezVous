@@ -1360,6 +1360,9 @@
 		</property>
 	</bean>
 	
-	
+	<bean id="systemConfiguration" class="domain.SystemConfiguration">
+		<property name="businessName" value="Adventure meetups"/>
+		<property name="bannerURL" value="https://tinyurl.com/adventure-meetup"/>
+	</bean>
 	
 </beans>
