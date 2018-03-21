@@ -18,6 +18,7 @@ import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
 import domain.Category;
+import domain.Service;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -32,6 +33,9 @@ public class CategoryServiceTest extends AbstractTest {
 	private CategoryService	categoryService;
 
 	//Helping Services
+
+	@Autowired
+	private ServiceService	serviceService;
 
 	@PersistenceContext
 	private EntityManager	entityManager;
@@ -200,5 +204,141 @@ public class CategoryServiceTest extends AbstractTest {
 		this.unauthenticate();
 
 		this.checkExceptions(expected, caught);
+	}
+
+	// -------------------------------------------------------------------------------
+	// [UC-2-009] Listar Category y actualizar Category.
+	// 
+	// Requisitos relacionados:
+	//   · REQ 9: Services belong to categories, which may be organised into arbitrary
+	//            hierarchies. A category is characterised by a name and a
+	//            description.
+	//   · REQ 11.1: An actor who is authenticated as an administrator must be able to
+	//               manage the categories of services, which includes listing,
+	//               creating, updating, deleting, and reorganising them in the
+	//               category hierarchies.
+	// -------------------------------------------------------------------------------
+	// v1.0 - Implemented by Alicia
+	// -------------------------------------------------------------------------------
+
+	@Test
+	public void driverListAndUpdateCategory() {
+
+		// testingData[i][0] -> username del actor loggeado.
+		// testingData[i][1] -> categoría a editar.
+		// testingData[i][2] -> nuevo nombre de la categoría.
+		// testingData[i][3] -> nueva descripción de la categoría.
+		// testingData[i][4] -> servicio a añadir a la categoría.
+		// testingData[i][5] -> servicio a eliminar de la categoría.
+		// testingData[i][6] -> excepción que debe saltar.
+
+		final Object testingData[][] = {
+			{
+				// 1 - (+) Un administrador edita correctamente una categoría.
+				"admin", "category2", "myNewName", "myNewDescription", "service1", "service3", null
+			}, {
+				// 2 - (-) Un usuario no autentificado edita una categoría.
+				null, "category2", "myNewName", "myNewDescription", "service1", "service3", IllegalArgumentException.class
+			}, {
+				// 3 - (-) Un usuario edita una categoría.
+				"user1", "category2", "myNewName", "myNewDescription", "service1", "service3", IllegalArgumentException.class
+			}, {
+				// 4 - (-) Un administrador edita una categoría null.
+				"admin", null, "myNewName", "myNewDescription", "service1", "service3", IllegalArgumentException.class
+			}, {
+				// 5 - (-) Un administrador actualiza el nombre de una categoría a null.
+				"admin", "category2", null, "myNewDescription", "service1", "service3", IllegalArgumentException.class
+			}, {
+				// 6 - (-) Un administrador actualiza el nombre de una categoría a blanco.
+				"admin", "category2", " ", "myNewDescription", "service1", "service3", ConstraintViolationException.class
+			}, {
+				// 7 - (-) Un administrador actualiza la descripción de una categoría a null.
+				"admin", "category2", "myNewName", null, "service1", "service3", ConstraintViolationException.class
+			}, {
+				// 8 - (-) Un administrador actualiza la descripción de una categoría a blanco.
+				"admin", "category2", "myNewName", "", "service1", "service3", ConstraintViolationException.class
+			}, {
+				// 9 - (-) Un administrador añade a una categoría un servicio cancelado.
+				"admin", "category2", "myNewName", "myNewDescription", "service4", "service3", IllegalArgumentException.class
+			}, {
+				// 10 - (-) Un administrador actualiza el nombre de una categoría a un nombre ya existente entre las categorías con esa parentCategory.
+				"admin", "category2", "Movies", "myNewDescription", "service1", "service3", IllegalArgumentException.class
+			}, {
+				// 11 - (-) Un administrador actualiza el nombre de una categoría añadiendo código malicioso.
+				"admin", "category2", "<script>alert('Hacked!');</script>", "myNewDescription", "service1", "service3", ConstraintViolationException.class
+			}, {
+				// 12 - (-) Un administrador actualiza la descripción de una categoría añadiendo código malicioso.
+				"admin", "category2", "myNewName", "<script>alert('Hacked!');</script>", "service1", "service3", ConstraintViolationException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+
+			Category categoryToUpdate = null;
+			Service serviceToAdd = null;
+			Service serviceToRemove = null;
+
+			if (testingData[i][1] != null)
+				categoryToUpdate = this.categoryService.findOne(super.getEntityId((String) testingData[i][1]));
+
+			final Category categoryCopy = categoryToUpdate;
+
+			if (testingData[i][4] != null)
+				serviceToAdd = this.serviceService.findOne(super.getEntityId((String) testingData[i][4]));
+
+			if (testingData[i][5] != null)
+				serviceToRemove = this.serviceService.findOne(super.getEntityId((String) testingData[i][5]));
+
+			this.startTransaction();
+
+			this.templateListAndUpdateCategory((String) testingData[i][0], categoryCopy, (String) testingData[i][2], (String) testingData[i][3], serviceToAdd, serviceToRemove, (Class<?>) testingData[i][6]);
+
+			this.rollbackTransaction();
+			this.entityManager.clear();
+		}
+
+	}
+	protected void templateListAndUpdateCategory(final String username, final Category categoryToUpdate, final String newName, final String newDescription, final Service serviceToAdd, final Service serviceToRemove, final Class<?> expected) {
+
+		Class<?> caught = null;
+
+		// 1. Loggearse como usuario (o como null)
+		super.authenticate(username);
+
+		try {
+
+			// 2. Listar las categorías disponibles
+			List<Category> categoriesBefore = null;
+
+			if (username != null && username.contains("admin"))
+				categoriesBefore = new ArrayList<Category>(this.categoryService.findAll());
+
+			// 3. Editar los campos de la categoría
+
+			if (categoryToUpdate != null) {
+				categoryToUpdate.setName(newName);
+				categoryToUpdate.setDescription(newDescription);
+
+				categoryToUpdate.getServices().add(serviceToAdd);
+				serviceToAdd.getCategories().add(categoryToUpdate);
+
+				categoryToUpdate.getServices().remove(serviceToRemove);
+				serviceToRemove.getCategories().remove(categoryToUpdate);
+			}
+
+			this.categoryService.save(categoryToUpdate);
+
+			// Flush
+			this.categoryService.flush();
+
+			Assert.isTrue(categoriesBefore.size() == this.categoryService.findAll().size());
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		super.unauthenticate();
+		super.checkExceptions(expected, caught);
+
 	}
 }

@@ -59,6 +59,8 @@ public class CategoryService {
 		final Administrator admin = this.administratorService.findByUserAccount(LoginService.getPrincipal());
 		Assert.notNull(admin);
 
+		final Category oldCategory = this.categoryRepository.findOne(category.getId());
+
 		Collection<Category> sameLevelCategories = new HashSet<Category>();
 		if (category.getParentCategory() != null)
 			sameLevelCategories = category.getParentCategory().getChildCategories();
@@ -71,6 +73,15 @@ public class CategoryService {
 		Assert.notNull(category.getName());
 		for (final Category c : sameLevelCategories)
 			Assert.isTrue(!category.getName().equals(c.getName()));
+
+		if (category.getId() != 0) {
+			final Collection<domain.Service> oldServices = oldCategory.getServices();
+			final Collection<domain.Service> newServices = category.getServices();
+
+			for (final domain.Service s : newServices)
+				if (!oldServices.contains(s))
+					Assert.isTrue(!s.getIsCanceled());
+		}
 
 		final Category saved = this.categoryRepository.save(category);
 		if (category.getId() == 0 && category.getParentCategory() != null)
