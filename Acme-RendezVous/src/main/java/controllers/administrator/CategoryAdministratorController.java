@@ -70,6 +70,7 @@ public class CategoryAdministratorController extends AbstractController {
 		Assert.notNull(category);
 
 		res = this.createEditModelAndView(category);
+		res.addObject("toEdit", true);
 
 		return res;
 
@@ -85,9 +86,24 @@ public class CategoryAdministratorController extends AbstractController {
 		Assert.notNull(category);
 
 		res = this.createEditModelAndView(category);
+		res.addObject("toEdit", true);
 
 		return res;
 
+	}
+
+	/* v1.0 - josembell */
+	@RequestMapping(value = "/reorganise", method = RequestMethod.GET)
+	public ModelAndView reorganise(@RequestParam final int categoryId) {
+		ModelAndView result;
+		final Category category = this.categoryService.findOne(categoryId);
+		Assert.notNull(category);
+
+		result = this.createEditModelAndView(category);
+		result.addObject("toReorganise", true);
+		result.addObject("categories", this.categoryService.findAll());
+
+		return result;
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
@@ -112,6 +128,7 @@ public class CategoryAdministratorController extends AbstractController {
 
 			} catch (final Throwable oops) {
 				res = this.createEditModelAndView(category, "category.commit.error");
+				res.addObject("toEdit", true);
 			}
 
 		return res;
@@ -137,7 +154,39 @@ public class CategoryAdministratorController extends AbstractController {
 
 		} catch (final Throwable oops) {
 			res = this.createEditModelAndView(category, "category.commit.error");
+			res.addObject("toEdit", true);
 		}
+
+		return res;
+
+	}
+
+	/* v1.0 - josembell */
+	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "reorganise")
+	public ModelAndView reorganise(@Valid final Category category, final BindingResult binding) {
+
+		// v1.0 - Implemented by JA
+
+		ModelAndView res;
+
+		if (binding.hasErrors())
+			res = this.createEditModelAndView(category);
+		else
+			try {
+
+				final Category savedCategory = this.categoryService.reorganise(category);
+				String parentCategoryId = "";
+
+				if (savedCategory.getParentCategory() != null)
+					parentCategoryId = new Integer(savedCategory.getParentCategory().getId()).toString();
+
+				res = new ModelAndView("redirect:list.do?rootCategoryId=" + parentCategoryId);
+
+			} catch (final Throwable oops) {
+				res = this.createEditModelAndView(category, "category.commit.error");
+				res.addObject("toReorganise", true);
+				res.addObject("categories", this.categoryService.findAll());
+			}
 
 		return res;
 

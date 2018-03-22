@@ -41,6 +41,9 @@
 	<display:column>
 		<a href="category/administrator/edit.do?categoryId=${categoryItem.id}"><spring:message code="category.edit"/></a>
 	</display:column>
+	<display:column>
+		<a href="category/administrator/reorganise.do?categoryId=${categoryItem.id}"><spring:message code="category.reorganise"/></a>
+	</display:column>
 </display:table>
 
 <a href="category/administrator/create.do?parentCategoryId=${parentCategoryId}"><spring:message code="category.create"/></a>

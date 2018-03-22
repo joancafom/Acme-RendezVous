@@ -115,4 +115,16 @@ public class CategoryService {
 		return this.categoryRepository.findRootCategories();
 	}
 
+	/* v1.1 - josembell */
+	public Category reorganise(final Category category) {
+		Assert.notNull(category);
+		final Category oldCategory = this.findOne(category.getId());
+		if (oldCategory.getParentCategory() != null)
+			oldCategory.getParentCategory().getChildCategories().remove(category);
+
+		this.save(category);
+
+		return category;
+	}
+
 }
