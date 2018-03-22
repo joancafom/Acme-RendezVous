@@ -1363,6 +1363,7 @@
 	<bean id="systemConfiguration" class="domain.SystemConfiguration">
 		<property name="businessName" value="Adventure meetups"/>
 		<property name="bannerURL" value="https://tinyurl.com/adventure-meetup"/>
+		<property name="welcomeMessages" value="es=Tu sitio para organizar quedadas de aventura|en=Your place to organise your adventure meetups!"/>
 	</bean>
 	
 </beans>

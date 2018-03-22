@@ -18,6 +18,7 @@ public class SystemConfiguration extends DomainEntity {
 
 	private String	businessName;
 	private String	bannerURL;
+	private String	welcomeMessages;
 
 
 	@NotBlank
@@ -28,8 +29,15 @@ public class SystemConfiguration extends DomainEntity {
 
 	@NotBlank
 	@URL
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getBannerURL() {
 		return this.bannerURL;
+	}
+
+	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
+	public String getWelcomeMessages() {
+		return this.welcomeMessages;
 	}
 
 	public void setBusinessName(final String businessName) {
@@ -38,6 +46,10 @@ public class SystemConfiguration extends DomainEntity {
 
 	public void setBannerURL(final String bannerURL) {
 		this.bannerURL = bannerURL;
+	}
+
+	public void setWelcomeMessages(final String welcomeMessages) {
+		this.welcomeMessages = welcomeMessages;
 	}
 
 }

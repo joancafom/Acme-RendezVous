@@ -1,6 +1,8 @@
 
 package controllers.administrator;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import services.SystemConfigurationService;
 import controllers.AbstractController;
 import domain.SystemConfiguration;
+import forms.SystemConfigurationForm;
 
 @Controller
 @RequestMapping("/systemConfiguration/administrator")
@@ -26,13 +29,16 @@ public class SystemConfigurationAdministratorController extends AbstractControll
 	@RequestMapping(value = "/display", method = RequestMethod.GET)
 	public ModelAndView display() {
 
-		// v1.0 - Implemented by JA
+		// v2.0 - Implemented by JA
 
 		ModelAndView res;
 
-		//Abstract Controller implements by itself the properties of SystemConfiguration, so no need to retrieve
+		//Abstract Controller implements by itself some properties like businessName and banner, so don't need to add them
+
+		//Also, we have a method to get the current WelcomeMessages (as we don't have more than one active SystemConfigurations)
 
 		res = new ModelAndView("systemConfiguration/display");
+		res.addObject("welcomeMessages", this.systemConfigurationService.getWelcomeMessagesMap());
 
 		return res;
 	}
@@ -40,64 +46,82 @@ public class SystemConfigurationAdministratorController extends AbstractControll
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public ModelAndView edit() {
 
-		// v1.0 - Implemented by JA
+		// v2.0 - Implemented by JA
 
 		final ModelAndView res;
 
 		//We can only edit the current one
 
 		SystemConfiguration currentSC;
+		final SystemConfigurationForm sCForm = new SystemConfigurationForm();
 
-		if (this.systemConfigurationService.getCurrentSystemConfiguration() != null)
+		if (this.systemConfigurationService.getCurrentSystemConfiguration() != null) {
+
+			//We retrieve the current sysConfig
+
 			currentSC = this.systemConfigurationService.getCurrentSystemConfiguration();
-		else
-			currentSC = this.systemConfigurationService.create();
+			final Map<String, String> welcomeMessages = this.systemConfigurationService.getWelcomeMessagesMap();
 
-		res = this.createEditModelAndView(currentSC);
+			sCForm.setWelcomeMessageEN(welcomeMessages.containsKey("en") ? welcomeMessages.get("en") : "");
+			sCForm.setWelcomeMessageES(welcomeMessages.containsKey("es") ? welcomeMessages.get("es") : "");
+
+		} else {
+
+			//If for some reason there is no current sysConfig, we create a new one
+			currentSC = this.systemConfigurationService.create();
+			sCForm.setWelcomeMessageEN("");
+			sCForm.setWelcomeMessageES("");
+		}
+
+		sCForm.setBannerURL(currentSC.getBannerURL());
+		sCForm.setBusinessName(currentSC.getBusinessName());
+
+		res = this.createEditModelAndView(sCForm);
 
 		return res;
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@Valid final SystemConfiguration sysConfig, final BindingResult binding) {
+	public ModelAndView save(@Valid final SystemConfigurationForm sysConfigForm, final BindingResult binding) {
 
-		// v1.0 - Implemented by JA
+		// v2.0 - Implemented by JA
 
 		ModelAndView res;
 
 		if (binding.hasErrors())
-			res = this.createEditModelAndView(sysConfig);
+			res = this.createEditModelAndView(sysConfigForm);
 		else
 			try {
-				this.systemConfigurationService.save(sysConfig);
+				final SystemConfiguration sC = this.systemConfigurationService.reconstruct(sysConfigForm);
+				this.systemConfigurationService.save(sC);
 				res = new ModelAndView("redirect:/systemConfiguration/administrator/display.do");
 			} catch (final Throwable oops) {
-				res = this.createEditModelAndView(sysConfig, "systemConfiguration.commit.error");
+				res = this.createEditModelAndView(sysConfigForm, "systemConfiguration.commit.error");
 			}
 
 		return res;
 	}
 
 	//Ancillary Methods
-	protected ModelAndView createEditModelAndView(final SystemConfiguration sysConfig) {
+	protected ModelAndView createEditModelAndView(final SystemConfigurationForm sysConfigForm) {
 
-		// v1.0 - Implemented by JA
+		// v2.0 - Implemented by JA
 
 		ModelAndView res;
 
-		res = this.createEditModelAndView(sysConfig, null);
+		res = this.createEditModelAndView(sysConfigForm, null);
 		return res;
 	}
 
-	protected ModelAndView createEditModelAndView(final SystemConfiguration sysConfig, final String message) {
+	protected ModelAndView createEditModelAndView(final SystemConfigurationForm sysConfigForm, final String message) {
 
-		// v1.0 - Implemented by JA
+		// v2.0 - Implemented by JA
 
 		final ModelAndView res;
 
 		res = new ModelAndView("systemConfiguration/edit");
 
-		res.addObject("systemConfiguration", sysConfig);
+		res.addObject("systemConfigurationForm", sysConfigForm);
 		res.addObject("message", message);
 
 		return res;

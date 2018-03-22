@@ -7,15 +7,15 @@
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
-<form:form action="systemConfiguration/administrator/edit.do" modelAttribute="systemConfiguration">
+<form:form action="systemConfiguration/administrator/edit.do" modelAttribute="systemConfigurationForm">
 
-	<!-- Hidden Inputs -->
-	<form:hidden path="id"/>
-	<form:hidden path="version"/>
 	<!-- Inputs -->
 	
 	<acme:textbox code="systemConfiguration.businessName" path="businessName"/><br>
 	<acme:textbox code="systemConfiguration.bannerURL" path="bannerURL"/><br>
+	
+	<spring:message code="systemConfiguration.welcomeMessage.en" /> <acme:textarea code="systemConfiguration.welcomeMessage" path="welcomeMessageEN"/><br>
+	<spring:message code="systemConfiguration.welcomeMessage.es" /> <acme:textarea code="systemConfiguration.welcomeMessage" path="welcomeMessageES"/><br>
 	
 	<acme:submit name="save" code="systemConfiguration.save"/>
 	<acme:cancel url="systemConfiguration/administrator/display.do" code="systemConfiguration.cancel"/>

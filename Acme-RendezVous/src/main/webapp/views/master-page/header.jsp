@@ -39,6 +39,7 @@ window.onload = function(){
 			<li><a href="administrator/display-dashboard.do"><spring:message code="master.page.administrator.dashboard"/></a></li>
 			<li><a href="rendezVous/administrator/list.do"><spring:message code="master.page.administrator.rendezVouses"/></a></li>
 			<li><a href="service/administrator/list.do"><spring:message code="master.page.actor.service" /></a></li>
+			<li><a href="systemConfiguration/administrator/display.do"><spring:message code="master.page.administrator.systemConfiguration" /></a></li>
 		</security:authorize>
 		
 		<security:authorize access="hasRole('USER')">

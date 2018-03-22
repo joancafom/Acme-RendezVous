@@ -16,7 +16,27 @@
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
-<p><spring:message code="welcome.message" /></p>
+<script type="text/javascript" src="scripts/welcome.js"></script>
+
+<script type="text/javascript">
+	
+$(document).ready(function() {
+
+	<jstl:choose>
+		<jstl:when test="${cookie.language.value eq null}">
+		$('#welcomeMessage').html(getMessage('<jstl:out value="${welcomeMessages}" />', 'en'));
+		</jstl:when>
+		<jstl:otherwise>
+		$('#welcomeMessage').html(getMessage('<jstl:out value="${welcomeMessages}" />', cookieCurrentValue('language')));
+		</jstl:otherwise>
+	</jstl:choose>
+	
+});
+	
+</script>
+
+<p id="welcomeMessage">
+</p>
 
 <security:authorize access="isAnonymous()">
 	<p><strong><spring:message code="welcome.registerQuestion"/><a href="user/register.do"><spring:message code="welcome.here"/></a></strong></p>

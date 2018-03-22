@@ -16,4 +16,10 @@
 	<spring:message code="systemConfiguration.bannerURL"/>: <a href="<jstl:out value="${logo}" />"><jstl:out value="${logo}" /></a>
 </p>
 
+<p>
+	<jstl:forEach var="entry" items="${welcomeMessages}">
+		<spring:message code="systemConfiguration.welcomeMessage"/> (<jstl:out value="${entry.key}" />): <jstl:out value="${entry.value}" /> <br />
+	</jstl:forEach>
+</p>
+
 <a href="systemConfiguration/administrator/edit.do"><spring:message code="systemConfiguration.editCurrent"/></a>

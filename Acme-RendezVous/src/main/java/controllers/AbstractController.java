@@ -14,7 +14,6 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,25 +32,32 @@ public class AbstractController {
 	@ModelAttribute("logo")
 	public String getLogo(final Model model) {
 
-		//v1.0 - Implemented by JA
+		//v2.0 - Implemented by JA
+
+		String bannerURL = "";
 
 		final SystemConfiguration currentSC = this.sysConfigService.getCurrentSystemConfiguration();
-		Assert.notNull(currentSC);
 
-		return currentSC.getBannerURL();
+		if (currentSC != null)
+			bannerURL = currentSC.getBannerURL();
+
+		return bannerURL;
 	}
 
 	@ModelAttribute("businessName")
 	public String getBusinessName(final Model model) {
 
-		//v1.0 - Implemented by JA
+		//v2.0 - Implemented by JA
+
+		String businessName = "";
 
 		final SystemConfiguration currentSC = this.sysConfigService.getCurrentSystemConfiguration();
-		Assert.notNull(currentSC);
 
-		return currentSC.getBusinessName();
+		if (currentSC != null)
+			businessName = currentSC.getBusinessName();
+
+		return businessName;
 	}
-
 	// Panic handler ----------------------------------------------------------
 
 	@ExceptionHandler(Throwable.class)

@@ -2,6 +2,8 @@
 package services;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import repositories.SystemConfigurationRepository;
 import security.LoginService;
 import domain.Administrator;
 import domain.SystemConfiguration;
+import forms.SystemConfigurationForm;
 
 @Service
 @Transactional
@@ -56,7 +59,6 @@ public class SystemConfigurationService {
 		Assert.notNull(sC);
 
 		final Administrator admin = this.adminService.findByUserAccount(LoginService.getPrincipal());
-
 		Assert.notNull(admin);
 
 		final Collection<SystemConfiguration> allSCs = this.findAll();
@@ -85,7 +87,8 @@ public class SystemConfigurationService {
 
 		//v1.0 - Implemented by JA
 
-		//Theoretically there is only one SystemConfiguration in our system.
+		//Theoretically there is only one SystemConfiguration in our system, so a findAll operation
+		//is not an overhead
 
 		final Collection<SystemConfiguration> allSysConfig = this.findAll();
 		SystemConfiguration res;
@@ -93,5 +96,44 @@ public class SystemConfigurationService {
 		res = allSysConfig == null ? null : allSysConfig.iterator().next();
 
 		return res;
+	}
+
+	public Map<String, String> getWelcomeMessagesMap() {
+
+		//v1.0 - Implemented by JA
+
+		//Returns a Map with keys the languages and values the message for that language
+
+		final Map<String, String> res = new HashMap<String, String>();
+		final SystemConfiguration currentSC = this.getCurrentSystemConfiguration();
+
+		//welcomeMessage is always of the form --> lang_iso1=message_for_lang1|lang_iso2=message_for_lang2...
+
+		final String[] welcomeMessagesSplited = currentSC.getWelcomeMessages().split("\\|");
+
+		if (currentSC != null)
+
+			for (final String m : welcomeMessagesSplited) {
+
+				final String[] langAndVal = m.split("=");
+				Assert.isTrue(langAndVal.length == 2);
+
+				res.put(langAndVal[0].trim(), langAndVal[1]);
+			}
+
+		return res;
+	}
+
+	public SystemConfiguration reconstruct(final SystemConfigurationForm systemConfigurationForm) {
+
+		//v1.0 - Implemented by JA
+
+		final SystemConfiguration sC = this.create();
+
+		sC.setBannerURL(systemConfigurationForm.getBannerURL());
+		sC.setBusinessName(systemConfigurationForm.getBusinessName());
+		sC.setWelcomeMessages("en=" + systemConfigurationForm.getWelcomeMessageEN() + "|es=" + systemConfigurationForm.getWelcomeMessageES());
+
+		return sC;
 	}
 }
