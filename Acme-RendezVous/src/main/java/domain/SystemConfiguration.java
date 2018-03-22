@@ -23,13 +23,14 @@ public class SystemConfiguration extends DomainEntity {
 		return this.businessName;
 	}
 
+	@NotBlank
 	@URL
-	public void setBusinessName(final String businessName) {
-		this.businessName = businessName;
-	}
-
 	public String getBannerURL() {
 		return this.bannerURL;
+	}
+
+	public void setBusinessName(final String businessName) {
+		this.businessName = businessName;
 	}
 
 	public void setBannerURL(final String bannerURL) {

@@ -65,7 +65,7 @@ public class SystemConfigurationService {
 		if (allSCs != null)
 			for (final SystemConfiguration sysConfig : allSCs)
 				if (!sysConfig.equals(sC))
-					;
+					this.delete(sysConfig);
 
 		return this.systemConfigurationRepository.save(sC);
 	}

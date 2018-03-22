@@ -33,6 +33,7 @@
 		<value>/views/rendezVous/messages</value>
 		<value>/views/service/messages</value>
 		<value>/views/serviceRequest/messages</value>
+		<value>/views/systemConfiguration/messages</value>
 		<value>/views/user/messages</value>
 	</util:list>
 
