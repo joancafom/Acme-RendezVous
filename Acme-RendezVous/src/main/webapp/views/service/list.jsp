@@ -8,7 +8,7 @@
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags" %>
 
-<display:table name="services" id="service" requestURI="rendezVous/${actor}list.do" style="text-align:center;" class="displaytag">
+<display:table name="services" id="service" requestURI="service/${actor}list.do" style="text-align:center;" class="displaytag" pagesize="5">
 	
 	<display:column titleKey="service.state">
 		<jstl:if test="${service.isCanceled}">
