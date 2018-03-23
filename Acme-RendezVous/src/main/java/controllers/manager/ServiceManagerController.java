@@ -109,14 +109,16 @@ public class ServiceManagerController {
 
 		service = this.serviceService.reconstruct(service, binding);
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(service);
-		else
+			result.addObject("toEdit", true);
+		} else
 			try {
 				this.serviceService.save(service);
 				result = new ModelAndView("redirect:list.do");
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(service, "service.commit.error");
+				result.addObject("toEdit", true);
 			}
 
 		return result;
@@ -124,8 +126,10 @@ public class ServiceManagerController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.POST, params = "delete")
-	public ModelAndView delete(final domain.Service service, final BindingResult binding) {
+	public ModelAndView delete(final domain.Service prunedService, final BindingResult binding) {
 		ModelAndView result;
+
+		final domain.Service service = this.serviceService.reconstruct(prunedService, binding);
 
 		try {
 			this.serviceService.delete(service);
