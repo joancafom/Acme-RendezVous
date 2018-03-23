@@ -26,7 +26,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Access(AccessType.PROPERTY)
-@Table(indexes = @Index(columnList = "isFinal"))
+@Table(indexes = @Index(columnList = "isFinal, isForAdults"))
 public class RendezVous extends DomainEntity {
 
 	private String			name;
