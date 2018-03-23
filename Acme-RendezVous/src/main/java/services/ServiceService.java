@@ -63,9 +63,11 @@ public class ServiceService {
 		Assert.notNull(manager);
 
 		final Collection<ServiceRequest> serviceRequests = new HashSet<ServiceRequest>();
+		final Collection<Category> categories = new HashSet<Category>();
 
 		res.setManager(manager);
 		res.setServiceRequests(serviceRequests);
+		res.setCategories(categories);
 		res.setIsCanceled(false);
 
 		return res;
@@ -231,6 +233,9 @@ public class ServiceService {
 		return copy;
 	}
 	public void addCategory(final domain.Service service, final Category category) {
+		final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(manager);
+		Assert.isTrue(manager.getServices().contains(service));
 		Assert.notNull(service);
 		Assert.notNull(category);
 		Assert.isTrue(!service.getCategories().contains(category));
@@ -239,8 +244,12 @@ public class ServiceService {
 
 	}
 	public void removeCategory(final domain.Service service, final Category category) {
+		final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(manager);
+		Assert.isTrue(manager.getServices().contains(service));
 		Assert.notNull(service);
 		Assert.notNull(category);
+		Assert.isTrue(service.getCategories().contains(category));
 		service.getCategories().remove(category);
 		this.serviceRepository.save(service);
 

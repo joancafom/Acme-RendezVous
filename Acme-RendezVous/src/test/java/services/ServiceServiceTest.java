@@ -20,6 +20,7 @@ import org.springframework.util.Assert;
 
 import security.LoginService;
 import utilities.AbstractTest;
+import domain.Category;
 import domain.Manager;
 import domain.Service;
 
@@ -42,6 +43,9 @@ public class ServiceServiceTest extends AbstractTest {
 
 	@PersistenceContext
 	private EntityManager	entityManager;
+
+	@Autowired
+	private CategoryService	categoryService;
 
 
 	// Drivers
@@ -573,4 +577,186 @@ public class ServiceServiceTest extends AbstractTest {
 		this.unauthenticate();
 		this.checkExceptions(expected, caught);
 	}
+
+	/*
+	 * v1.0 - josembell
+	 * 
+	 * [UC-2-013] - Add a Category to a Service
+	 */
+
+	@Test
+	public void driverAddCategoryToService() {
+		final Object testingData[][] = {
+			{
+				/* + 1) Un manager añade una categoria a un service suyo */
+				"manager2", "service3", "category1", null
+			}, {
+				/* - 2) Un usuario no identificado añade una categoria a un service */
+				null, "service3", "category1", IllegalArgumentException.class
+			}, {
+				/* - 3) Un manager añade una categoria a un service que no es suyo */
+				"manager1", "service3", "category1", IllegalArgumentException.class
+			}, {
+				/* - 4) Un manager añade una categoria a un service null */
+				"manager2", null, "category1", IllegalArgumentException.class
+			}, {
+				/* - 5) Un manager añade una categoria null a un service */
+				"manager2", "service3", null, IllegalArgumentException.class
+			}, {
+				/* - 6) Un usuario añade una categoria a un service */
+				"user1", "service3", "category1", IllegalArgumentException.class
+			}, {
+				/* - 7) Un admin añade una categoria a un service */
+				"admin", "service3", "category1", IllegalArgumentException.class
+			}, {
+				/* - 8) Un manager añade una categoria ya existente a un service */
+				"manager2", "service3", "category2", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			domain.Service service = null;
+			Category category = null;
+
+			if (testingData[i][1] != null)
+				service = this.serviceService.findOne(this.getEntityId((String) testingData[i][1]));
+			if (testingData[i][2] != null)
+				category = this.categoryService.findOne(this.getEntityId((String) testingData[i][2]));
+
+			//System.out.println("test " + (i + 1));
+			this.templateAddCategoryToService((String) testingData[i][0], service, category, (Class<?>) testingData[i][3]);
+		}
+	}
+	/* v1.0 - josembell */
+	public void templateAddCategoryToService(final String username, final Service service, final Category category, final Class<?> expected) {
+		Class<?> caught = null;
+
+		/* 1. Loggearse como manager */
+		this.authenticate(username);
+
+		try {
+			/* 2. Listar los services */
+			Integer numServicesBefore = 0;
+			if (username != null) {
+				final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+				if (manager != null) {
+					final Collection<domain.Service> myServices = manager.getServices();
+					numServicesBefore = myServices.size();
+				}
+
+			}
+
+			/* 3. Seleccionar un service y añadirle una categoria -> entra por parámetros */
+			this.serviceService.addCategory(service, category);
+
+			/* 4. Listar los services */
+			Integer numServicesNow = 0;
+			if (username != null) {
+				final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+				if (manager != null) {
+					final Collection<domain.Service> myServices = manager.getServices();
+					numServicesNow = myServices.size();
+				}
+
+			}
+
+			Assert.isTrue(numServicesBefore == numServicesNow);
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+	}
+
+	/*
+	 * v1.0 - josembell
+	 * 
+	 * [UC-2-014] - Remove a Category from a Service
+	 */
+
+	@Test
+	public void driverRemoveCategoryFromService() {
+		final Object testingData[][] = {
+			{
+				/* + 1) Un manager quita una categoria de un service suyo */
+				"manager2", "service3", "category2", null
+			}, {
+				/* - 2) Un usuario no identificado quita una categoria a un service */
+				null, "service3", "category2", IllegalArgumentException.class
+			}, {
+				/* - 3) Un manager quita una categoria a un service que no es suyo */
+				"manager1", "service5", "category2", IllegalArgumentException.class
+			}, {
+				/* - 4) Un manager quita una categoria a un service null */
+				"manager2", null, "category1", IllegalArgumentException.class
+			}, {
+				/* - 5) Un manager quita una categoria null a un service */
+				"manager2", "service3", null, IllegalArgumentException.class
+			}, {
+				/* - 6) Un usuario quita una categoria a un service */
+				"user1", "service3", "category1", IllegalArgumentException.class
+			}, {
+				/* - 7) Un admin quita una categoria a un service */
+				"admin", "service3", "category1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			domain.Service service = null;
+			Category category = null;
+
+			if (testingData[i][1] != null)
+				service = this.serviceService.findOne(this.getEntityId((String) testingData[i][1]));
+			if (testingData[i][2] != null)
+				category = this.categoryService.findOne(this.getEntityId((String) testingData[i][2]));
+
+			//System.out.println("test " + (i + 1));
+			this.templateRemoveCategoryFromService((String) testingData[i][0], service, category, (Class<?>) testingData[i][3]);
+		}
+
+	}
+
+	/* v1.0 - josembell */
+	public void templateRemoveCategoryFromService(final String username, final Service service, final Category category, final Class<?> expected) {
+		Class<?> caught = null;
+
+		/* 1. Loggearse como manager */
+		this.authenticate(username);
+
+		try {
+			/* 2. Listar los services */
+			Integer numServicesBefore = 0;
+			if (username != null) {
+				final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+				if (manager != null) {
+					final Collection<domain.Service> myServices = manager.getServices();
+					numServicesBefore = myServices.size();
+				}
+
+			}
+
+			/* 3. Seleccionar un service y añadirle una categoria -> entra por parámetros */
+			this.serviceService.removeCategory(service, category);
+
+			/* 4. Listar los services */
+			Integer numServicesNow = 0;
+			if (username != null) {
+				final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
+				if (manager != null) {
+					final Collection<domain.Service> myServices = manager.getServices();
+					numServicesNow = myServices.size();
+				}
+
+			}
+
+			Assert.isTrue(numServicesBefore == numServicesNow);
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+	}
+
 }
