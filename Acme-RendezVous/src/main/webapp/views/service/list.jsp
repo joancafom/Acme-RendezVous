@@ -26,8 +26,8 @@
 		</jstl:if>
 	</display:column>
 	<display:column titleKey = "service.categories">
-		<jstl:forEach var="category" items="${service.categories}">
-			<jstl:out value="${category.name}, "/>
+		<jstl:forEach var="category" items="${service.categories}" varStatus="loopStatus">
+			<jstl:out value="${category.name}"/><jstl:if test="${!loopStatus.last}">,</jstl:if>
 		</jstl:forEach>
 	</display:column>
 	

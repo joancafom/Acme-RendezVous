@@ -40,12 +40,14 @@ window.onload = function(){
 			<li><a href="service/administrator/list.do"><spring:message code="master.page.actor.service" /></a></li>
 			<li><a href="category/administrator/list.do"><spring:message code="master.page.administrator.categories" /></a></li>
 			<li><a href="systemConfiguration/administrator/display.do"><spring:message code="master.page.administrator.systemConfiguration" /></a></li>
+			<li><a href="#"><security:authentication property="principal.username" /></a></li>
 		</ul>
 	</security:authorize>
 	<security:authorize access="hasRole('MANAGER')">
     	<ul class="nav navbar-nav">
 			<li><a href="service/manager/list.do"><spring:message code="master.page.manager.myServices" /></a></li>
 			<li><a href="service/manager/list.do?show=all"><spring:message code="master.page.manager.allServices" /></a></li>
+			<li><a href="#"><security:authentication property="principal.username" /></a></li>
 		</ul>
 	</security:authorize>
     <security:authorize access="hasRole('USER')">

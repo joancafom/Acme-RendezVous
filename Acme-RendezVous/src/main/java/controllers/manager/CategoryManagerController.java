@@ -105,33 +105,6 @@ public class CategoryManagerController extends AbstractController {
 
 	}
 
-	/*
-	 * @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "delete")
-	 * public ModelAndView delete(final Category category, final BindingResult binding) {
-	 * 
-	 * // v1.0 - Implemented by JA
-	 * 
-	 * ModelAndView res;
-	 * 
-	 * try {
-	 * 
-	 * this.categoryService.delete(category);
-	 * 
-	 * String parentCategoryId = "";
-	 * if (category.getParentCategory() != null)
-	 * parentCategoryId = new Integer(category.getParentCategory().getId()).toString();
-	 * 
-	 * res = new ModelAndView("redirect:list.do?rootCategoryId=" + parentCategoryId);
-	 * 
-	 * } catch (final Throwable oops) {
-	 * res = this.createEditModelAndView(category, "category.commit.error");
-	 * res.addObject("toEdit", true);
-	 * }
-	 * 
-	 * return res;
-	 * 
-	 * }
-	 */
 	//Ancillary Methods
 	protected ModelAndView createEditModelAndView(final AddCategoryForm form) {
 

@@ -54,6 +54,7 @@ public class ServiceRequestUserController extends AbstractController {
 		service = this.serviceService.findOne(serviceId);
 
 		Assert.notNull(service);
+		Assert.isTrue(!service.getIsCanceled());
 
 		serviceRequest = this.serviceRequestService.create(service);
 

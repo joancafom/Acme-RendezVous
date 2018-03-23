@@ -113,9 +113,10 @@ public class CategoryAdministratorController extends AbstractController {
 
 		ModelAndView res;
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			res = this.createEditModelAndView(category);
-		else
+			res.addObject("toEdit", true);
+		} else
 			try {
 
 				final Category savedCategory = this.categoryService.save(category);
@@ -169,9 +170,10 @@ public class CategoryAdministratorController extends AbstractController {
 
 		ModelAndView res;
 
-		if (binding.hasErrors())
+		if (binding.hasErrors()) {
 			res = this.createEditModelAndView(category);
-		else
+			res.addObject("toReorganise", true);
+		} else
 			try {
 
 				final Category savedCategory = this.categoryService.reorganise(category);

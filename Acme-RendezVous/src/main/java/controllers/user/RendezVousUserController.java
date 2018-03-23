@@ -252,6 +252,7 @@ public class RendezVousUserController extends AbstractController {
 		Assert.isTrue(rendezVous.getIsFinal() == false);
 		Assert.isTrue(rendezVous.getIsDeleted() == false);
 		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
+		Assert.isTrue(!rendezVous.getIsFinal());
 
 		result = this.createEditModelAndView(rendezVous);
 
@@ -342,7 +343,7 @@ public class RendezVousUserController extends AbstractController {
 		ModelAndView result;
 
 		try {
-
+			Assert.isTrue(!rendezVous.getIsFinal());
 			this.rendezVousService.virtualDelete(rendezVous);
 			result = new ModelAndView("redirect:list.do?show=mine");
 		} catch (final Throwable oops) {

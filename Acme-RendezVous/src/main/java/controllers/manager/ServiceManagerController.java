@@ -15,11 +15,12 @@ import org.springframework.web.servlet.ModelAndView;
 import security.LoginService;
 import services.ManagerService;
 import services.ServiceService;
+import controllers.AbstractController;
 import domain.Manager;
 
 @Controller
 @RequestMapping("/service/manager")
-public class ServiceManagerController {
+public class ServiceManagerController extends AbstractController {
 
 	/* Services */
 	@Autowired

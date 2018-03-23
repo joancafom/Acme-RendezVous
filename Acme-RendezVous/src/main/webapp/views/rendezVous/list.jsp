@@ -153,8 +153,9 @@
 				<p>
 				<jstl:if test="${rendezVous.isFinal==false}">
 					<a href="rendezVous/user/edit.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.edit"/></a>
+					<a href="rendezVous/user/delete.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.delete"/></a>
 				</jstl:if>
-				<a href="rendezVous/user/delete.do?rendezVousId=${rendezVous.id}"><spring:message code="rendezVous.delete"/></a></p>
+				</p>
 			</jstl:if>
 		</display:column>
 		
