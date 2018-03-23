@@ -81,6 +81,13 @@ public class SystemConfigurationService {
 		this.systemConfigurationRepository.delete(sC);
 	}
 
+	public void flush() {
+
+		//v1.0 - Implemented by JA
+
+		this.systemConfigurationRepository.flush();
+	}
+
 	//Other Business Methods
 
 	public SystemConfiguration getCurrentSystemConfiguration() {
