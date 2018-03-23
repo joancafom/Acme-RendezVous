@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -14,6 +15,7 @@ import org.springframework.validation.Validator;
 import repositories.ServiceRepository;
 import security.LoginService;
 import domain.Administrator;
+import domain.Category;
 import domain.Manager;
 import domain.RendezVous;
 import domain.ServiceRequest;
@@ -210,4 +212,20 @@ public class ServiceService {
 
 	}
 
+	public domain.Service copy(final domain.Service original) {
+
+		final domain.Service copy = new domain.Service();
+
+		copy.setCategories(new ArrayList<Category>(original.getCategories()));
+		copy.setDescription(original.getDescription());
+		copy.setId(original.getId());
+		copy.setIsCanceled(original.getIsCanceled());
+		copy.setManager(original.getManager());
+		copy.setName(original.getName());
+		copy.setPicture(original.getPicture());
+		copy.setServiceRequests(new ArrayList<ServiceRequest>(original.getServiceRequests()));
+		copy.setVersion(original.getVersion());
+
+		return copy;
+	}
 }

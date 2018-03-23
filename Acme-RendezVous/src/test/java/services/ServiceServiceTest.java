@@ -145,6 +145,7 @@ public class ServiceServiceTest extends AbstractTest {
 		};
 
 		domain.Service service = null;
+		domain.Service serviceCopy;
 
 		for (int i = 0; i < testingData.length; i++) {
 
@@ -152,28 +153,27 @@ public class ServiceServiceTest extends AbstractTest {
 
 			if (testingData[i][1] != null) {
 				service = this.serviceService.findOne(this.getEntityId((String) testingData[i][1]));
-
-				//System.out.println("Ask about Detach & StringsStates");
-				//We will detach the entity to prevent automatic flushes when we set the properties
-				this.entityManager.detach(service);
-			} else
+				serviceCopy = this.serviceService.copy(service);
+			} else {
 				service = null;
+				serviceCopy = null;
+			}
 
 			final String changes = (String) testingData[i][6];
 
 			if (changes.contains("name"))
-				service.setName((String) testingData[i][2]);
+				serviceCopy.setName((String) testingData[i][2]);
 
 			if (changes.contains("description"))
-				service.setDescription((String) testingData[i][3]);
+				serviceCopy.setDescription((String) testingData[i][3]);
 
 			if (changes.contains("picture"))
-				service.setPicture((String) testingData[i][4]);
+				serviceCopy.setPicture((String) testingData[i][4]);
 
 			if (changes.contains("isCanceled"))
-				service.setIsCanceled((Boolean) testingData[i][5]);
+				serviceCopy.setIsCanceled((Boolean) testingData[i][5]);
 
-			this.templateListEditService((String) testingData[i][0], service, changes, (Class<?>) testingData[i][7]);
+			this.templateListEditService((String) testingData[i][0], serviceCopy, changes, (Class<?>) testingData[i][7]);
 
 			this.rollbackTransaction();
 			this.entityManager.clear();
