@@ -22,6 +22,24 @@
 	<acme:submit name="save" code="service.save"/>
 	<acme:cancel url="service/manager/list.do" code="service.cancel2"/>
 </form:form>
+<br>
+<hr>
+<h3><spring:message code="service.categories"/></h3>
+<display:table name="service.categories" id="category" style="text-align:center;" class="displaytag">
+	<display:column titleKey="service.category.name">
+		<jstl:out value="${category.name}"/>
+	</display:column>
+	<display:column titleKey="service.category.description">
+		<jstl:out value="${category.description}"/>
+	</display:column>
+	<display:column>
+		<a href="category/manager/remove.do?categoryId=${category.id}&serviceId=${service.id}"><spring:message code="service.category.remove"/></a>
+	</display:column>
+
+</display:table>
+<a href="category/manager/add.do?serviceId=${service.id}"><spring:message code="service.category.add"/></a>
+
+
 </jstl:if>
 <jstl:if test="${toDelete==true}">
 	<jstl:if test="${able==true}">

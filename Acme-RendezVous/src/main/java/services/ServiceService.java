@@ -193,6 +193,7 @@ public class ServiceService {
 			final Manager manager = this.managerService.findByUserAccount(LoginService.getPrincipal());
 			result.setManager(manager);
 			result.setServiceRequests(new HashSet<ServiceRequest>());
+			result.setCategories(new HashSet<Category>());
 			this.validator.validate(result, binding);
 		}
 
@@ -204,6 +205,7 @@ public class ServiceService {
 			result.setIsCanceled(savedService.getIsCanceled());
 			result.setServiceRequests(savedService.getServiceRequests());
 			result.setManager(savedService.getManager());
+			result.setCategories(savedService.getCategories());
 
 			this.validator.validate(result, binding);
 		}
@@ -227,5 +229,20 @@ public class ServiceService {
 		copy.setVersion(original.getVersion());
 
 		return copy;
+	}
+	public void addCategory(final domain.Service service, final Category category) {
+		Assert.notNull(service);
+		Assert.notNull(category);
+		Assert.isTrue(!service.getCategories().contains(category));
+		service.getCategories().add(category);
+		this.serviceRepository.save(service);
+
+	}
+	public void removeCategory(final domain.Service service, final Category category) {
+		Assert.notNull(service);
+		Assert.notNull(category);
+		service.getCategories().remove(category);
+		this.serviceRepository.save(service);
+
 	}
 }

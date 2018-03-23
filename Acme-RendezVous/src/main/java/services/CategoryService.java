@@ -127,4 +127,13 @@ public class CategoryService {
 		return category;
 	}
 
+	public Collection<Category> findAllExceptAdded(final domain.Service service) {
+		final Collection<Category> result = new HashSet<Category>();
+		for (final Category c : this.findAll())
+			if (!service.getCategories().contains(c))
+				result.add(c);
+
+		return result;
+	}
+
 }

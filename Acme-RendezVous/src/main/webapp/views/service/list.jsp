@@ -25,6 +25,11 @@
 			<img src="<jstl:out value="${service.picture}" />" alt="<spring:message code="img.alt.service.picture" />" style="max-width: 200px;" />
 		</jstl:if>
 	</display:column>
+	<display:column titleKey = "service.categories">
+		<jstl:forEach var="category" items="${service.categories}">
+			<jstl:out value="${category.name}, "/>
+		</jstl:forEach>
+	</display:column>
 	
 	<jstl:if test="${show=='own'}">
 		<display:column>

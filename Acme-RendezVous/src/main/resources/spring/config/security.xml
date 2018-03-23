@@ -62,7 +62,10 @@
 		<security:intercept-url pattern="/category/administrator/edit.do" access="hasRole('ADMINISTRATOR')"/> 
 		<security:intercept-url pattern="/category/administrator/create.do" access="hasRole('ADMINISTRATOR')"/> 
 		<security:intercept-url pattern="/category/administrator/reorganise.do" access="hasRole('ADMINISTRATOR')"/> 
-		
+		<security:intercept-url pattern="/category/manager/add.do" access="hasRole('MANAGER')"/> 
+		<security:intercept-url pattern="/category/manager/edit.do" access="hasRole('MANAGER')"/> 
+		<security:intercept-url pattern="/category/manager/remove.do" access="hasRole('MANAGER')"/>
+						
 		<security:intercept-url pattern="/comment/user/create.do" access="hasRole('USER')" />
 		<security:intercept-url pattern="/comment/user/edit.do" access="hasRole('USER')" />
 		<security:intercept-url pattern="/comment/administrator/delete.do" access="hasRole('ADMINISTRATOR')" />
