@@ -27,22 +27,29 @@ window.onload = function(){
 
 </script>
 
-
-<div id="sticky-header">
-	<div id="logo-container">
-		<a href=""><img src="images/logo.png" alt="Acme, Inc" height="100%"/></a>
-	</div>
-	<div id="menu-container">
-	<ul id="jMenu">
-		<!-- Do not forget the "fNiv" class for the first level links !! -->
-		<security:authorize access="hasRole('ADMINISTRATOR')">
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <img src="<jstl:out value="${logo}" />" style="max-height: 50px;"/>
+      <a class="navbar-brand" href="#"><jstl:out value="${businessName}" /></a>
+    </div>
+    <security:authorize access="hasRole('ADMINISTRATOR')">
+    	<ul class="nav navbar-nav">
 			<li><a href="administrator/display-dashboard.do"><spring:message code="master.page.administrator.dashboard"/></a></li>
 			<li><a href="rendezVous/administrator/list.do"><spring:message code="master.page.administrator.rendezVouses"/></a></li>
 			<li><a href="service/administrator/list.do"><spring:message code="master.page.actor.service" /></a></li>
+			<li><a href="service/categories/list.do"><spring:message code="master.page.administrator.categories" /></a></li>
 			<li><a href="systemConfiguration/administrator/display.do"><spring:message code="master.page.administrator.systemConfiguration" /></a></li>
-		</security:authorize>
-		
-		<security:authorize access="hasRole('USER')">
+		</ul>
+	</security:authorize>
+	<security:authorize access="hasRole('MANAGER')">
+    	<ul class="nav navbar-nav">
+			<li><a href="service/manager/list.do"><spring:message code="master.page.manager.myServices" /></a></li>
+			<li><a href="service/manager/list.do?show=all"><spring:message code="master.page.manager.allServices" /></a></li>
+		</ul>
+	</security:authorize>
+    <security:authorize access="hasRole('USER')">
+    	<ul class="nav navbar-nav">
 			<li><a href="rendezVous/user/list.do?show=mine"><spring:message code="master.page.user.myRendezVouses" /></a></li>
 			<li><a href="rendezVous/user/list.do?show=attended"><spring:message code="master.page.user.attendedRendezVouses" /></a></li>
 			<li><a href="user/user/list.do"><spring:message code="master.page.user.users" /></a></li>
@@ -51,25 +58,22 @@ window.onload = function(){
 			<li><a href="announcement/user/list.do"><spring:message code="master.page.user.announcements" /></a></li>
 			<li><a href="service/user/list.do"><spring:message code="master.page.actor.service" /></a></li>
 			<li><a href="user/user/display.do"><spring:message code="master.page.profile" /> (<security:authentication property="principal.username" />)</a></li>
-		</security:authorize>
-		
-		<security:authorize access="hasRole('MANAGER')">
-			<li><a href="service/manager/list.do"><spring:message code="master.page.manager.myServices" /></a></li>
-			<li><a href="service/manager/list.do?show=all"><spring:message code="master.page.manager.allServices" /></a></li>
-		</security:authorize>
-		
-		<security:authorize access="isAnonymous()">
 			<li><a href="rendezVous/list.do?show=all"><spring:message code="master.page.user.allRendezVouses" /></a></li>
 			<li><a href="rendezVous/list.do?show=category"><spring:message code="master.page.user.allRendezVousesByCategory" /></a></li>
 			<li><a href="user/list.do"><spring:message code="master.page.user.allUsers" /></a></li>
 			<li><a href="user/register.do"><spring:message code="master.page.user.register" /></a></li>
 			<li><a href="manager/register.do"><spring:message code="master.page.manager.register" /></a></li>
-			<li id="login" style="width:50%"><a class="fNiv" href="security/login.do"><spring:message code="master.page.login" /></a></li>
-		</security:authorize>
-		
-		<security:authorize access="isAuthenticated()">
-			<li id="logout"><a href="j_spring_security_logout"><spring:message code="master.page.logout" /> </a></li>
-		</security:authorize>
-	</ul>
-	</div>
-</div>
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+      		<li><a href="user/register.do"><span class="glyphicon glyphicon-user"></span> <spring:message code="master.page.singup" /></a></li>
+      		<li><a href="security/login.do"><span class="glyphicon glyphicon-log-in"></span> <spring:message code="master.page.login" /></a></li>
+    	</ul>
+	</security:authorize>
+	
+	<security:authorize access="isAuthenticated()">
+		<ul class="nav navbar-nav navbar-right">
+      		<li><a href="j_spring_security_logout"><span class="glyphicon glyphicon-log-out"></span> <spring:message code="master.page.logout" /></a></li>
+    	</ul>
+	</security:authorize>
+  </div>
+</nav>
