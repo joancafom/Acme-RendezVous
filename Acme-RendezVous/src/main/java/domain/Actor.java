@@ -50,7 +50,7 @@ public abstract class Actor extends DomainEntity {
 		return this.phoneNumber;
 	}
 
-	@NotNull
+	@NotBlank
 	@Email
 	public String getEmail() {
 		return this.email;

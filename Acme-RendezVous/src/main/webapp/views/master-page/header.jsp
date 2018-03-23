@@ -38,7 +38,7 @@ window.onload = function(){
 			<li><a href="administrator/display-dashboard.do"><spring:message code="master.page.administrator.dashboard"/></a></li>
 			<li><a href="rendezVous/administrator/list.do"><spring:message code="master.page.administrator.rendezVouses"/></a></li>
 			<li><a href="service/administrator/list.do"><spring:message code="master.page.actor.service" /></a></li>
-			<li><a href="service/categories/list.do"><spring:message code="master.page.administrator.categories" /></a></li>
+			<li><a href="category/administrator/list.do"><spring:message code="master.page.administrator.categories" /></a></li>
 			<li><a href="systemConfiguration/administrator/display.do"><spring:message code="master.page.administrator.systemConfiguration" /></a></li>
 		</ul>
 	</security:authorize>
@@ -58,6 +58,10 @@ window.onload = function(){
 			<li><a href="announcement/user/list.do"><spring:message code="master.page.user.announcements" /></a></li>
 			<li><a href="service/user/list.do"><spring:message code="master.page.actor.service" /></a></li>
 			<li><a href="user/user/display.do"><spring:message code="master.page.profile" /> (<security:authentication property="principal.username" />)</a></li>
+		</ul>
+	</security:authorize>
+    <security:authorize access="isAnonymous()">
+    	<ul class="nav navbar-nav">
 			<li><a href="rendezVous/list.do?show=all"><spring:message code="master.page.user.allRendezVouses" /></a></li>
 			<li><a href="rendezVous/list.do?show=category"><spring:message code="master.page.user.allRendezVousesByCategory" /></a></li>
 			<li><a href="user/list.do"><spring:message code="master.page.user.allUsers" /></a></li>

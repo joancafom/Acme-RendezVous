@@ -3,6 +3,11 @@ package forms;
 
 import java.util.Date;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class UserRegisterForm {
 
 	private String	username;
@@ -53,6 +58,8 @@ public class UserRegisterForm {
 		return this.email;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	public Date getDateOfBirth() {
 		return this.dateOfBirth;
 	}
