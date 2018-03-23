@@ -178,20 +178,7 @@ public class AdministratorService {
 
 		Assert.notNull(admin);
 
-		final Collection<Long> answerPerRendezVous = this.administratorRepository.answerPerRendezVous();
-
-		Long sum = 0L;
-
-		for (final Long a : answerPerRendezVous)
-			sum += a;
-
-		Double res = 0.0;
-		final Double count = new Double(this.rendezVousService.findAll().size());
-
-		if (count != 0.0)
-			res = sum / count;
-
-		return res;
+		return this.administratorRepository.avgAnswerPerRendezVous();
 	}
 	public Double getStdAnswersPerRendezVous() {
 
@@ -207,7 +194,7 @@ public class AdministratorService {
 			sumSq += a * a;
 
 		Double res = 0.0;
-		final Double count = new Double(this.rendezVousService.findAll().size());
+		final Double count = new Double(this.rendezVousService.count());
 
 		if (count != 0.0)
 			res = Math.sqrt((sumSq / count) - Math.pow(this.getAvgAnswersPerRendezVous(), 2));

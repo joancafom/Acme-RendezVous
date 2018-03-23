@@ -380,4 +380,11 @@ public class RendezVousService {
 		return this.rendezVousRepository.findAllNotAdultByCategory(category.getId());
 	}
 
+	public Long count() {
+
+		// v1.0 - Implemented by JA
+
+		return this.rendezVousRepository.count();
+	}
+
 }
