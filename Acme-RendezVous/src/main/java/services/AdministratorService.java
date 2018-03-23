@@ -280,4 +280,14 @@ public class AdministratorService {
 
 		return this.administratorRepository.stdServicesRequestedPerRendezVous();
 	}
+
+	// v3.0 - Implemented by Alicia
+	public Collection<domain.Service> topSellingServices() {
+		final Administrator admin = this.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(admin);
+
+		final Page<domain.Service> servicePage = this.administratorRepository.topSellingServices(new PageRequest(0, 5));
+		return servicePage.getContent();
+	}
+
 }

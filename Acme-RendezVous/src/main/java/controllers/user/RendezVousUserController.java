@@ -147,6 +147,15 @@ public class RendezVousUserController extends AbstractController {
 		final ModelAndView res;
 		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
 
+		Assert.notNull(rendezVous);
+
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(user);
+
+		Assert.isTrue(!rendezVous.getIsDeleted());
+		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
+		Assert.isTrue(rendezVous.getAttendants().contains(user));
+
 		res = new ModelAndView("rendezVous/cancel");
 		res.addObject("rendezVous", rendezVous);
 
@@ -183,6 +192,17 @@ public class RendezVousUserController extends AbstractController {
 		final ModelAndView res;
 		final RendezVous rendezVous = this.rendezVousService.findOne(rendezVousId);
 		final RSVPForm rsvpForm = new RSVPForm();
+
+		Assert.notNull(rendezVous);
+
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(user);
+
+		Assert.isTrue(!rendezVous.getIsDeleted());
+		Assert.isTrue(rendezVous.getOrgDate().after(new Date()));
+		Assert.isTrue(!rendezVous.getAttendants().contains(user));
+		if (rendezVous.getIsForAdults())
+			Assert.isTrue(user.getAge() >= 18);
 
 		rsvpForm.setRendezVous(rendezVousId);
 

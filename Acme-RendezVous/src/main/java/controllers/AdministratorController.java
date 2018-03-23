@@ -65,6 +65,7 @@ public class AdministratorController extends AbstractController {
 		res.addObject("minServicesRequestedPerRendezVous", this.administratorService.getMinServicesRequestedPerRendezVous());
 		res.addObject("maxServicesRequestedPerRendezVous", this.administratorService.getMaxServicesRequestedPerRendezVous());
 		res.addObject("stdServicesRequestedPerRendezVous", this.administratorService.getStdServicesRequestedPerRendezVous());
+		res.addObject("topSellingServices", this.administratorService.topSellingServices());
 
 		return res;
 	}

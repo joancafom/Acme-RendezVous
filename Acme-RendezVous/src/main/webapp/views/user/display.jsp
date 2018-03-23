@@ -28,7 +28,7 @@
 <p><strong><spring:message code="user.dateOfBirth"/>:</strong><acme:dateFormat code="date.format3" value="${user.dateOfBirth}"/></p>
 
 <h3><spring:message code="user.attendedRendezVouses"/></h3>
-<display:table name="attendedRendezVouses" id="rendezVous" requestURI="rendezVous${actorWS}/list.do" class="displaytag">
+<display:table name="attendedRendezVouses" id="rendezVous" requestURI="user/${actorWS}display.do" class="displaytag" pagesize="5">
 		<display:column titleKey="user.rendezVous.state" class="tableRendezVous">
 			<jstl:if test="${rendezVous.isDeleted==true}">
 				<p style="color:red;"><strong><spring:message code="user.rendezVous.deleted"/></strong></p>

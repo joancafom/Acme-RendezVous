@@ -162,3 +162,32 @@
 <p><strong><spring:message code="min.servicesRequestedPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${minServicesRequestedPerRendezVous}"/></p>
 <p><strong><spring:message code="max.servicesRequestedPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${maxServicesRequestedPerRendezVous}"/></p>
 <p><strong><spring:message code="std.servicesRequestedPerRendezVous"/>:</strong> <fmt:formatNumber pattern="${numberFormat}" value="${stdServicesRequestedPerRendezVous}"/></p>
+<br/>
+<h4><spring:message code="topSellingServices"/>:</h4>
+<display:table name="topSellingServices" id="service" requestURI="administrator/display-dashboard.do" style="text-align:center;" class="displaytag" pagesize="5">
+	
+	<display:column titleKey="service.state">
+		<jstl:if test="${service.isCanceled}">
+			<p style="color:red;"><strong><spring:message code="service.canceled"/></strong></p>
+		</jstl:if>
+		<jstl:if test="${!service.isCanceled}">
+			<p style="color:green;"><strong><spring:message code="service.available"/></strong></p>
+		</jstl:if>
+	</display:column>
+	
+	<display:column titleKey="service.name" property="name" />
+	<display:column titleKey="service.description" property="description" />
+	
+	<display:column>
+		<jstl:if test="${service.picture ne null}">
+			<img src="<jstl:out value="${service.picture}" />" alt="<spring:message code="img.alt.service.picture" />" style="max-width: 200px;" />
+		</jstl:if>
+	</display:column>
+	
+	<display:column>
+		<jstl:if test="${!service.isCanceled}">
+			<a href="service/administrator/cancel.do?serviceId=<jstl:out value="${service.id}" />"><spring:message code="service.cancel" /></a>
+		</jstl:if>
+	</display:column>
+	
+</display:table>

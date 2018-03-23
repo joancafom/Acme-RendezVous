@@ -101,7 +101,7 @@
 <!-- Attendants -->
 <h2><spring:message code="rendezVous.attendants"/></h2>
 
-<display:table name="rendezVous.attendants" id="attendant" requestURI="" class="displaytag" style="width:25%;">
+<display:table name="rendezVous.attendants" id="attendant" requestURI="rendezVous/${actorWS}display.do?rendezVousId=1787" class="displaytag" style="width:25%;" pagesize="5">
 	<display:column titleKey="rendezVous.attendants" style="text-align:center;">
 		<a href="user/${actorWS}display.do?userId=<jstl:out value="${attendant.id}" />"><jstl:out value="${attendant.name}" /></a>
 	</display:column>
@@ -215,7 +215,7 @@
 
 <h2><spring:message code="rendezVous.services"/></h2>
 
-<display:table name="rendezVous.serviceRequests" id="serviceRequest" requestURI="rendezVous/user/display.do?rendezVousId=${rendezVous.id}" style="text-align:center;" class="displaytag">
+<display:table name="rendezVous.serviceRequests" id="serviceRequest" requestURI="rendezVous/${actorWS}display.do?rendezVousId=${rendezVous.id}" style="text-align:center;" class="displaytag" pagesize="5">
 	
 	<display:column titleKey="service.name" property="service.name" />
 	<display:column titleKey="service.description" property="service.description" />

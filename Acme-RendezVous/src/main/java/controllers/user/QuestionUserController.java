@@ -95,6 +95,12 @@ public class QuestionUserController extends AbstractController {
 		final ModelAndView res;
 		final Question question = this.questionService.findOne(questionId);
 
+		Assert.notNull(question);
+
+		final User user = this.userService.findByUserAccount(LoginService.getPrincipal());
+		Assert.notNull(user);
+		Assert.isTrue(user.getCreatedRendezVouses().contains(question.getRendezVous()));
+
 		res = new ModelAndView("question/delete");
 		res.addObject("question", question);
 

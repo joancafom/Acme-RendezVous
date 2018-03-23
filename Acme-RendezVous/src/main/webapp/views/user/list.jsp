@@ -14,7 +14,7 @@
 	}
 </style>
 
-<display:table name="users" id="user" requestURI="user/list.do" class="displaytag">
+<display:table name="users" id="user" requestURI="user/list.do" class="displaytag" pagesize="5">
 	<display:column titleKey="user.name" class="tableRendezVous">
 		<jstl:out value="${user.name}"/>
 	</display:column>

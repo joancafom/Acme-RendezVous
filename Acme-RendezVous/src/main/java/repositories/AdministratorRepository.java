@@ -111,4 +111,8 @@ public interface AdministratorRepository extends JpaRepository<Administrator, In
 	// v1.0 - Implemented by Alicia
 	@Query("select sqrt(sum(r.serviceRequests.size * r.serviceRequests.size) / count(r.serviceRequests.size) - avg(r.serviceRequests.size) * avg(r.serviceRequests.size)) from RendezVous r")
 	Double stdServicesRequestedPerRendezVous();
+
+	// v1.0 - Implemented by Alicia
+	@Query(value = "select s from Service s where s.serviceRequests.size > 0 order by s.serviceRequests.size desc")
+	Page<Service> topSellingServices(Pageable pageable);
 }
