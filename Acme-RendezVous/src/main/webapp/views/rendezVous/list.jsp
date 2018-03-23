@@ -42,7 +42,7 @@
 
 <jstl:if test="${hasRendezVouses==true}">
 <jstl:if test="${!own}">
-	<display:table name="rendezVouses" id="rendezVous" requestURI="rendezVous${actorWS}/list.do" class="displaytag">
+	<display:table name="rendezVouses" id="rendezVous" requestURI="rendezVous/${actorWS}list.do" class="displaytag" pagesize="5">
 		<display:column titleKey="rendezVous.state" class="tableRendezVous">
 			<jstl:if test="${rendezVous.isDeleted==true}">
 				<p style="color:red;"><strong><spring:message code="rendezVous.deleted"/></strong></p>
@@ -99,7 +99,7 @@
 </jstl:if>
 
 <jstl:if test="${own}">
-	<display:table name="rendezVouses" id="rendezVous" requestURI="rendezVous/user/list.do" class="displaytag">
+	<display:table name="rendezVouses" id="rendezVous" requestURI="rendezVous/user/list.do" class="displaytag" pagesize="5">
 		<display:column titleKey="rendezVous.state" class="tableRendezVous">
 			<jstl:if test="${rendezVous.isDeleted==true}">
 				<p style="color:red;"><strong><spring:message code="rendezVous.deleted"/></strong></p>

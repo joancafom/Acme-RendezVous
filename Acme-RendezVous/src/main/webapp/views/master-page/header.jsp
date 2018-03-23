@@ -56,7 +56,6 @@ window.onload = function(){
 		<security:authorize access="hasRole('MANAGER')">
 			<li><a href="service/manager/list.do"><spring:message code="master.page.manager.myServices" /></a></li>
 			<li><a href="service/manager/list.do?show=all"><spring:message code="master.page.manager.allServices" /></a></li>
-			<li><a href="manager/manager/display.do"><spring:message code="master.page.profile" /> (<security:authentication property="principal.username" />)</a></li>
 		</security:authorize>
 		
 		<security:authorize access="isAnonymous()">
