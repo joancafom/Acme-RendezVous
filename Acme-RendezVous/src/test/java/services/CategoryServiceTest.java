@@ -341,4 +341,143 @@ public class CategoryServiceTest extends AbstractTest {
 		super.checkExceptions(expected, caught);
 
 	}
+
+	
+	/*
+	 * v1.0 - josembell
+	 * 
+	 * [UC-2-010] - List and Delete categories
+	 */
+
+	@Test
+	public void driverListAndDeleteCategory() {
+		final Object testingData[][] = {
+			{
+				/* + 1) Un admin elimina una categoria correctamente */
+				"admin", "category1", null
+			}, {
+				/* - 2) Un usuario no identificado elimina una categorya */
+				null, "category1", IllegalArgumentException.class
+			}, {
+				/* - 3) Un admin elimina una categoria null */
+				"admin", null, IllegalArgumentException.class
+			}, {
+				/* - 4) Un usuario elimina una categoria */
+				"user1", "category1", IllegalArgumentException.class
+			}, {
+				/* - 5) Un manager elimina una categoria */
+				"manager1", "category1", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			Category category = null;
+			if (testingData[i][1] != null)
+				category = this.categoryService.findOne(this.getEntityId((String) testingData[i][1]));
+
+			//System.out.println("Test " + (i + 1));
+			this.templateListAndDeleteCategory((String) testingData[i][0], category, (Class<?>) testingData[i][2]);
+			//System.out.println("Test " + (i + 1) + " - OK");
+		}
+	}
+
+	/* v1.0 - josembell */
+	protected void templateListAndDeleteCategory(final String username, final Category category, final Class<?> expected) {
+		Class<?> caught = null;
+
+		/* 1. Loggearse como admin */
+		this.authenticate(username);
+		try {
+			/* 2. Listar las categorias */
+			Collection<Category> categories = this.categoryService.findAll();
+			final int sizeBefore = categories.size();
+
+			/* 3. Seleccionar una y eliminarla -> entra por parámetros */
+			this.categoryService.delete(category);
+
+			/* 4. Comprobar que el tamaño es menor */
+			categories = this.categoryService.findAll();
+			final int sizeNow = categories.size();
+
+			Assert.isTrue(sizeNow < sizeBefore);
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+
+	}
+
+	/*
+	 * v1.0 - josembell
+	 * 
+	 * [UC-2-011] - Reorganise Categories Hierarchies
+	 */
+	@Test
+	public void driverReorganiseCategory() {
+		final Object testingData[][] = {
+			{
+				/* + 1) Un admin cambia el parentCategory de una category */
+				"admin", "category1", "category5", null
+			}, {
+				/* + 2) Un admin cambia una categoria a root */
+				"admin", "category2", null, null
+			}, {
+				/* - 3) Un usuario no identificado reorganiza una category */
+				null, "category1", "category5", IllegalArgumentException.class
+			}, {
+				/* - 4) Un usuario regoraniza una categoria */
+				"user1", "category1", "category5", IllegalArgumentException.class
+			}, {
+				/* - 5) Un manager reorganiza una categoria */
+				"manager1", "category1", "category5", IllegalArgumentException.class
+			}
+		};
+
+		for (int i = 0; i < testingData.length; i++) {
+			Category category = null;
+			Category parentCategory = null;
+			if (testingData[i][1] != null)
+				category = this.categoryService.findOne(this.getEntityId((String) testingData[i][1]));
+			if (testingData[i][2] != null)
+				parentCategory = this.categoryService.findOne(this.getEntityId((String) testingData[i][2]));
+
+			//System.out.println("Test " + i);
+			this.templateReorganiseCategory((String) testingData[i][0], category, parentCategory, (Class<?>) testingData[i][3]);
+			//System.out.println("Test " + i + "- ok");
+		}
+
+	}
+
+	/* v1.0 - josembell */
+	protected void templateReorganiseCategory(final String username, final Category category, final Category parentCategory, final Class<?> expected) {
+		Class<?> caught = null;
+
+		/* 1. Loggearse como admin */
+		this.authenticate(username);
+
+		try {
+			/* 2. Listar las categorias */
+			Collection<Category> categories = this.categoryService.findAll();
+			final int numCategoriesBefore = categories.size();
+
+			/* 3. Elegir una y reorganizarla */
+			category.setParentCategory(parentCategory);
+			this.categoryService.reorganise(category);
+
+			/* 4. Comprobar el tamaño */
+			categories = this.categoryService.findAll();
+			final int numCategoriesNow = categories.size();
+
+			Assert.isTrue(numCategoriesNow == numCategoriesBefore);
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.unauthenticate();
+		this.checkExceptions(expected, caught);
+	}
 }
