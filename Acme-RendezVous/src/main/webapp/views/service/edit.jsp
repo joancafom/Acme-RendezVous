@@ -22,6 +22,7 @@
 	<acme:submit name="save" code="service.save"/>
 	<acme:cancel url="service/manager/list.do" code="service.cancel2"/>
 </form:form>
+<jstl:if test="${service.id!=0}">
 <br>
 <hr>
 <h3><spring:message code="service.categories"/></h3>
@@ -38,6 +39,7 @@
 
 </display:table>
 <a href="category/manager/add.do?serviceId=${service.id}"><spring:message code="service.category.add"/></a>
+</jstl:if>
 
 
 </jstl:if>
